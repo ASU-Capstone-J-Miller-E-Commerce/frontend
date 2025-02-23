@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { FormField } from "../util/Inputs";
+import React from "react";
+import { FormField } from "../../util/Inputs";
 import { useForm } from "react-hook-form";
-import { Button } from "../util/Buttons";
+import { Button } from "../../util/Buttons";
+import { NavLink } from "react-router-dom";
 
-export default function LoginPage () {
+export default function PasswordReset () {
     const { register, handleSubmit, watch, formState: { errors } } = useForm({
         defaultValues: {
             email: "",
-            password: "",
         }
     });
 
@@ -16,15 +16,18 @@ export default function LoginPage () {
     };
 
     const email = watch("email");
-    const password = watch("password");
 
     return (
         <section className="form-content">
             <div className="login-area">
                 {/* HEADER */}
                 <h1 className="login-page-title">
-                    Login
+                    Reset your password
                 </h1>
+
+                <p className="login-page-subtitle">
+                    We will send you an email to reset your password.
+                </p>
 
                 {/* FIELDS */}
                 <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
@@ -39,25 +42,12 @@ export default function LoginPage () {
                         })} 
                     />
 
-                    <FormField 
-                        title="Password"
-                        type="password"
-                        value={password}
-                        error={errors.password && errors.password.message}
-                        {...register("password", {
-                            required: "Password is required",
-                        })} 
-                    />
-
                     {/* ACTIONS */}
                     <div className="login-actions">
-                        <Button text="Sign in"/>
+                        <Button text="Submit"/>
                         <div>
                             <span className="form-action-row">
-                                New customer? <a href="/account/create-account">Create account</a>
-                            </span>
-                            <span className="form-action-row">
-                                <a href="/account/login">Forgot your password?</a>
+                                Remember your password? <NavLink to="/account/login">Sign in</NavLink>
                             </span>
                         </div>
                     </div>

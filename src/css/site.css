@@ -1,8 +1,44 @@
 /*==============================================================
 # Site Defaults
 ==============================================================*/
+
+@font-face {
+  font-family: 'papyrus';
+  src: url('./webfonts/papyrus.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'american-uncial';
+  src: url('./webfonts/AMERICAN.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'bouwsma-uncial';
+  src: url('./webfonts/BouwsUnc.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'electr-uncial';
+  src: url('./webfonts/ElectrUnciale.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'deutch-uncial';
+  src: url('./webfonts/DeutscheUncialis.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
-  font-family: system-ui, Helvetica, Arial, sans-serif;
+  font-family: 'American', system-ui, Helvetica, Arial, sans-serif;
   font-weight: 400;
   color-scheme: light dark;
   color: #444;
@@ -11,8 +47,6 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-
 }
 
 a {
@@ -29,7 +63,7 @@ body {
   line-height: 1.8;
 }
 
-#root {
+.jmiller-app {
   display: grid;
   grid-template-rows: auto 1fr auto;
   height: 100vh;
@@ -75,6 +109,10 @@ button {
 
 p {
   margin: 0
+}
+
+.toast-class {
+  margin-top: 65px;
 }
 
 

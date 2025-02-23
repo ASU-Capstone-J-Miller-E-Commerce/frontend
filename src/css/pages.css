@@ -37,6 +37,13 @@
     text-align: center;
 }
 
+.login-page-subtitle {
+    font-size: 1rem;
+    padding: 0px 10px 20px 10px;
+    text-align: center;
+    color: #666;
+}
+
 .login-form{
     display: flex;
     flex-direction: column;
@@ -60,4 +67,58 @@
 
 .form-action-row {
     display: block;
+}
+
+/*==============================================================
+# User details page
+==============================================================*/
+.user-layout {
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+.user-drawer-menu {
+    background: var(--miller-dark-grey);
+    padding: 0;
+    overflow-x: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-nav {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.user-nav-item {
+    font-size: 20px;
+}
+
+.user-nav-item a {
+    padding: 6px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--miller-white);
+    text-decoration: none;
+    font-size: 1.2rem;
+}
+
+.user-nav-item a:hover,
+.user-nav-item a.active {
+    background-color: rgb(109, 109, 109);
+    color: var(--miller-white);
+}
+
+.user-content {
+    padding: 20px;
+    background-color: #fafafa;
+    overflow-y: auto;
 }

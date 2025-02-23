@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { FormField } from "../util/Inputs";
+import React from "react";
+import { FormField } from "../../util/Inputs";
 import { useForm } from "react-hook-form";
-import { Button } from "../util/Buttons";
+import { Button } from "../../util/Buttons";
+import { NavLink } from "react-router-dom";
 
 export default function CreateAccountPage () {
     const { register, handleSubmit, watch, formState: { errors } } = useForm({
@@ -70,7 +71,7 @@ export default function CreateAccountPage () {
                         <Button text="Create"/>
                         <div>
                             <span className="form-action-row">
-                                Returning customer? <a href="/account/login">Sign in</a>
+                                Returning customer? <NavLink to="/account/login">Sign in</NavLink>
                             </span>
                         </div>
                     </div>

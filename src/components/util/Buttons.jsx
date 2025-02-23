@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 /*==============================================================
 # Defaults
@@ -64,23 +65,26 @@ export function Button({text, onClick}) {
 /*==============================================================
 # Login
 ==============================================================*/
-export function LoginButton() {
+export function LoginButton({onClick}) {
     const navigate = useNavigate();
 
     return (
         <button
             className="fa-solid fa-user header-icon"
-            onClick={() => navigate('/account/login')}
+            onClick={() => {
+                onClick && onClick();
+                navigate('/account/login')
+            }}
         >
         </button>
     );
 }
 
-export function DrawerLoginButton() {
+export function DrawerLoginButton({onClick}) {
     return (
-        <a className="drawer-foot-nav-text" tabIndex={0} href="/account/login">
+        <NavLink className="drawer-foot-nav-text" tabIndex={0} to="/account/login" onClick={onClick}>
             <button className="fa-solid fa-user drawer-login-icon" tabIndex={-1} />
             Log In
-        </a>
+        </NavLink>
     );
 }
