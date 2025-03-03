@@ -8,14 +8,17 @@
     display: flex;
     align-items: center;
 }
-.form-field.input-error .form-field-input{
+.form-field.input-error .form-field-input, 
+.form-field.input-error .form-field-textarea {
     border: 1px solid var(--miller-red) !important;
 }
-.form-field.input-error .form-field-input:focus {
+.form-field.input-error .form-field-input:focus,
+.form-field.input-error .form-field-textarea:focus {
     box-shadow: 0px 1px 3px var(--miller-red) !important;
 }
 
-.form-field-input {
+.form-field-input,
+.form-field-textarea {
     border: 1px solid #c9c9c9;
     padding: 24px 10px 6px 10px;
     height: 18px;
@@ -27,7 +30,18 @@
     flex: 1;
 }
 
-.form-field-title {
+.form-field select {
+    padding: 36px 10px 12px 10px;
+}
+
+.form-field-textarea {
+    resize: vertical;
+    min-height: 18px;
+    height: 38px;
+}
+
+.form-field-title,
+.form-field-textarea-title {
     position: absolute;
     z-index: 2;
     pointer-events: none;
@@ -43,11 +57,22 @@
     font-size: 13px;
     top: 28%;
 }
-.form-field-input:hover {
+.form-field-input:hover,
+.form-field-textarea:hover {
     border: 1px solid #a0a0a0;
 }
 
-.form-field-input:focus{
+.form-field.text-within .form-field-textarea-title,
+.form-field:focus-within .form-field-textarea-title {
+    font-size: 13px;
+    top: 14px;
+}
+.form-field-textarea-title {
+    top: 23px;
+}
+
+.form-field-input:focus,
+.form-field-textarea:focus {
     border: 1px solid #747474;
     box-shadow: 0px 1px 3px #aaa;
 }
