@@ -145,11 +145,11 @@ export function createAccessory(accessoryNumber, name, description, price, statu
     });
 }
 
-export function editAccessory(accessoryNumber, name, description, price, status) {
+export function editAccessory(id, accessoryNumber, name, description, price, status) {
     return _ajax({
-        url: "/admin/accessories/" + accessoryNumber,
+        url: "/admin/accessories/" + id,
         method: "PUT",
-        data: { name, description, price, status }
+        data: { accessoryNumber, name, description, price, status }
     });
 }
 
