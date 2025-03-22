@@ -814,6 +814,7 @@ function CueDialog({ open, onClose, title, getData, element = {
     const [includeForearmPointVeneers, setIncludeForearmPointVeneers] = useState(false);
     const [includeButtSleevePointVeneers, setIncludeButtSleevePointVeneers] = useState(false);
     const [includeInlays, setIncludeInlays] = useState(false);
+    const [buttType, setButtType] = useState(false);
 
     const { register, handleSubmit, watch, formState: { errors }, reset, setValue } = useForm({
         defaultValues: element
@@ -1097,7 +1098,10 @@ function CueDialog({ open, onClose, title, getData, element = {
                             </div>
                         </div>
                         <div>
-                            <h3 className="dialog-header">Butt</h3>
+                            <div className='form-row'>
+                                <h3 className="dialog-header">Butt</h3>
+                                <DefaultToggle titleOn={"Full Splice"} titleOff={"Standard"} onChange={setButtType} />
+                            </div>
                             <div>
                                 <div className='form-row'>
                                     <div className='flex-1'>
