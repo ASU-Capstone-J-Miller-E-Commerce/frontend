@@ -824,6 +824,8 @@ function CueDialog({ open, onClose, title, getData, element = {
     const [includeButtSleeveInlay, setIncludeButtSleeveInlay] = useState(false);
     const [includeForearmPointInlay, setIncludeForearmPointInlay] = useState(false);
     const [includeButtSleevePointInlay, setIncludeButtSleevePointInlay] = useState(false);
+    const [includeForearmPoint, setIncludeForarmPoint] = useState(false);
+    const [includeButtSleevePoint, setIncludeButtSleevePoint] = useState(false);
 
     const { register, handleSubmit, watch, formState: { errors }, reset, setValue } = useForm({
         defaultValues: element
@@ -840,6 +842,8 @@ function CueDialog({ open, onClose, title, getData, element = {
             setIncludeButtSleeveInlay(!!element.buttsleeveInlayQuantity);
             setIncludeForearmPointVeneers(!!element.forearmPointVeneerDescription);
             setIncludeButtSleevePointVeneers(!!element.buttSleevePointVeneerDescription);
+            setIncludeForearmPointInlay(!!element.forearmPointInlayDescription);
+            setIncludeButtSleevePointInlay(!!element.buttSleevePointInlayDescription);
             setIncludeForearmPointInlay(!!element.forearmPointInlayDescription);
             setIncludeButtSleevePointInlay(!!element.buttSleevePointInlayDescription);
         }
@@ -1258,48 +1262,51 @@ function CueDialog({ open, onClose, title, getData, element = {
                                     <div>
                                         <div className='form-row'>
                                             <h3 className="dialog-header3">Forearm Point</h3>
-                                            <DefaultToggle titleOn={"Include Forearm Point Veneers"} titleOff={"Exclude Forearm Point Veneers"} onChange={setIncludeForearmPointVeneers}/>
-                                            <DefaultToggle titleOn={"Include Forearm Point Inlays"} titleOff={"Exclude Forearm Point Inlays"} onChange={setIncludeForearmPointInlay} />
+                                            <DefaultToggle titleOn={"Include Forearm Points"} titleOff={"Exclude Forearm Points"} onChange={setIncludeForarmPoint} />
+                                            {includeForearmPoint && <DefaultToggle titleOn={"Include Forearm Point Veneers"} titleOff={"Exclude Forearm Point Veneers"} onChange={setIncludeForearmPointVeneers}/>}
+                                            {includeForearmPoint && <DefaultToggle titleOn={"Include Forearm Point Inlays"} titleOff={"Exclude Forearm Point Inlays"} onChange={setIncludeForearmPointInlay} />}
                                         </div>
-                                        <div className='form-row'>
-                                            <div className='flex-1'>
-                                                <FormField
-                                                    title="Quantity"
-                                                    type="number"
-                                                    value={forearmPointQuantity}
-                                                    {...register("forearmPointQuantity")}
-                                                />
-                                            </div>
-                                            <div className='flex-1'>
-                                                <FormSelect
-                                                    title="Size"
-                                                    value={forearmPointSize}
-                                                    options={BASIC_SIZE_OPTIONS}
-                                                    displayKey="label"
-                                                    {...register("forearmPointSize")}
-                                                />
-                                            </div>
-                                        </div>
-                                        {includeForearmPointVeneers &&<div className='form-row'>
-                                            <div className='flex-1'>
-                                                <FormTextArea
-                                                    title="Forearm Point Veneer Description"
-                                                    value={forearmPointVeneerDescription}
-                                                    {...register("forearmPointVeneerDescription")}
-                                                />
-                                            </div>
-                                        </div>}
-                                        {includeForearmPointInlay && (
+                                        {includeForearmPoint && ( <>
                                             <div className='form-row'>
                                                 <div className='flex-1'>
-                                                    <FormTextArea
-                                                        title="Forearm Point Inlay Description"
-                                                        value={forearmPointInlayDescription}
-                                                        {...register("forearmPointInlayDescription")}
+                                                    <FormField
+                                                        title="Quantity"
+                                                        type="number"
+                                                        value={forearmPointQuantity}
+                                                        {...register("forearmPointQuantity")}
+                                                    />
+                                                </div>
+                                                <div className='flex-1'>
+                                                    <FormSelect
+                                                        title="Size"
+                                                        value={forearmPointSize}
+                                                        options={BASIC_SIZE_OPTIONS}
+                                                        displayKey="label"
+                                                        {...register("forearmPointSize")}
                                                     />
                                                 </div>
                                             </div>
-                                        )}
+                                            {includeForearmPointVeneers &&<div className='form-row'>
+                                                <div className='flex-1'>
+                                                    <FormTextArea
+                                                        title="Forearm Point Veneer Description"
+                                                        value={forearmPointVeneerDescription}
+                                                        {...register("forearmPointVeneerDescription")}
+                                                    />
+                                                </div>
+                                            </div>}
+                                            {includeForearmPointInlay && (
+                                                <div className='form-row'>
+                                                    <div className='flex-1'>
+                                                        <FormTextArea
+                                                            title="Forearm Point Inlay Description"
+                                                            value={forearmPointInlayDescription}
+                                                            {...register("forearmPointInlayDescription")}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </>)}
                                     </div>
                                 </div>
 
@@ -1492,49 +1499,52 @@ function CueDialog({ open, onClose, title, getData, element = {
                                     <div>
                                         <div className='form-row'>
                                             <h3 className="dialog-header3">Butt Sleeve Point</h3>
-                                            <DefaultToggle titleOn={"Include Butt Sleeve Point Veneers"} titleOff={"Exclude  Butt Sleeve Point Veneers"} onChange={setIncludeButtSleevePointVeneers}/>
-                                            <DefaultToggle titleOn={"Include Butt Sleeve Point Inlays"} titleOff={"Exclude Butt Sleeve Point Inlays"} onChange={setIncludeButtSleevePointInlay} />
+                                            <DefaultToggle titleOn={"Include Butt Sleeve Points"} titleOff={"Exclude Butt Sleeve Points"} onChange={setIncludeButtSleevePoint} />
+                                            {includeButtSleevePoint && <DefaultToggle titleOn={"Include Butt Sleeve Point Veneers"} titleOff={"Exclude  Butt Sleeve Point Veneers"} onChange={setIncludeButtSleevePointVeneers}/>}
+                                            {includeButtSleevePoint && <DefaultToggle titleOn={"Include Butt Sleeve Point Inlays"} titleOff={"Exclude Butt Sleeve Point Inlays"} onChange={setIncludeButtSleevePointInlay} />}
                                         </div>
                                         
-                                        <div className='form-row'>
-                                            <div className='flex-1'>
-                                                <FormField
-                                                    title="Quantity"
-                                                    type="number"
-                                                    value={buttSleevePointQuantity}
-                                                    {...register("buttSleevePointQuantity")}
-                                                />
-                                            </div>
-                                            <div className='flex-1'>
-                                                <FormSelect
-                                                    title="Size"
-                                                    value={buttSleevePointSize}
-                                                    options={BASIC_SIZE_OPTIONS}
-                                                    displayKey="label"
-                                                    {...register("buttSleevePointSize")}
-                                                />
-                                            </div>
-                                        </div>
-                                        {includeButtSleevePointVeneers &&<div className='form-row'>
-                                            <div className='flex-1'>
-                                                <FormTextArea
-                                                    title="Butt Sleeve Point Veneer Description"
-                                                    value={buttSleevePointVeneerDescription}
-                                                    {...register("buttSleevePointVeneerDescription")}
-                                                />
-                                            </div>
-                                        </div>}
-                                        {includeButtSleevePointInlay && (
+                                        {includeButtSleevePoint && (<>
                                             <div className='form-row'>
                                                 <div className='flex-1'>
-                                                    <FormTextArea
-                                                        title="Butt Sleeve Point Inlay Description"
-                                                        value={buttSleevePointInlayDescription}
-                                                        {...register("buttSleevePointInlayDescription")}
+                                                    <FormField
+                                                        title="Quantity"
+                                                        type="number"
+                                                        value={buttSleevePointQuantity}
+                                                        {...register("buttSleevePointQuantity")}
+                                                    />
+                                                </div>
+                                                <div className='flex-1'>
+                                                    <FormSelect
+                                                        title="Size"
+                                                        value={buttSleevePointSize}
+                                                        options={BASIC_SIZE_OPTIONS}
+                                                        displayKey="label"
+                                                        {...register("buttSleevePointSize")}
                                                     />
                                                 </div>
                                             </div>
-                                        )}
+                                            {includeButtSleevePointVeneers &&<div className='form-row'>
+                                                <div className='flex-1'>
+                                                    <FormTextArea
+                                                        title="Butt Sleeve Point Veneer Description"
+                                                        value={buttSleevePointVeneerDescription}
+                                                        {...register("buttSleevePointVeneerDescription")}
+                                                    />
+                                                </div>
+                                            </div>}
+                                            {includeButtSleevePointInlay && (
+                                                <div className='form-row'>
+                                                    <div className='flex-1'>
+                                                        <FormTextArea
+                                                            title="Butt Sleeve Point Inlay Description"
+                                                            value={buttSleevePointInlayDescription}
+                                                            {...register("buttSleevePointInlayDescription")}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </>)}
                                     </div>
                                 </div>
                             </div>
