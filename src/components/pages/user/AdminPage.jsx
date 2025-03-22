@@ -1218,7 +1218,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                     <div>
                                         <div className='form-row'>
                                             <h3 className="dialog-header3">Forearm Inlay</h3>
-                                            <DefaultToggle titleOn={"Include"} titleOff={"Exclude"} onChange={setIncludeForearmInlay} />
+                                            <DefaultToggle titleOn={"Include Forearm Inlays"} titleOff={"Exclude Forearm Inlays"} onChange={setIncludeForearmInlay} />
                                         </div>
                                         {includeForearmInlay && (
                                             <div className='form-row'>
@@ -1244,7 +1244,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                         {includeForearmInlay && (
                                             <div className='form-row'>
                                                 <div className='flex-1'>
-                                                    <FormField
+                                                    <FormTextArea
                                                         title="Forearm Inlay Description"
                                                         value={forearmInlayDescription}
                                                         {...register("forearmInlayDescription")}
@@ -1258,8 +1258,8 @@ function CueDialog({ open, onClose, title, getData, element = {
                                     <div>
                                         <div className='form-row'>
                                             <h3 className="dialog-header3">Forearm Point</h3>
-                                            <DefaultToggle titleOn={"Include Veneers"} titleOff={"Exclude Veneers"} onChange={setIncludeForearmPointVeneers}/>
-                                            <DefaultToggle titleOn={"Include Point Inlays"} titleOff={"Exclude Point Inlays"} onChange={setIncludeForearmPointInlay} />
+                                            <DefaultToggle titleOn={"Include Forearm Point Veneers"} titleOff={"Exclude Forearm Point Veneers"} onChange={setIncludeForearmPointVeneers}/>
+                                            <DefaultToggle titleOn={"Include Forearm Point Inlays"} titleOff={"Exclude Forearm Point Inlays"} onChange={setIncludeForearmPointInlay} />
                                         </div>
                                         <div className='form-row'>
                                             <div className='flex-1'>
@@ -1282,7 +1282,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                         </div>
                                         {includeForearmPointVeneers &&<div className='form-row'>
                                             <div className='flex-1'>
-                                                <FormField
+                                                <FormTextArea
                                                     title="Forearm Point Veneer Description"
                                                     value={forearmPointVeneerDescription}
                                                     {...register("forearmPointVeneerDescription")}
@@ -1292,7 +1292,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                         {includeForearmPointInlay && (
                                             <div className='form-row'>
                                                 <div className='flex-1'>
-                                                    <FormField
+                                                    <FormTextArea
                                                         title="Forearm Point Inlay Description"
                                                         value={forearmPointInlayDescription}
                                                         {...register("forearmPointInlayDescription")}
@@ -1307,7 +1307,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                 <div>
                                     <div className='form-row'>
                                         <h2 className="dialog-header2">Handle Attributes</h2>
-                                        <DefaultToggle titleOn={"Include Wrap"} titleOff={"Exclude Wrap"} onChange={setIncludeWrap} />
+                                        <DefaultToggle titleOn={"Include Handle Wrap"} titleOff={"Exclude Handle Wrap"} onChange={setIncludeWrap} />
                                     </div>
                                     
                                     <div>
@@ -1317,7 +1317,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                     <div className='flex-1'>
                                                         {isCustomWrapType ? (
                                                             // Custom wrap type input
-                                                            <FormField
+                                                            <FormTextArea
                                                                 title="Custom Wrap Type"
                                                                 type="text"
                                                                 value={handleWrapType === 'other' ? '' : handleWrapType}
@@ -1354,7 +1354,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                                 />
                                                             ) : ['leather', 'embossed_leather', 'stacked_leather'].includes(handleWrapType) ? (
                                                                 isCustomColor ? (
-                                                                    <FormField
+                                                                    <FormTextArea
                                                                         title="Custom Leather Color"
                                                                         type="text"
                                                                         value={handleWrapColor === 'other' ? '' : handleWrapColor}
@@ -1396,7 +1396,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                         {/* Move Handle Inlay inside here instead of as a separate section */}
                                         <div className='form-row'>
                                             <h3 className="dialog-header3">Handle Inlay</h3>
-                                            <DefaultToggle titleOn={"Include Inlays"} titleOff={"Exclude Inlays"} onChange={setIncludeHandleInlay} />
+                                            <DefaultToggle titleOn={"Include Handle Inlays"} titleOff={"Exclude Handle Inlays"} onChange={setIncludeHandleInlay} />
                                         </div>
                                         {includeHandleInlay && (
                                             <div className='form-row'>
@@ -1422,7 +1422,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                         {includeHandleInlay && (
                                             <div className='form-row'>
                                                 <div className='flex-1'>
-                                                    <FormField
+                                                    <FormTextArea
                                                         title="Handle Inlay Description"
                                                         value={handleInlayDescription}
                                                         {...register("handleInlayDescription")}
@@ -1452,7 +1452,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                     <div>
                                         <div className='form-row'>
                                             <h3 className="dialog-header3">Buttsleeve Inlay</h3>
-                                            <DefaultToggle titleOn={"Include"} titleOff={"Exclude"} onChange={setIncludeButtSleeveInlay} />
+                                            <DefaultToggle titleOn={"Include Butt Sleeve Inlay"} titleOff={"Exclude Butt Sleeve Inlay"} onChange={setIncludeButtSleeveInlay} />
                                         </div>
                                         {includeButtSleeveInlay && (
                                             <div className='form-row'>
@@ -1478,7 +1478,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                         {includeButtSleeveInlay && (
                                             <div className='form-row'>
                                                 <div className='flex-1'>
-                                                    <FormField
+                                                    <FormTextArea
                                                         title="Butt Sleeve Inlay Description"
                                                         value={buttsleeveInlayDescription}
                                                         {...register("buttsleeveInlayDescription")}
@@ -1492,8 +1492,8 @@ function CueDialog({ open, onClose, title, getData, element = {
                                     <div>
                                         <div className='form-row'>
                                             <h3 className="dialog-header3">Butt Sleeve Point</h3>
-                                            <DefaultToggle titleOn={"Include Veneers"} titleOff={"Exclude Veneers"} onChange={setIncludeButtSleevePointVeneers}/>
-                                            <DefaultToggle titleOn={"Include Point Inlays"} titleOff={"Exclude Point Inlays"} onChange={setIncludeButtSleevePointInlay} />
+                                            <DefaultToggle titleOn={"Include Butt Sleeve Point Veneers"} titleOff={"Exclude  Butt Sleeve Point Veneers"} onChange={setIncludeButtSleevePointVeneers}/>
+                                            <DefaultToggle titleOn={"Include Butt Sleeve Point Inlays"} titleOff={"Exclude Butt Sleeve Point Inlays"} onChange={setIncludeButtSleevePointInlay} />
                                         </div>
                                         
                                         <div className='form-row'>
@@ -1517,7 +1517,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                         </div>
                                         {includeButtSleevePointVeneers &&<div className='form-row'>
                                             <div className='flex-1'>
-                                                <FormField
+                                                <FormTextArea
                                                     title="Butt Sleeve Point Veneer Description"
                                                     value={buttSleevePointVeneerDescription}
                                                     {...register("buttSleevePointVeneerDescription")}
@@ -1527,7 +1527,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                         {includeButtSleevePointInlay && (
                                             <div className='form-row'>
                                                 <div className='flex-1'>
-                                                    <FormField
+                                                    <FormTextArea
                                                         title="Butt Sleeve Point Inlay Description"
                                                         value={buttSleevePointInlayDescription}
                                                         {...register("buttSleevePointInlayDescription")}
