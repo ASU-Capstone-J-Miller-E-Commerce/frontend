@@ -4,7 +4,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, B
 import { useForm } from 'react-hook-form';
 import { FormField, FormTextArea, FormSelect, DefaultToggle, FormMultiSelect } from '../../util/Inputs';
 import { DefaultButton } from '../../util/Buttons';
-import { getUsers, createUser, editUser, changePassword, deleteUser, getAccessories, createAccessory, editAccessory, deleteAccessory } from '../../../util/requests';
+import { getUsers, createUser, editUser, changePassword, deleteUser, getAccessories, createAccessory, editAccessory, deleteAccessory, getMaterials } from '../../../util/requests';
 import { receiveResponse } from '../../../util/notifications';
 import { AdminSkeletonLoader } from '../../util/Util';
 import { useSelector } from 'react-redux';
@@ -329,7 +329,14 @@ export default function AdminPage() {
                     });
                 break;
             case 'Materials':
-                setLoading(false);
+                getMaterials()
+                    .then((res) => {
+                        setLoading(false);
+                        setMaterialData(res.data);
+                    })
+                    .catch((err) => {
+                        setLoading(false);
+                    });
                 break;
             case 'Users':
                 getUsers()
@@ -478,7 +485,7 @@ function AdminContent({ adminPage, loading, onEditClick, onPasswordEditClick, on
         case 'Accessories':
             return <AccessoriesTable data={accessoryData} onEditClick={onEditClick} onDeleteClick={onDeleteClick} />;
         case 'Materials':
-            return <MaterialsTable data={data} onEditClick={onEditClick} onDeleteClick={onDeleteClick} />;
+            return <MaterialsTable data={materialData} onEditClick={onEditClick} onDeleteClick={onDeleteClick} />;
         case 'Users':
             return <UsersTable data={userData} onEditClick={onEditClick} onPasswordEditClick={onPasswordEditClick} onDeleteClick={onDeleteClick} />;
         default:
@@ -1391,9 +1398,10 @@ function AccessoryDialog({ open, onClose, title, getData, element = { name: '', 
 }
 
 function MaterialDialog({ open, onClose, title, getData, element = false }) {
+    const [materialType, setMaterialType] = useState('');
+
     const getDefaultValues = (type) => {
         const commonDefaults = {
-            materialType: type || '',
             status: '',
             description: '',
             tier: '',
@@ -1433,27 +1441,89 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
         defaultValues: element || getDefaultValues('')
     });
 
-    const materialType = watch("materialType");
-    useEffect(() => {
-        if (materialType && materialType !== '') {
-            // Keep current materialType when resetting
-            reset({...getDefaultValues(materialType), materialType});
-        }
-    }, [materialType]);
+    const existingMaterial = !!element._id;
     
     useEffect(() => {
         if (open) {
-            if (element && element.materialType) {
+            if (element && element._id) {
+                // Determine material type from element properties
+                if (element.commonName || element.scientificName || element.jankaHardness) {
+                    setMaterialType('wood');
+                } else if (element.crystalName || element.crystalCategory || element.psychologicalCorrespondence) {
+                    setMaterialType('crystal');
+                }
                 reset(element);
             } else {
-                reset(getDefaultValues(''));
+                // New material
+                setMaterialType('');
+                reset(getDefaultValues());
             }
         }
     }, [open, reset]);
 
+    useEffect(() => {
+        if (materialType && !element._id) {
+            reset({ ...getDefaultValues() });
+        }
+    }, [materialType]);
+
     const onSubmit = (data) => {
-        console.log(data);
-        onClose();
+        // Add logic based on material type
+        const materialData = { ...data };
+
+        if (materialType === 'wood') {
+            // Create or edit wood
+            if (existingMaterial) {
+                // Edit wood
+                editMaterial(data._id, data.commonName, data.description,
+                    data.status, data.tier, data.colors, data.alternateName1,
+                    data.alternateName2, data.scientificName, data.brief,
+                    data.jankaHardness, data.treeHeight, data.trunkDiameter,
+                    data.geographicOrigin, data.streaksVeins, data.texture,
+                    data.grainPattern, data.metaphysicalTags)
+                    .then(res => {
+                        receiveResponse(res);
+                        getData();
+                        onClose();
+                    });
+            } else {
+                // Create wood
+                createMaterial(data.commonName, data.description,
+                    data.status, data.tier, data.colors, data.alternateName1,
+                    data.alternateName2, data.scientificName, data.brief,
+                    data.jankaHardness, data.treeHeight, data.trunkDiameter,
+                    data.geographicOrigin, data.streaksVeins, data.texture,
+                    data.grainPattern, data.metaphysicalTags)
+                    .then(res => {
+                        receiveResponse(res);
+                        getData();
+                        onClose();
+                    });
+            }
+        } else if (materialType === 'crystal') {
+            // Create or edit crystal
+            if (existingMaterial) {
+                // Edit crystal
+                editMaterial(data._id, data.crystalName, data.description,
+                    data.status, data.tier, data.colors, data.crystalCategory,
+                    data.psychologicalCorrespondence)
+                    .then(res => {
+                        receiveResponse(res);
+                        getData();
+                        onClose();
+                    });
+            } else {
+                // Create crystal
+                createMaterial(data.crystalName, data.description,
+                    data.status, data.tier, data.colors, data.crystalCategory,
+                    data.psychologicalCorrespondence)
+                    .then(res => {
+                        receiveResponse(res);
+                        getData();
+                        onClose();
+                    });
+            }
+        }
     };
 
     const formRef = useRef(null);
@@ -1476,18 +1546,7 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
         { value: 'tier4', label: 'Tier 4' }
     ];
 
-    const chakraOptions = [
-        { value: 'root', label: 'Root' },
-        { value: 'sacral', label: 'Sacral' },
-        { value: 'solar', label: 'Solar Plexus' },
-        { value: 'heart', label: 'Heart' },
-        { value: 'throat', label: 'Throat' },
-        { value: 'third_eye', label: 'Third Eye' },
-        { value: 'crown', label: 'Crown' }
-    ];
-
     const renderWoodAttributes = () => {
-        // Watch all wood-specific values
         const commonName = watch("commonName");
         const alternateName1 = watch("alternateName1");
         const alternateName2 = watch("alternateName2");
@@ -1844,12 +1903,10 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                         <FormSelect
                             title="Material Type*"
                             value={materialType}
-                            error={errors.materialType && errors.materialType.message}
                             options={materialTypeOptions}
                             displayKey="label"
-                            {...register("materialType", {
-                                required: "Material Type is required"
-                            })}
+                            valueKey="value"
+                            onChange={(e) => setMaterialType(e.target.value)}
                         />
                         {materialType === 'wood' && renderWoodAttributes()}
                         {materialType === 'crystal' && renderCrystalAttributes()}

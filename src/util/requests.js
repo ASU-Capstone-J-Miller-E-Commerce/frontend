@@ -159,3 +159,12 @@ export function deleteAccessory(id) {
         method: "DELETE",
     });
 }
+
+// admin materials sections
+
+export function getMaterials() {
+    return _ajax({
+        url: "/admin/materials",
+        method: "GET",
+    });
+}
