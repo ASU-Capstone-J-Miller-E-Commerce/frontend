@@ -306,10 +306,10 @@ export default function AdminPage() {
     const [passwordDialogProps, setPasswordDialogProps] = useState({});
     const [deleteDialogProps, setDeleteDialogProps] = useState({});
 
-    const [cueData, setCueData] = useState([]);
-    const [accessoryData, setAccessoryData] = useState([]);
-    const [materialData, setMaterialData] = useState([]);
-    const [userData, setUserData] = useState([]);
+    const [cueData, setCueData] = useState(null);
+    const [accessoryData, setAccessoryData] = useState(null);
+    const [materialData, setMaterialData] = useState(null);
+    const [userData, setUserData] = useState(null);
 
     const getData = async () => {
         setLoading(true);
@@ -354,7 +354,15 @@ export default function AdminPage() {
     };
 
     useEffect(() => {
-        getData();
+        // Only load data if it's null for the current page
+        if (
+            (adminPage === 'Cues' && cueData === null) ||
+            (adminPage === 'Accessories' && accessoryData === null) ||
+            (adminPage === 'Materials' && materialData === null) ||
+            (adminPage === 'Users' && userData === null)
+        ) {
+            getData();
+        }
     }, [adminPage]);
 
     const handleDialogOpen = (props) => {
@@ -391,7 +399,7 @@ export default function AdminPage() {
         <div>
             <AdminHeader setAdminPage={setAdminPage} adminPage={adminPage} loading={loading} onPlusClick={handleDialogOpen} />
             <div className='user-content'>
-                <AdminContent adminPage={adminPage} loading={loading} onEditClick={handleDialogOpen} onPasswordEditClick={handlePasswordDialogOpen} onDeleteClick={handleDeleteDialogOpen} cueData={cueData} accessoryData={accessoryData} materialData={materialData} userData={userData}/>
+                <AdminContent adminPage={adminPage} loading={loading} onEditClick={handleDialogOpen} onPasswordEditClick={handlePasswordDialogOpen} onDeleteClick={handleDeleteDialogOpen} cueData={cueData || []} accessoryData={accessoryData || []} materialData={materialData || []} userData={userData || []} />
             </div>
             {adminPage === 'Cues' && <CueDialog open={dialogOpen} onClose={handleDialogClose} getData={getData} {...dialogProps} />}
             {adminPage === 'Accessories' && <AccessoryDialog open={dialogOpen} onClose={handleDialogClose} getData={getData} {...dialogProps} />}
