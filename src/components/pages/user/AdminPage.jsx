@@ -4,7 +4,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, B
 import { useForm } from 'react-hook-form';
 import { FormField, FormTextArea, FormSelect, DefaultToggle, FormMultiSelect } from '../../util/Inputs';
 import { DefaultButton } from '../../util/Buttons';
-import { getUsers, createUser, editUser, changePassword, deleteUser, getAccessories, createAccessory, editAccessory, deleteAccessory, getMaterials } from '../../../util/requests';
+import { getUsers, createUser, editUser, changePassword, deleteUser, getAccessories, createAccessory, editAccessory, deleteAccessory, getMaterials, createWood, editWood, createCrystal, editCrystal, deleteCrystal, deleteWood } from '../../../util/requests';
 import { receiveResponse } from '../../../util/notifications';
 import { AdminSkeletonLoader } from '../../util/Util';
 import { useSelector } from 'react-redux';
@@ -584,22 +584,27 @@ function AccessoriesTable({ data, onEditClick, onDeleteClick }) {
     );
 }
 
-function MaterialsTable({ data, onEditClick }) {
+function MaterialsTable({ data, onEditClick, onDeleteClick }) {
     const columns = [
         {
-            accessorKey: 'firstName',
-            header: 'First Name',
+            header: 'Type',
+            accessorFn: (row) => row.commonName ? 'Wood' : row.crystalName ? 'Stone/Crystal' : 'Unknown',
+            id: 'materialType',
         },
         {
-            accessorKey: 'lastName',
-            header: 'Last Name',
+            header: 'Name',
+            accessorFn: (row) => row.commonName || row.crystalName || '',
+            id: 'materialName',
         },
         {
-            accessorKey: 'age',
-            header: 'Age',
+            header: 'Tier',
+            accessorKey: 'tier',
         },
         {
-            id: 'actions',
+            header: 'Status',
+            accessorKey: 'status',
+        },
+        {
             header: 'Actions',
             Cell: ({ row }) => (
                 <div className='admin-actions'>
@@ -607,7 +612,13 @@ function MaterialsTable({ data, onEditClick }) {
                         className='fa-solid fa-pencil admin-action-button'
                         onClick={() => onEditClick({ element: row.original })}
                     />
-                    <button className='fa-solid fa-trash admin-action-button' />
+                    <button
+                        className='fa-solid fa-trash admin-action-button'
+                        onClick={() => onDeleteClick({
+                            element: row.original,
+                            title: `Delete ${row.original.commonName ? 'Wood' : 'Stone/Crystal'} '${row.original.commonName || row.original.crystalName}'`
+                        })}
+                    />
                 </div>
             ),
         },
@@ -1468,60 +1479,91 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
     }, [materialType]);
 
     const onSubmit = (data) => {
-        // Add logic based on material type
-        const materialData = { ...data };
-
         if (materialType === 'wood') {
-            // Create or edit wood
             if (existingMaterial) {
-                // Edit wood
-                editMaterial(data._id, data.commonName, data.description,
-                    data.status, data.tier, data.colors, data.alternateName1,
-                    data.alternateName2, data.scientificName, data.brief,
-                    data.jankaHardness, data.treeHeight, data.trunkDiameter,
-                    data.geographicOrigin, data.streaksVeins, data.texture,
-                    data.grainPattern, data.metaphysicalTags)
+                editWood(
+                    data._id,
+                    data.commonName,
+                    data.description,
+                    data.status,
+                    data.tier,
+                    data.colors,
+                    data.alternateName1,
+                    data.alternateName2,
+                    data.scientificName,
+                    data.brief,
+                    data.jankaHardness,
+                    data.treeHeight,
+                    data.trunkDiameter,
+                    data.geographicOrigin,
+                    data.streaksVeins,
+                    data.texture,
+                    data.grainPattern,
+                    data.metaphysicalTags
+                )
                     .then(res => {
                         receiveResponse(res);
                         getData();
                         onClose();
-                    });
+                    })
             } else {
-                // Create wood
-                createMaterial(data.commonName, data.description,
-                    data.status, data.tier, data.colors, data.alternateName1,
-                    data.alternateName2, data.scientificName, data.brief,
-                    data.jankaHardness, data.treeHeight, data.trunkDiameter,
-                    data.geographicOrigin, data.streaksVeins, data.texture,
-                    data.grainPattern, data.metaphysicalTags)
+                createWood(
+                    data.commonName,
+                    data.description,
+                    data.status,
+                    data.tier,
+                    data.colors,
+                    data.alternateName1,
+                    data.alternateName2,
+                    data.scientificName,
+                    data.brief,
+                    data.jankaHardness,
+                    data.treeHeight,
+                    data.trunkDiameter,
+                    data.geographicOrigin,
+                    data.streaksVeins,
+                    data.texture,
+                    data.grainPattern,
+                    data.metaphysicalTags
+                )
                     .then(res => {
                         receiveResponse(res);
                         getData();
                         onClose();
-                    });
+                    })
             }
         } else if (materialType === 'crystal') {
-            // Create or edit crystal
             if (existingMaterial) {
-                // Edit crystal
-                editMaterial(data._id, data.crystalName, data.description,
-                    data.status, data.tier, data.colors, data.crystalCategory,
-                    data.psychologicalCorrespondence)
+                editCrystal(
+                    data._id,
+                    data.crystalName,
+                    data.description,
+                    data.status,
+                    data.tier,
+                    data.colors,
+                    data.crystalCategory,
+                    data.psychologicalCorrespondence
+                )
                     .then(res => {
                         receiveResponse(res);
                         getData();
                         onClose();
-                    });
+                    })
             } else {
-                // Create crystal
-                createMaterial(data.crystalName, data.description,
-                    data.status, data.tier, data.colors, data.crystalCategory,
-                    data.psychologicalCorrespondence)
+                createCrystal(
+                    data.crystalName,
+                    data.description,
+                    data.status,
+                    data.tier,
+                    data.colors,
+                    data.crystalCategory,
+                    data.psychologicalCorrespondence
+                )
                     .then(res => {
                         receiveResponse(res);
                         getData();
                         onClose();
-                    });
+                    })
             }
         }
     };
@@ -1540,10 +1582,10 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
     ];
 
     const tierOptions = [
-        { value: 'tier1', label: 'Tier 1' },
-        { value: 'tier2', label: 'Tier 2' },
-        { value: 'tier3', label: 'Tier 3' },
-        { value: 'tier4', label: 'Tier 4' }
+        { label: 'Tier 1' },
+        { label: 'Tier 2' },
+        { label: 'Tier 3' },
+        { label: 'Tier 4' }
     ];
 
     const renderWoodAttributes = () => {
@@ -1647,6 +1689,7 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                             value={tier}
                             options={tierOptions}
                             displayKey="label"
+                            valueKey="label"
                             error={errors.tier && errors.tier.message}
                             {...register("tier", {
                                 required: "Tier is required"
@@ -1825,6 +1868,7 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                             value={tier}
                             options={tierOptions}
                             displayKey="label"
+                            valueKey="label"
                             error={errors.tier && errors.tier.message}
                             {...register("tier", {
                                 required: "Tier is required"
@@ -2080,7 +2124,26 @@ function DeleteDialog({ open, onClose, title, adminPage, getData, element }) {
                     });
                 break;
             case 'Materials':
-
+                if (element.commonName) {
+                    // It's a wood material
+                    deleteWood(element._id)
+                        .then((res) => {
+                            receiveResponse(res);
+                            getData();
+                            onClose();
+                        })
+                } else if (element.crystalName) {
+                    // It's a crystal material
+                    deleteCrystal(element._id)
+                        .then((res) => {
+                            receiveResponse(res);
+                            getData();
+                            onClose();
+                        })
+                } else {
+                    console.error("Unknown material type");
+                    onClose();
+                }
                 break;
             case 'Users':
                 deleteUser(element.email)
@@ -2106,7 +2169,7 @@ function DeleteDialog({ open, onClose, title, adminPage, getData, element }) {
             <DialogContent>
                 <div className="form-column">
                     <DialogContentText>
-                        Are you sure you want to delete?
+                        This action is irreversible. Are you sure you want to proceed?
                     </DialogContentText>
                     <DialogActions>
                         <div className='form-row'>
