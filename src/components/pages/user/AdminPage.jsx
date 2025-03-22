@@ -979,6 +979,45 @@ function CueDialog({ open, onClose, title, getData, element = {
         }
     }, [handleWrapType, isCustomWrapType, setValue]);
 
+    // Add effect to handle buttType changes
+    useEffect(() => {
+        if (buttType) {
+            // Full Splice mode - reset butt sleeve fields and set forearm points to 4
+            setValue("buttSleeveMaterial", "");
+            setValue("buttsleeveInlayQuantity", "");
+            setValue("buttsleeveInlaySize", "");
+            setValue("buttsleeveInlayDescription", "");
+            setValue("buttSleevePointQuantity", "");
+            setValue("buttSleevePointSize", "");
+            setValue("buttSleevePointVeneerDescription", "");
+            setValue("buttSleevePointInlayDescription", "");
+            setValue("forearmPointQuantity", "4"); // Set forearm points to fixed value of 4
+            
+            // Reset related toggle states
+            setIncludeButtSleeveInlay(false);
+            setIncludeButtSleevePoint(false);
+            setIncludeButtSleevePointVeneers(false);
+            setIncludeButtSleevePointInlay(false);
+        } else {
+            // Full Splice mode - reset butt sleeve fields and set forearm points to 4
+            setValue("buttSleeveMaterial", "");
+            setValue("buttsleeveInlayQuantity", "");
+            setValue("buttsleeveInlaySize", "");
+            setValue("buttsleeveInlayDescription", "");
+            setValue("buttSleevePointQuantity", "");
+            setValue("buttSleevePointSize", "");
+            setValue("buttSleevePointVeneerDescription", "");
+            setValue("buttSleevePointInlayDescription", "");
+            setValue("forearmPointQuantity", ""); // Set forearm points to fixed value of 4
+
+            // Reset related toggle states
+            setIncludeButtSleeveInlay(false);
+            setIncludeButtSleevePoint(false);
+            setIncludeButtSleevePointVeneers(false);
+            setIncludeButtSleevePointInlay(false);
+        }
+    }, [buttType, setValue]);
+
     return (
         <Dialog open={open} onClose={onClose} fullScreen>
             <DialogTitle>
@@ -1452,7 +1491,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                 </div>
 
                                 {/* Butt Sleeve Attributes */}
-                                <div>
+                                {!buttType && (<div>
                                     <h2 className="dialog-header2">Butt Sleeve Attributes</h2>
                                     <div>
                                         <div className='form-row'>
@@ -1557,7 +1596,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                             )}
                                         </>)}
                                     </div>
-                                </div>
+                                </div>)}
                             </div>
                         </div>
                         <div>
