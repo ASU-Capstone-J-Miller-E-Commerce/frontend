@@ -811,6 +811,9 @@ function CueDialog({ open, onClose, title, getData, element = {
     handleInlaySize: '', // Add this new field
     forearmPointInlayDescription: '', // Add this new field
     buttSleevePointInlayDescription: '', // Add this new field
+    forearmInlayDescription: '',
+    handleInlayDescription: '', // Add this new field
+    buttsleeveInlayDescription: '', // Add this new field
   }}) {
     const [includeWrap, setIncludeWrap] = useState(false);
     const [includeForearmPointVeneers, setIncludeForearmPointVeneers] = useState(false);
@@ -893,6 +896,9 @@ function CueDialog({ open, onClose, title, getData, element = {
     const handleInlaySize = watch("handleInlaySize");
     const forearmPointInlayDescription = watch("forearmPointInlayDescription");
     const buttSleevePointInlayDescription = watch("buttSleevePointInlayDescription");
+    const forearmInlayDescription = watch("forearmInlayDescription");
+    const handleInlayDescription = watch("handleInlayDescription");
+    const buttsleeveInlayDescription = watch("buttsleeveInlayDescription");
 
     const materialOptions = [
         { value: 'juma', label: 'Juma' },
@@ -1235,6 +1241,17 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                 </div>
                                             </div>
                                         )}
+                                        {includeForearmInlay && (
+                                            <div className='form-row'>
+                                                <div className='flex-1'>
+                                                    <FormField
+                                                        title="Forearm Inlay Description"
+                                                        value={forearmInlayDescription}
+                                                        {...register("forearmInlayDescription")}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                     
                                     {/* Moved Forearm Point here */}
@@ -1402,6 +1419,17 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                 </div>
                                             </div>
                                         )}
+                                        {includeHandleInlay && (
+                                            <div className='form-row'>
+                                                <div className='flex-1'>
+                                                    <FormField
+                                                        title="Handle Inlay Description"
+                                                        value={handleInlayDescription}
+                                                        {...register("handleInlayDescription")}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 
@@ -1443,6 +1471,17 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                         options={BASIC_SIZE_OPTIONS}
                                                         displayKey="label"
                                                         {...register("buttsleeveInlaySize")}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+                                        {includeButtSleeveInlay && (
+                                            <div className='form-row'>
+                                                <div className='flex-1'>
+                                                    <FormField
+                                                        title="Butt Sleeve Inlay Description"
+                                                        value={buttsleeveInlayDescription}
+                                                        {...register("buttsleeveInlayDescription")}
                                                     />
                                                 </div>
                                             </div>
