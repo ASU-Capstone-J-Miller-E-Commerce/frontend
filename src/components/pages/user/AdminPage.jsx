@@ -361,6 +361,13 @@ const LEATHER_COLOR_OPTIONS = [
     { value: 'other', label: 'Other' }
 ];
 
+// Add this constant with the ring options
+const RING_TYPE_OPTIONS = [
+    { value: 'accent_rings', label: 'Accent Rings' },
+    { value: 'simple_inlays', label: 'Simple Inlays' },
+    { value: 'intricate_inlays', label: 'Intricate Inlays' },
+];
+
 export default function AdminPage() {
     const user = useSelector(state => state.user);
     const isAdmin = user?.role === "Admin";
@@ -790,9 +797,13 @@ function CueDialog({ open, onClose, title, getData, element = {
     handleWrapType: '',
     handleWrapColor: '',
     buttSleeveMaterial: '',
-    jointRings: '',
-    handleRings: '',
-    buttRings: '',
+    // Remove these three properties
+    // jointRings: '',
+    // handleRings: '',
+    // buttRings: '',
+    // Add these new properties
+    ringType: '',
+    ringsDescription: '',
     buttWeight: '',
     buttLength: '',
     buttCapMaterial: 'juma',
@@ -880,9 +891,6 @@ function CueDialog({ open, onClose, title, getData, element = {
     const handleWrapType = watch("handleWrapType");
     const handleWrapColor = watch("handleWrapColor");
     const buttSleeveMaterial = watch("buttSleeveMaterial");
-    const jointRings = watch("jointRings");
-    const handleRings = watch("handleRings");
-    const buttRings = watch("buttRings");
     const buttWeight = watch("buttWeight");
     const buttLength = watch("buttLength");
     const buttCapMaterial = watch("buttCapMaterial");
@@ -903,6 +911,9 @@ function CueDialog({ open, onClose, title, getData, element = {
     const forearmInlayDescription = watch("forearmInlayDescription");
     const handleInlayDescription = watch("handleInlayDescription");
     const buttsleeveInlayDescription = watch("buttsleeveInlayDescription");
+    // Add these new watches
+    const ringType = watch("ringType");
+    const ringsDescription = watch("ringsDescription");
 
     const materialOptions = [
         { value: 'juma', label: 'Juma' },
@@ -1554,29 +1565,20 @@ function CueDialog({ open, onClose, title, getData, element = {
                             <div className='form-row'>
                                 <div className='flex-1'>
                                     <FormSelect
-                                        title="Joint Rings Material"
-                                        value={jointRings}
-                                        options={materialOptions}
+                                        title="Ring Type"
+                                        value={ringType}
+                                        options={RING_TYPE_OPTIONS}
                                         displayKey="label"
-                                        {...register("jointRings")}
+                                        {...register("ringType")}
                                     />
                                 </div>
+                            </div>
+                            <div className='form-row'>
                                 <div className='flex-1'>
-                                    <FormSelect
-                                        title="Handle Rings Material"
-                                        value={handleRings}
-                                        options={materialOptions}
-                                        displayKey="label"
-                                        {...register("handleRings")}
-                                    />
-                                </div>
-                                <div className='flex-1'>
-                                    <FormSelect
-                                        title="Butt Rings Material"
-                                        value={buttRings}
-                                        options={materialOptions}
-                                        displayKey="label"
-                                        {...register("buttRings")}
+                                    <FormTextArea
+                                        title="Rings Description"
+                                        value={ringsDescription}
+                                        {...register("ringsDescription")}
                                     />
                                 </div>
                             </div>
