@@ -808,7 +808,9 @@ function CueDialog({ open, onClose, title, getData, element = {
     buttSleevePointSize: '',
     buttSleevePointVeneerDescription: '', // Changed to plural and array
     handleInlayQuantity: '', // Add this new field
-    handleInlaySize: '' // Add this new field
+    handleInlaySize: '', // Add this new field
+    forearmPointInlayDescription: '', // Add this new field
+    buttSleevePointInlayDescription: '', // Add this new field
   }}) {
     const [includeWrap, setIncludeWrap] = useState(false);
     const [includeForearmPointVeneers, setIncludeForearmPointVeneers] = useState(false);
@@ -817,6 +819,8 @@ function CueDialog({ open, onClose, title, getData, element = {
     const [includeForearmInlay, setIncludeForearmInlay] = useState(false);
     const [includeHandleInlay, setIncludeHandleInlay] = useState(false);
     const [includeButtSleeveInlay, setIncludeButtSleeveInlay] = useState(false);
+    const [includeForearmPointInlay, setIncludeForearmPointInlay] = useState(false);
+    const [includeButtSleevePointInlay, setIncludeButtSleevePointInlay] = useState(false);
 
     const { register, handleSubmit, watch, formState: { errors }, reset, setValue } = useForm({
         defaultValues: element
@@ -831,6 +835,10 @@ function CueDialog({ open, onClose, title, getData, element = {
             setIncludeForearmInlay(!!element.forearmInlayQuantity);
             setIncludeHandleInlay(!!element.handleInlayQuantity);
             setIncludeButtSleeveInlay(!!element.buttsleeveInlayQuantity);
+            setIncludeForearmPointVeneers(!!element.forearmPointVeneerDescription);
+            setIncludeButtSleevePointVeneers(!!element.buttSleevePointVeneerDescription);
+            setIncludeForearmPointInlay(!!element.forearmPointInlayDescription);
+            setIncludeButtSleevePointInlay(!!element.buttSleevePointInlayDescription);
         }
     }, [open, reset]);
 
@@ -883,6 +891,8 @@ function CueDialog({ open, onClose, title, getData, element = {
     const buttsleeveInlaySize = watch("buttsleeveInlaySize");
     const handleInlayQuantity = watch("handleInlayQuantity");
     const handleInlaySize = watch("handleInlaySize");
+    const forearmPointInlayDescription = watch("forearmPointInlayDescription");
+    const buttSleevePointInlayDescription = watch("buttSleevePointInlayDescription");
 
     const materialOptions = [
         { value: 'juma', label: 'Juma' },
@@ -1232,6 +1242,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                         <div className='form-row'>
                                             <h3 className="dialog-header3">Forearm Point</h3>
                                             <DefaultToggle titleOn={"Include Veneers"} titleOff={"Exclude Veneers"} onChange={setIncludeForearmPointVeneers}/>
+                                            <DefaultToggle titleOn={"Include Point Inlays"} titleOff={"Exclude Point Inlays"} onChange={setIncludeForearmPointInlay} />
                                         </div>
                                         <div className='form-row'>
                                             <div className='flex-1'>
@@ -1261,6 +1272,17 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                 />
                                             </div>
                                         </div>}
+                                        {includeForearmPointInlay && (
+                                            <div className='form-row'>
+                                                <div className='flex-1'>
+                                                    <FormField
+                                                        title="Forearm Point Inlay Description"
+                                                        value={forearmPointInlayDescription}
+                                                        {...register("forearmPointInlayDescription")}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 
@@ -1357,7 +1379,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                         {/* Move Handle Inlay inside here instead of as a separate section */}
                                         <div className='form-row'>
                                             <h3 className="dialog-header3">Handle Inlay</h3>
-                                            <DefaultToggle titleOn={"Include"} titleOff={"Exclude"} onChange={setIncludeHandleInlay} />
+                                            <DefaultToggle titleOn={"Include Inlays"} titleOff={"Exclude Inlays"} onChange={setIncludeHandleInlay} />
                                         </div>
                                         {includeHandleInlay && (
                                             <div className='form-row'>
@@ -1432,6 +1454,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                         <div className='form-row'>
                                             <h3 className="dialog-header3">Butt Sleeve Point</h3>
                                             <DefaultToggle titleOn={"Include Veneers"} titleOff={"Exclude Veneers"} onChange={setIncludeButtSleevePointVeneers}/>
+                                            <DefaultToggle titleOn={"Include Point Inlays"} titleOff={"Exclude Point Inlays"} onChange={setIncludeButtSleevePointInlay} />
                                         </div>
                                         
                                         <div className='form-row'>
@@ -1462,6 +1485,17 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                 />
                                             </div>
                                         </div>}
+                                        {includeButtSleevePointInlay && (
+                                            <div className='form-row'>
+                                                <div className='flex-1'>
+                                                    <FormField
+                                                        title="Butt Sleeve Point Inlay Description"
+                                                        value={buttSleevePointInlayDescription}
+                                                        {...register("buttSleevePointInlayDescription")}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
