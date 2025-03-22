@@ -803,10 +803,10 @@ function CueDialog({ open, onClose, title, getData, element = {
     buttsleeveInlaySize: '',
     forearmPointQuantity: '',
     forearmPointSize: '',
-    forearmPointVeneerColors: [], // Changed to plural and array
+    forearmPointVeneerDescription: '', // Changed to plural and array
     buttSleevePointQuantity: '',
     buttSleevePointSize: '',
-    buttSleevePointVeneerColors: [], // Changed to plural and array
+    buttSleevePointVeneerDescription: '', // Changed to plural and array
     handleInlayQuantity: '', // Add this new field
     handleInlaySize: '' // Add this new field
   }}) {
@@ -873,10 +873,10 @@ function CueDialog({ open, onClose, title, getData, element = {
     const buttCapMaterial = watch("buttCapMaterial");
     const forearmPointQuantity = watch("forearmPointQuantity");
     const forearmPointSize = watch("forearmPointSize");
-    const forearmPointVeneerColors = watch("forearmPointVeneerColors");
+    const forearmPointVeneerDescription = watch("forearmPointVeneerDescription");
     const buttSleevePointQuantity = watch("buttSleevePointQuantity");
     const buttSleevePointSize = watch("buttSleevePointSize");
-    const buttSleevePointVeneerColors = watch("buttSleevePointVeneerColors");
+    const buttSleevePointVeneerDescription = watch("buttSleevePointVeneerDescription");
     const forearmInlayQuantity = watch("forearmInlayQuantity");
     const forearmInlaySize = watch("forearmInlaySize");
     const buttsleeveInlayQuantity = watch("buttsleeveInlayQuantity");
@@ -1226,6 +1226,42 @@ function CueDialog({ open, onClose, title, getData, element = {
                                             </div>
                                         )}
                                     </div>
+                                    
+                                    {/* Moved Forearm Point here */}
+                                    <div>
+                                        <div className='form-row'>
+                                            <h3 className="dialog-header3">Forearm Point</h3>
+                                            <DefaultToggle titleOn={"Include Veneers"} titleOff={"Exclude Veneers"} onChange={setIncludeForearmPointVeneers}/>
+                                        </div>
+                                        <div className='form-row'>
+                                            <div className='flex-1'>
+                                                <FormField
+                                                    title="Quantity"
+                                                    type="number"
+                                                    value={forearmPointQuantity}
+                                                    {...register("forearmPointQuantity")}
+                                                />
+                                            </div>
+                                            <div className='flex-1'>
+                                                <FormSelect
+                                                    title="Size"
+                                                    value={forearmPointSize}
+                                                    options={BASIC_SIZE_OPTIONS}
+                                                    displayKey="label"
+                                                    {...register("forearmPointSize")}
+                                                />
+                                            </div>
+                                        </div>
+                                        {includeForearmPointVeneers &&<div className='form-row'>
+                                            <div className='flex-1'>
+                                                <FormField
+                                                    title="Forearm Point Veneer Description"
+                                                    value={forearmPointVeneerDescription}
+                                                    {...register("forearmPointVeneerDescription")}
+                                                />
+                                            </div>
+                                        </div>}
+                                    </div>
                                 </div>
 
                                 {/* Handle Attributes */}
@@ -1390,6 +1426,43 @@ function CueDialog({ open, onClose, title, getData, element = {
                                             </div>
                                         )}
                                     </div>
+                                    
+                                    {/* Moved Butt Sleeve Point here */}
+                                    <div>
+                                        <div className='form-row'>
+                                            <h3 className="dialog-header3">Butt Sleeve Point</h3>
+                                            <DefaultToggle titleOn={"Include Veneers"} titleOff={"Exclude Veneers"} onChange={setIncludeButtSleevePointVeneers}/>
+                                        </div>
+                                        
+                                        <div className='form-row'>
+                                            <div className='flex-1'>
+                                                <FormField
+                                                    title="Quantity"
+                                                    type="number"
+                                                    value={buttSleevePointQuantity}
+                                                    {...register("buttSleevePointQuantity")}
+                                                />
+                                            </div>
+                                            <div className='flex-1'>
+                                                <FormSelect
+                                                    title="Size"
+                                                    value={buttSleevePointSize}
+                                                    options={BASIC_SIZE_OPTIONS}
+                                                    displayKey="label"
+                                                    {...register("buttSleevePointSize")}
+                                                />
+                                            </div>
+                                        </div>
+                                        {includeButtSleevePointVeneers &&<div className='form-row'>
+                                            <div className='flex-1'>
+                                                <FormField
+                                                    title="Butt Sleeve Point Veneer Description"
+                                                    value={buttSleevePointVeneerDescription}
+                                                    {...register("buttSleevePointVeneerDescription")}
+                                                />
+                                            </div>
+                                        </div>}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1425,80 +1498,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            <h1 className="dialog-header1">Points</h1>
-                            <div>
-                                <div className='form-row'>
-                                    <h3 className="dialog-header3">Forearm Point</h3>
-                                    <DefaultToggle titleOn={"Include Veneers"} titleOff={"Exclude Veneers"} onChange={setIncludeForearmPointVeneers}/>
-                                </div>
-                                <div className='form-row'>
-                                    <div className='flex-1'>
-                                        <FormField
-                                            title="Quantity"
-                                            type="number"
-                                            value={forearmPointQuantity}
-                                            {...register("forearmPointQuantity")}
-                                        />
-                                    </div>
-                                    <div className='flex-1'>
-                                        <FormSelect
-                                            title="Size"
-                                            value={forearmPointSize}
-                                            options={BASIC_SIZE_OPTIONS}
-                                            displayKey="label"
-                                            {...register("forearmPointSize")}
-                                        />
-                                    </div>
-                                    {includeForearmPointVeneers &&
-                                        <div className='flex-1'>
-                                        <FormMultiSelect
-                                            title="Point Veneer Colors"
-                                            value={forearmPointVeneerColors || []}
-                                            options={COLOR_OPTIONS}
-                                            displayKey="label"
-                                            {...register("forearmPointVeneerColors")}
-                                        />
-                                    </div>}
-                                </div>
-                            </div>
-                            <div>
-                                <div className='form-row'>
-                                    <h3 className="dialog-header3">Butt Sleeve Point</h3>
-                                    <DefaultToggle titleOn={"Include Veneers"} titleOff={"Exclude Veneers"} onChange={setIncludeButtSleevePointVeneers}/>
-                                </div>
-                                
-                                <div className='form-row'>
-                                    <div className='flex-1'>
-                                        <FormField
-                                            title="Quantity"
-                                            type="number"
-                                            value={buttSleevePointQuantity}
-                                            {...register("buttSleevePointQuantity")}
-                                        />
-                                    </div>
-                                    <div className='flex-1'>
-                                        <FormSelect
-                                            title="Size"
-                                            value={buttSleevePointSize}
-                                            options={BASIC_SIZE_OPTIONS}
-                                            displayKey="label"
-                                            {...register("buttSleevePointSize")}
-                                        />
-                                    </div>
-                                    {includeButtSleevePointVeneers &&
-                                        <div className='flex-1'>
-                                        <FormMultiSelect
-                                            title="Point Veneer Colors"
-                                            value={buttSleevePointVeneerColors || []}
-                                            options={COLOR_OPTIONS}
-                                            displayKey="label"
-                                            {...register("buttSleevePointVeneerColors")}
-                                        />
-                                    </div>}
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                 </form>
             </DialogContent>
