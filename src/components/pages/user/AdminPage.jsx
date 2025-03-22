@@ -89,13 +89,24 @@ const STATUS_OPTIONS_CUE = [
 ];
 
 const TIP_SIZE_OPTIONS = [
-    { value: '11.75', label: '11.75' },
-    { value: '12.0', label: '12.0' },
-    { value: '12.25', label: '12.25' },
+    { value: '11.8', label: '11.8' },
+    { value: '12', label: '12' },
+    { value: '12.2', label: '12.2' },
     { value: '12.4', label: '12.4' },
-    { value: '12.5', label: '12.5' },
-    { value: '12.75', label: '12.75' },
-    { value: '13.0', label: '13.0' }
+    { value: '12.6', label: '12.6' },
+    { value: '12.8', label: '12.8' },
+    { value: '13', label: '13' },
+    { value: '14', label: '14' },
+    { value: 'other', label: 'Other' }
+];
+
+const SHAFT_MATERIAL_OPTIONS = [
+    { value: 'hard_maple', label: 'Hard Maple' },
+    { value: 'roasted_maple', label: 'Roasted Maple' },
+    { value: 'kielwood', label: 'Kielwood' },
+    { value: 'curly_kielwood', label: 'Curly Kielwood' },
+    { value: 'purpleheart', label: 'Purpleheart' },
+    { value: 'carbon_fiber', label: 'Carbon Fiber' }
 ];
 
 const SHAFT_TAPER_OPTIONS = [
@@ -105,15 +116,31 @@ const SHAFT_TAPER_OPTIONS = [
 ];
 
 const JOINT_PIN_SIZE_OPTIONS = [
-    { value: '5_16_14', label: '5/16-14 (Std.)' },
-    { value: '5_16_18', label: '5/16-18' },
-    { value: '3_8_10', label: '3/8-10' },
     { value: '3_8_10_mod', label: '3/8-10 Modified' },
-    { value: 'american_ball', label: 'American Ball Thd / Radial' },
+    { value: '3_8_10', label: '3/8-10' },
+    { value: '5_16_14', label: '5/16-14' },
+    { value: '5_16_18', label: '5/16-18' },
+    { value: 'american_ball', label: 'American Ball Thread / Radial' },
     { value: 'wavy', label: 'Wavy' },
     { value: 'quick_release', label: 'Quick Release' },
     { value: 'uni_loc', label: 'Uni-Loc' },
-    { value: 'special', label: 'Special' }
+    { value: 'other', label: 'Other' }
+];
+
+const JOINT_MATERIAL_OPTIONS = [
+    { value: 'stainless_steel', label: 'Stainless Steel' },
+    { value: 'aluminum', label: 'Aluminum' },
+    { value: 'titanium', label: 'Titanium' },
+    { value: 'brass', label: 'Brass' },
+    { value: 'g10', label: 'G10' }
+];
+
+const WRAP_TYPE_OPTIONS = [
+    { value: 'irish_linen', label: 'Irish Linen' },
+    { value: 'leather', label: 'Leather' },
+    { value: 'embossed_leather', label: 'Embossed Leather' },
+    { value: 'stacked_leather', label: 'Stacked Leather' },
+    { value: 'other', label: 'Other' }
 ];
 
 const BASIC_SIZE_OPTIONS = [
@@ -288,6 +315,50 @@ const CRYSTAL_CATEGORY_OPTIONS = [
     { value: 'love', label: 'For Love' },
     { value: 'success', label: 'For Success' },
     { value: 'well_being', label: 'For Well-Being' }
+];
+
+const IRISH_LINEN_COLOR_OPTIONS = [
+    { value: 'black', label: 'Black' },
+    { value: 'black_w_blue', label: 'Black w/ Blue' },
+    { value: 'black_w_dbl_wht', label: 'Black w/ Dbl Wht' },
+    { value: 'black_w_green', label: 'Black w/ Green' },
+    { value: 'black_w_light_brown', label: 'Black w/ Light Brown' },
+    { value: 'black_w_light_green', label: 'Black w/ Light Green' },
+    { value: 'black_w_red', label: 'Black w/ Red' },
+    { value: 'black_w_walnut_brown', label: 'Black w/ Walnut Brown' },
+    { value: 'black_w_white', label: 'Black w/ White' },
+    { value: 'blue_w_black', label: 'Blue w/ Black' },
+    { value: 'blue_w_white', label: 'Blue w/ White' },
+    { value: 'burgundy_w_white', label: 'Burgundy w/ White' },
+    { value: 'green_w_white', label: 'Green w/ White' },
+    { value: 'green_w_black', label: 'Green w/ Black' },
+    { value: 'light_blue_w_white', label: 'Light Blue w/ White' },
+    { value: 'light_brown_w_white', label: 'Light Brown w White' },
+    { value: 'purple_w_white', label: 'Purple w/ White' },
+    { value: 'red_w_black', label: 'Red w/ Black' },
+    { value: 'red_w_white', label: 'Red w/ White' },
+    { value: 'walnut_brown_w_black', label: 'Walnut Brown w/ Black' },
+    { value: 'walnut_brown_w_dbl_wht', label: 'Walnut Brown w/ Dbl Wht' },
+    { value: 'walnut_brown_w_white', label: 'Walnut Brown w/ White' },
+    { value: 'white_antique', label: 'White (Antique)' },
+    { value: 'white_w_black', label: 'White w/ Black' },
+    { value: 'white_w_blue', label: 'White w/ Blue' },
+    { value: 'white_w_burgundy', label: 'White w/ Burgundy' },
+    { value: 'white_w_dbl_blk', label: 'White w/ Dbl Blk' },
+    { value: 'white_w_dbl_brown', label: 'White w/ Dbl Brown' },
+    { value: 'white_w_green', label: 'White w/ Green' },
+    { value: 'white_w_light_brown', label: 'White w/ Light Brown' },
+    { value: 'white_w_light_green', label: 'White w/ Light Green' },
+    { value: 'white_w_red', label: 'White w/ Red' },
+    { value: 'white_w_walnut_brown', label: 'White w/ Walnut Brown' }
+];
+
+const LEATHER_COLOR_OPTIONS = [
+    { value: 'black', label: 'Black' },
+    { value: 'brown', label: 'Brown' },
+    { value: 'red', label: 'Red' },
+    { value: 'white', label: 'White' },
+    { value: 'other', label: 'Other' }
 ];
 
 export default function AdminPage() {
@@ -698,23 +769,26 @@ function UsersTable({ data, onEditClick, onPasswordEditClick, onDeleteClick }) {
     );
 }
 
+// Add handleWrapColor to the CueDialog default element properties
 function CueDialog({ open, onClose, title, getData, element = {
     cueNumber: '',
     name: '',
     description: '',
+    notes: '', // Add this new field
     price: '',
     overallWeight: '',
     overallLength: '',
-    tipSize: '12.4', // Default to 12.4
+    tipSize: '12.4',
     ferruleMaterial: 'juma',
-    shaftMaterial: '',
-    shaftTaper: '',
-    jointPinSize: '3_8_10',
-    jointPinMaterial: '',
+    shaftMaterial: 'hard_maple',
+    shaftTaper: 'pro_taper',
+    jointPinSize: '3_8_10_mod',
+    jointPinMaterial: 'stainless_steel',
     jointCollarMaterial: 'black_juma',
     forearmMaterial: '',
     handleMaterial: '',
-    handleWrapMaterial: '',
+    handleWrapType: '',
+    handleWrapColor: '',
     buttSleeveMaterial: '',
     jointRings: '',
     handleRings: '',
@@ -741,7 +815,7 @@ function CueDialog({ open, onClose, title, getData, element = {
     const [includeButtSleevePointVeneers, setIncludeButtSleevePointVeneers] = useState(false);
     const [includeInlays, setIncludeInlays] = useState(false);
 
-    const { register, handleSubmit, watch, formState: { errors }, reset } = useForm({
+    const { register, handleSubmit, watch, formState: { errors }, reset, setValue } = useForm({
         defaultValues: element
     });
 
@@ -750,6 +824,7 @@ function CueDialog({ open, onClose, title, getData, element = {
     useEffect(() => {
         if (open) {
             reset(element);
+            setIncludeWrap(!!element.handleWrapType);
         }
     }, [open, reset]);
 
@@ -767,6 +842,7 @@ function CueDialog({ open, onClose, title, getData, element = {
     const cueNumber = watch("cueNumber");
     const name = watch("name");
     const description = watch("description");
+    const notes = watch("notes"); 
     const price = watch("price");
     const overallWeight = watch("overallWeight");
     const overallLength = watch("overallLength");
@@ -780,7 +856,8 @@ function CueDialog({ open, onClose, title, getData, element = {
     const jointCollarMaterial = watch("jointCollarMaterial");
     const forearmMaterial = watch("forearmMaterial");
     const handleMaterial = watch("handleMaterial");
-    const handleWrapMaterial = watch("handleWrapMaterial");
+    const handleWrapType = watch("handleWrapType");
+    const handleWrapColor = watch("handleWrapColor");
     const buttSleeveMaterial = watch("buttSleeveMaterial");
     const jointRings = watch("jointRings");
     const handleRings = watch("handleRings");
@@ -807,6 +884,63 @@ function CueDialog({ open, onClose, title, getData, element = {
         { value: 'rubber', label: 'Rubber' },
         { value: 'wood', label: 'Wood' }
     ];
+
+    // Set default colors when wrap type changes
+    useEffect(() => {
+        if (handleWrapType === 'irish_linen') {
+            setValue("handleWrapColor", 'black_w_white');
+        } else if (['leather', 'embossed_leather', 'stacked_leather'].includes(handleWrapType)) {
+            setValue("handleWrapColor", 'black');
+        }
+    }, [handleWrapType, setValue]);
+
+    // Handle include wrap toggle
+    useEffect(() => {
+        if (includeWrap) {
+            setValue("handleMaterial", '');
+            setValue("handleWrapType", 'irish_linen');
+            setValue("handleWrapColor", 'black_w_white');
+            setIsCustomWrapType(false);
+            setIsCustomColor(false);
+        } else {
+            setValue("handleWrapType", '');
+            setValue("handleWrapColor", '');
+            setValue("handleCustomLeatherColor", '');
+        }
+    }, [includeWrap, setValue]);
+
+    // Watch these values for conditional rendering
+    const [isCustomColor, setIsCustomColor] = useState(false);
+    
+    // Check if we need to show custom color input when wrap type or color changes
+    useEffect(() => {
+        if (['leather', 'embossed_leather', 'stacked_leather'].includes(handleWrapType) && 
+            handleWrapColor === 'other') {
+            setIsCustomColor(true);
+        }
+    }, [handleWrapType, handleWrapColor]);
+    
+    // Handle wrap type changes to set default colors
+    useEffect(() => {
+        if (handleWrapType === 'irish_linen') {
+            setValue("handleWrapColor", 'black_w_white');
+            setIsCustomColor(false);
+        } else if (['leather', 'embossed_leather', 'stacked_leather'].includes(handleWrapType)) {
+            setValue("handleWrapColor", 'black');
+            setIsCustomColor(false);
+        }
+    }, [handleWrapType, setValue]);
+
+    // Add a state to track custom wrap type
+    const [isCustomWrapType, setIsCustomWrapType] = useState(false);
+
+    // Add effect to handle wrap type changes
+    useEffect(() => {
+        if (handleWrapType === 'other') {
+            setIsCustomWrapType(true);
+            setValue("handleWrapColor", '');
+        }
+    }, [handleWrapType, isCustomWrapType, setValue]);
 
     return (
         <Dialog open={open} onClose={onClose} fullScreen>
@@ -897,6 +1031,11 @@ function CueDialog({ open, onClose, title, getData, element = {
                                     value={description}
                                     {...register("description")}
                                 />
+                                <FormTextArea
+                                    title="Notes"
+                                    value={notes}
+                                    {...register("notes")}
+                                />
                                 <FormSelect
                                     title="Status*"
                                     value={status}
@@ -917,7 +1056,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                         <FormSelect
                                             title="Shaft Material"
                                             value={shaftMaterial}
-                                            options={materialOptions}
+                                            options={SHAFT_MATERIAL_OPTIONS}
                                             displayKey="label"
                                             {...register("shaftMaterial")}
                                         />
@@ -995,7 +1134,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                         <FormSelect
                                             title="Joint Pin Material"
                                             value={jointPinMaterial}
-                                            options={materialOptions}
+                                            options={JOINT_MATERIAL_OPTIONS}
                                             displayKey="label"
                                             {...register("jointPinMaterial")}
                                         />
@@ -1037,24 +1176,85 @@ function CueDialog({ open, onClose, title, getData, element = {
                                 </div>
                                 
                                 <div className='form-row'>
-                                    <div className='flex-1'>
-                                        {includeWrap ? 
-                                            <FormSelect
-                                            title="Handle Wrap Material"
-                                            value={handleWrapMaterial}
-                                            options={materialOptions}
-                                            displayKey="label"
-                                            {...register("handleWrapMaterial")}
-                                            />
-                                        :
+                                    {includeWrap ? (
+                                        <>
+                                            <div className='flex-1'>
+                                                {isCustomWrapType ? (
+                                                    // Custom wrap type input
+                                                    <FormField
+                                                        title="Custom Wrap Type"
+                                                        type="text"
+                                                        value={handleWrapType === 'other' ? '' : handleWrapType}
+                                                        onChange={(e) => setValue("handleWrapType", e.target.value)}
+                                                    />
+                                                ) : (
+                                                    // Standard wrap types dropdown
+                                                    <FormSelect
+                                                        title="Handle Wrap Type"
+                                                        value={handleWrapType}
+                                                        options={WRAP_TYPE_OPTIONS}
+                                                        displayKey="label"
+                                                        onChange={(e) => {
+                                                            if (e.target.value === 'other') {
+                                                                setValue("handleWrapType", 'other');
+                                                            } else {
+                                                                setValue("handleWrapType", e.target.value);
+                                                            }
+                                                        }}
+                                                    />
+                                                )}
+                                            </div>
+                                            
+                                            {/* Only show color selector for standard wrap types */}
+                                            {!isCustomWrapType && (
+                                                <div className='flex-1'>
+                                                    {handleWrapType === 'irish_linen' ? (
+                                                        <FormSelect
+                                                            title="Wrap Color"
+                                                            value={handleWrapColor}
+                                                            options={IRISH_LINEN_COLOR_OPTIONS}
+                                                            displayKey="label"
+                                                            {...register("handleWrapColor")}
+                                                        />
+                                                    ) : ['leather', 'embossed_leather', 'stacked_leather'].includes(handleWrapType) ? (
+                                                        isCustomColor ? (
+                                                            <FormField
+                                                                title="Custom Leather Color"
+                                                                type="text"
+                                                                value={handleWrapColor === 'other' ? '' : handleWrapColor}
+                                                                onChange={(e) => setValue("handleWrapColor", e.target.value)}
+                                                            />
+                                                        ) : (
+                                                            <FormSelect
+                                                                title="Wrap Color"
+                                                                value={handleWrapColor}
+                                                                options={LEATHER_COLOR_OPTIONS}
+                                                                displayKey="label"
+                                                                {...register("handleWrapColor")}
+                                                            />
+                                                        )
+                                                    ) : (
+                                                        <FormField
+                                                            title="Wrap Color/Description"
+                                                            type="text"
+                                                            value={handleWrapColor}
+                                                            {...register("handleWrapColor")}
+                                                        />
+                                                    )}
+                                                </div>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <div className='flex-1'>
                                             <FormSelect
                                                 title="Handle Material"
                                                 value={handleMaterial}
                                                 options={materialOptions}
                                                 displayKey="label"
                                                 {...register("handleMaterial")}
-                                            />}
-                                    </div>
+                                            />
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                             <div>
