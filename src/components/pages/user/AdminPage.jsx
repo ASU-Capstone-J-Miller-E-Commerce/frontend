@@ -801,20 +801,22 @@ function CueDialog({ open, onClose, title, getData, element = {
     forearmInlaySize: '',
     buttsleeveInlayQuantity: '',
     buttsleeveInlaySize: '',
-    ringsInlayQuantity: '',
-    ringsInlaySize: '',
     forearmPointQuantity: '',
     forearmPointSize: '',
     forearmPointVeneerColors: [], // Changed to plural and array
     buttSleevePointQuantity: '',
     buttSleevePointSize: '',
     buttSleevePointVeneerColors: [], // Changed to plural and array
+    handleInlayQuantity: '', // Add this new field
+    handleInlaySize: '' // Add this new field
   }}) {
     const [includeWrap, setIncludeWrap] = useState(false);
     const [includeForearmPointVeneers, setIncludeForearmPointVeneers] = useState(false);
     const [includeButtSleevePointVeneers, setIncludeButtSleevePointVeneers] = useState(false);
-    const [includeInlays, setIncludeInlays] = useState(false);
     const [buttType, setButtType] = useState(false);
+    const [includeForearmInlay, setIncludeForearmInlay] = useState(false);
+    const [includeHandleInlay, setIncludeHandleInlay] = useState(false);
+    const [includeButtSleeveInlay, setIncludeButtSleeveInlay] = useState(false);
 
     const { register, handleSubmit, watch, formState: { errors }, reset, setValue } = useForm({
         defaultValues: element
@@ -826,6 +828,9 @@ function CueDialog({ open, onClose, title, getData, element = {
         if (open) {
             reset(element);
             setIncludeWrap(!!element.handleWrapType);
+            setIncludeForearmInlay(!!element.forearmInlayQuantity);
+            setIncludeHandleInlay(!!element.handleInlayQuantity);
+            setIncludeButtSleeveInlay(!!element.buttsleeveInlayQuantity);
         }
     }, [open, reset]);
 
@@ -876,8 +881,8 @@ function CueDialog({ open, onClose, title, getData, element = {
     const forearmInlaySize = watch("forearmInlaySize");
     const buttsleeveInlayQuantity = watch("buttsleeveInlayQuantity");
     const buttsleeveInlaySize = watch("buttsleeveInlaySize");
-    const ringsInlayQuantity = watch("ringsInlayQuantity");
-    const ringsInlaySize = watch("ringsInlaySize");
+    const handleInlayQuantity = watch("handleInlayQuantity");
+    const handleInlaySize = watch("handleInlaySize");
 
     const materialOptions = [
         { value: 'juma', label: 'Juma' },
@@ -966,7 +971,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                 <form className="cue-form" onSubmit={handleSubmit(onSubmit)} ref={formRef}>
                     <div className="form-column">
                         <div>
-                            <h2 className="dialog-header1">General Attributes</h2>
+                            <h1 className="dialog-header1">General Attributes</h1>
                             <div className="form-column">
                                 <div className="form-row">
                                     <div className="flex-1">
@@ -1050,7 +1055,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                             </div>
                         </div>
                         <div>
-                            <h2 className="dialog-header1">Shaft</h2>
+                            <h1 className="dialog-header1">Shaft</h1>
                             <div>
                                 <div className='form-row'>
                                     <div className='flex-1'>
@@ -1099,199 +1104,297 @@ function CueDialog({ open, onClose, title, getData, element = {
                         </div>
                         <div>
                             <div className='form-row'>
-                                <h2 className="dialog-header1">Butt</h2>
+                                <h1 className="dialog-header1">Butt</h1>
                                 <DefaultToggle titleOn={"Full Splice"} titleOff={"Standard"} onChange={setButtType} />
                             </div>
-                            <div>
-                                <div className='form-row'>
-                                    <div className='flex-1'>
-                                        <FormField
-                                            title="Butt Weight (oz)"
-                                            type="number"
-                                            value={buttWeight}
-                                            {...register("buttWeight")}
-                                        />
-                                    </div>
-                                    <div className='flex-1'>
-                                        <FormField
-                                            title="Butt Length (in)"
-                                            type="number"
-                                            value={buttLength}
-                                            {...register("buttLength")}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <h3 className="dialog-header3">Joint Pin</h3>
-                                <div className='form-row'>
-                                    <div className='flex-1'>
-                                        <FormSelect
-                                            title="Joint Pin Size (in)"
-                                            value={jointPinSize}
-                                            options={JOINT_PIN_SIZE_OPTIONS}
-                                            displayKey="label"
-                                            {...register("jointPinSize")}
-                                        />
-                                    </div>
-                                    <div className='flex-1'>
-                                        <FormSelect
-                                            title="Joint Pin Material"
-                                            value={jointPinMaterial}
-                                            options={JOINT_MATERIAL_OPTIONS}
-                                            displayKey="label"
-                                            {...register("jointPinMaterial")}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <h3 className="dialog-header3">Joint Collar</h3>
-                                <div className='form-row'>
-                                    <div className='flex-1'>
-                                        <FormSelect
-                                            title="Joint Collar Material"
-                                            value={jointCollarMaterial}
-                                            options={materialOptions}
-                                            displayKey="label"
-                                            {...register("jointCollarMaterial")}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <h3 className="dialog-header3">Forearm</h3>
-                                <div className='form-row'>
-                                    <div className='flex-1'>
-                                        <FormSelect
-                                            title="Forearm Material"
-                                            value={forearmMaterial}
-                                            options={materialOptions}
-                                            displayKey="label"
-                                            {...register("forearmMaterial")}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div className='form-row'>
-                                    <h3 className="dialog-header3">Handle</h3>
-                                    <DefaultToggle titleOn={"Include Wrap"} titleOff={"Exclude Wrap"} onChange={setIncludeWrap}/>
-                                </div>
-                                
-                                <div className='form-row'>
-                                    {includeWrap ? (
-                                        <>
-                                            <div className='flex-1'>
-                                                {isCustomWrapType ? (
-                                                    // Custom wrap type input
-                                                    <FormField
-                                                        title="Custom Wrap Type"
-                                                        type="text"
-                                                        value={handleWrapType === 'other' ? '' : handleWrapType}
-                                                        onChange={(e) => setValue("handleWrapType", e.target.value)}
-                                                    />
-                                                ) : (
-                                                    // Standard wrap types dropdown
-                                                    <FormSelect
-                                                        title="Handle Wrap Type"
-                                                        value={handleWrapType}
-                                                        options={WRAP_TYPE_OPTIONS}
-                                                        displayKey="label"
-                                                        onChange={(e) => {
-                                                            if (e.target.value === 'other') {
-                                                                setValue("handleWrapType", 'other');
-                                                            } else {
-                                                                setValue("handleWrapType", e.target.value);
-                                                            }
-                                                        }}
-                                                    />
-                                                )}
-                                            </div>
-                                            
-                                            {/* Only show color selector for standard wrap types */}
-                                            {!isCustomWrapType && (
-                                                <div className='flex-1'>
-                                                    {handleWrapType === 'irish_linen' ? (
-                                                        <FormSelect
-                                                            title="Wrap Color"
-                                                            value={handleWrapColor}
-                                                            options={IRISH_LINEN_COLOR_OPTIONS}
-                                                            displayKey="label"
-                                                            {...register("handleWrapColor")}
-                                                        />
-                                                    ) : ['leather', 'embossed_leather', 'stacked_leather'].includes(handleWrapType) ? (
-                                                        isCustomColor ? (
-                                                            <FormField
-                                                                title="Custom Leather Color"
-                                                                type="text"
-                                                                value={handleWrapColor === 'other' ? '' : handleWrapColor}
-                                                                onChange={(e) => setValue("handleWrapColor", e.target.value)}
-                                                            />
-                                                        ) : (
-                                                            <FormSelect
-                                                                title="Wrap Color"
-                                                                value={handleWrapColor}
-                                                                options={LEATHER_COLOR_OPTIONS}
-                                                                displayKey="label"
-                                                                {...register("handleWrapColor")}
-                                                            />
-                                                        )
-                                                    ) : (
-                                                        <FormField
-                                                            title="Wrap Color/Description"
-                                                            type="text"
-                                                            value={handleWrapColor}
-                                                            {...register("handleWrapColor")}
-                                                        />
-                                                    )}
-                                                </div>
-                                            )}
-                                        </>
-                                    ) : (
+
+                            <div className='form-column'> 
+                                {/* Butt Attributes */}
+                                <div>
+                                    <h2 className="dialog-header2">General Attributes</h2>
+                                    <div className='form-row'>
                                         <div className='flex-1'>
-                                            <FormSelect
-                                                title="Handle Material"
-                                                value={handleMaterial}
-                                                options={materialOptions}
-                                                displayKey="label"
-                                                {...register("handleMaterial")}
+                                            <FormField
+                                                title="Butt Weight (oz)"
+                                                type="number"
+                                                value={buttWeight}
+                                                {...register("buttWeight")}
                                             />
                                         </div>
-                                    )}
-                                </div>
-                            </div>
-                            <div>
-                                <h3 className="dialog-header3">Butt Sleeve</h3>
-                                <div className='form-row'>
-                                    <div className='flex-1'>
-                                        <FormSelect
-                                            title="Butt Sleeve Material"
-                                            value={buttSleeveMaterial}
-                                            options={materialOptions}
-                                            displayKey="label"
-                                            {...register("buttSleeveMaterial")}
-                                        />
+                                        <div className='flex-1'>
+                                            <FormField
+                                                title="Butt Length (in)"
+                                                type="number"
+                                                value={buttLength}
+                                                {...register("buttLength")}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 className="dialog-header3">Joint Pin</h3>
+                                        <div className='form-row'>
+                                            <div className='flex-1'>
+                                                <FormSelect
+                                                    title="Joint Pin Size (in)"
+                                                    value={jointPinSize}
+                                                    options={JOINT_PIN_SIZE_OPTIONS}
+                                                    displayKey="label"
+                                                    {...register("jointPinSize")}
+                                                />
+                                            </div>
+                                            <div className='flex-1'>
+                                                <FormSelect
+                                                    title="Joint Pin Material"
+                                                    value={jointPinMaterial}
+                                                    options={JOINT_MATERIAL_OPTIONS}
+                                                    displayKey="label"
+                                                    {...register("jointPinMaterial")}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 className="dialog-header3">Joint Collar</h3>
+                                        <div className='form-row'>
+                                            <div className='flex-1'>
+                                                <FormSelect
+                                                    title="Joint Collar Material"
+                                                    value={jointCollarMaterial}
+                                                    options={materialOptions}
+                                                    displayKey="label"
+                                                    {...register("jointCollarMaterial")}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 className="dialog-header3">Butt Cap</h3>
+                                        <div className='form-row'>
+                                            <div className='flex-1'>
+                                                <FormSelect
+                                                    title="Butt Cap Material"
+                                                    value={buttCapMaterial}
+                                                    options={materialOptions}
+                                                    displayKey="label"
+                                                    {...register("buttCapMaterial")}
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div>
-                                <h3 className="dialog-header3">Butt Cap</h3>
-                                <div className='form-row'>
-                                    <div className='flex-1'>
-                                        <FormSelect
-                                            title="Butt Cap Material"
-                                            value={buttCapMaterial}
-                                            options={materialOptions}
-                                            displayKey="label"
-                                            {...register("buttCapMaterial")}
-                                        />
+
+                                {/* Forearm Attributes */}
+                                <div>
+                                    <h2 className="dialog-header2">Forearm Attributes</h2>
+                                    <div>
+                                        <div className='form-row'>
+                                            <div className='flex-1'>
+                                                <FormSelect
+                                                    title="Forearm Material"
+                                                    value={forearmMaterial}
+                                                    options={materialOptions}
+                                                    displayKey="label"
+                                                    {...register("forearmMaterial")}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className='form-row'>
+                                            <h3 className="dialog-header3">Forearm Inlay</h3>
+                                            <DefaultToggle titleOn={"Include"} titleOff={"Exclude"} onChange={setIncludeForearmInlay} />
+                                        </div>
+                                        {includeForearmInlay && (
+                                            <div className='form-row'>
+                                                <div className='flex-1'>
+                                                    <FormField
+                                                        title="Quantity"
+                                                        type="number"
+                                                        value={forearmInlayQuantity}
+                                                        {...register("forearmInlayQuantity")}
+                                                    />
+                                                </div>
+                                                <div className='flex-1'>
+                                                    <FormSelect
+                                                        title="Size"
+                                                        value={forearmInlaySize}
+                                                        options={BASIC_SIZE_OPTIONS}
+                                                        displayKey="label"
+                                                        {...register("forearmInlaySize")}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Handle Attributes */}
+                                <div>
+                                    <div className='form-row'>
+                                        <h2 className="dialog-header2">Handle Attributes</h2>
+                                        <DefaultToggle titleOn={"Include Wrap"} titleOff={"Exclude Wrap"} onChange={setIncludeWrap} />
+                                    </div>
+                                    
+                                    <div>
+                                        <div className='form-row'>
+                                            {includeWrap ? (
+                                                <>
+                                                    <div className='flex-1'>
+                                                        {isCustomWrapType ? (
+                                                            // Custom wrap type input
+                                                            <FormField
+                                                                title="Custom Wrap Type"
+                                                                type="text"
+                                                                value={handleWrapType === 'other' ? '' : handleWrapType}
+                                                                onChange={(e) => setValue("handleWrapType", e.target.value)}
+                                                            />
+                                                        ) : (
+                                                            // Standard wrap types dropdown
+                                                            <FormSelect
+                                                                title="Handle Wrap Type"
+                                                                value={handleWrapType}
+                                                                options={WRAP_TYPE_OPTIONS}
+                                                                displayKey="label"
+                                                                onChange={(e) => {
+                                                                    if (e.target.value === 'other') {
+                                                                        setValue("handleWrapType", 'other');
+                                                                    } else {
+                                                                        setValue("handleWrapType", e.target.value);
+                                                                    }
+                                                                }}
+                                                            />
+                                                        )}
+                                                    </div>
+
+                                                    {/* Only show color selector for standard wrap types */}
+                                                    {!isCustomWrapType && (
+                                                        <div className='flex-1'>
+                                                            {handleWrapType === 'irish_linen' ? (
+                                                                <FormSelect
+                                                                    title="Wrap Color"
+                                                                    value={handleWrapColor}
+                                                                    options={IRISH_LINEN_COLOR_OPTIONS}
+                                                                    displayKey="label"
+                                                                    {...register("handleWrapColor")}
+                                                                />
+                                                            ) : ['leather', 'embossed_leather', 'stacked_leather'].includes(handleWrapType) ? (
+                                                                isCustomColor ? (
+                                                                    <FormField
+                                                                        title="Custom Leather Color"
+                                                                        type="text"
+                                                                        value={handleWrapColor === 'other' ? '' : handleWrapColor}
+                                                                        onChange={(e) => setValue("handleWrapColor", e.target.value)}
+                                                                    />
+                                                                ) : (
+                                                                    <FormSelect
+                                                                        title="Wrap Color"
+                                                                        value={handleWrapColor}
+                                                                        options={LEATHER_COLOR_OPTIONS}
+                                                                        displayKey="label"
+                                                                        {...register("handleWrapColor")}
+                                                                    />
+                                                                )
+                                                            ) : (
+                                                                <FormField
+                                                                    title="Wrap Color/Description"
+                                                                    type="text"
+                                                                    value={handleWrapColor}
+                                                                    {...register("handleWrapColor")}
+                                                                />
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <div className='flex-1'>
+                                                    <FormSelect
+                                                        title="Handle Material"
+                                                        value={handleMaterial}
+                                                        options={materialOptions}
+                                                        displayKey="label"
+                                                        {...register("handleMaterial")}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+                                        
+                                        {/* Move Handle Inlay inside here instead of as a separate section */}
+                                        <div className='form-row'>
+                                            <h3 className="dialog-header3">Handle Inlay</h3>
+                                            <DefaultToggle titleOn={"Include"} titleOff={"Exclude"} onChange={setIncludeHandleInlay} />
+                                        </div>
+                                        {includeHandleInlay && (
+                                            <div className='form-row'>
+                                                <div className='flex-1'>
+                                                    <FormField
+                                                        title="Quantity"
+                                                        type="number"
+                                                        value={handleInlayQuantity}
+                                                        {...register("handleInlayQuantity")}
+                                                    />
+                                                </div>
+                                                <div className='flex-1'>
+                                                    <FormSelect
+                                                        title="Size"
+                                                        value={handleInlaySize}
+                                                        options={BASIC_SIZE_OPTIONS}
+                                                        displayKey="label"
+                                                        {...register("handleInlaySize")}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Butt Sleeve Attributes */}
+                                <div>
+                                    <h2 className="dialog-header2">Butt Sleeve Attributes</h2>
+                                    <div>
+                                        <div className='form-row'>
+                                            <div className='flex-1'>
+                                                <FormSelect
+                                                    title="Butt Sleeve Material"
+                                                    value={buttSleeveMaterial}
+                                                    options={materialOptions}
+                                                    displayKey="label"
+                                                    {...register("buttSleeveMaterial")}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className='form-row'>
+                                            <h3 className="dialog-header3">Buttsleeve Inlay</h3>
+                                            <DefaultToggle titleOn={"Include"} titleOff={"Exclude"} onChange={setIncludeButtSleeveInlay} />
+                                        </div>
+                                        {includeButtSleeveInlay && (
+                                            <div className='form-row'>
+                                                <div className='flex-1'>
+                                                    <FormField
+                                                        title="Quantity"
+                                                        type="number"
+                                                        value={buttsleeveInlayQuantity}
+                                                        {...register("buttsleeveInlayQuantity")}
+                                                    />
+                                                </div>
+                                                <div className='flex-1'>
+                                                    <FormSelect
+                                                        title="Size"
+                                                        value={buttsleeveInlaySize}
+                                                        options={BASIC_SIZE_OPTIONS}
+                                                        displayKey="label"
+                                                        {...register("buttsleeveInlaySize")}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div>
-                            <h2 className="dialog-header1">Rings</h2>
+                            <h1 className="dialog-header1">Rings</h1>
                             <div className='form-row'>
                                 <div className='flex-1'>
                                     <FormSelect
@@ -1323,7 +1426,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                             </div>
                         </div>
                         <div>
-                            <h2 className="dialog-header1">Points</h2>
+                            <h1 className="dialog-header1">Points</h1>
                             <div>
                                 <div className='form-row'>
                                     <h3 className="dialog-header3">Forearm Point</h3>
@@ -1395,80 +1498,6 @@ function CueDialog({ open, onClose, title, getData, element = {
                                     </div>}
                                 </div>
                             </div>
-                        </div>
-                        <div>
-                            <div className='form-row'>
-                                <h2 className="dialog-header1">Inlays</h2>
-                                <DefaultToggle titleOn={"Include Inlays"} titleOff={"Exclude Inlays"} onChange={setIncludeInlays}/>
-                            </div>
-                            {includeInlays && <>
-                                <div>
-                                    <h3 className="dialog-header3">Forearm Inlay</h3>
-                                    <div className='form-row'>
-                                        <div className='flex-1'>
-                                            <FormField
-                                                title="Quantity"
-                                                type="number"
-                                                value={forearmInlayQuantity}
-                                                {...register("forearmInlayQuantity")}
-                                            />
-                                        </div>
-                                        <div className='flex-1'>
-                                            <FormSelect
-                                                title="Size"
-                                                value={forearmInlaySize}
-                                                options={BASIC_SIZE_OPTIONS}
-                                                displayKey="label"
-                                                {...register("forearmInlaySize")}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 className="dialog-header3">Buttsleeve Inlay</h3>
-                                    <div className='form-row'>
-                                        <div className='flex-1'>
-                                            <FormField
-                                                title="Quantity"
-                                                type="number"
-                                                value={buttsleeveInlayQuantity}
-                                                {...register("buttsleeveInlayQuantity")}
-                                            />
-                                        </div>
-                                        <div className='flex-1'>
-                                            <FormSelect
-                                                title="Size"
-                                                value={buttsleeveInlaySize}
-                                                options={BASIC_SIZE_OPTIONS}
-                                                displayKey="label"
-                                                {...register("buttsleeveInlaySize")}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 className="dialog-header3">Rings Inlay</h3>
-                                    <div className='form-row'>
-                                        <div className='flex-1'>
-                                            <FormField
-                                                title="Quantity"
-                                                type="number"
-                                                value={ringsInlayQuantity}
-                                                {...register("ringsInlayQuantity")}
-                                            />
-                                        </div>
-                                        <div className='flex-1'>
-                                            <FormSelect
-                                                title="Size"
-                                                value={ringsInlaySize}
-                                                options={BASIC_SIZE_OPTIONS}
-                                                displayKey="label"
-                                                {...register("ringsInlaySize")}
-                                            />
-                                        </div>
-                                    </div>
-                                </div> 
-                            </>}
                         </div>
                     </div>
                 </form>
