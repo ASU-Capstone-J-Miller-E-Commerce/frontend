@@ -603,7 +603,7 @@ function CuesTable({ data, onEditClick }) {
 
     return (
         <div>
-            <h2 className="admin-page-header">Cues</h2>
+            <h3 className="admin-page-header">Cues</h3>
             <MaterialReactTable
                 columns={columns}
                 data={data}
@@ -653,7 +653,7 @@ function AccessoriesTable({ data, onEditClick, onDeleteClick }) {
 
     return (
         <div>
-            <h2 className="admin-page-header">Accessories</h2>
+            <h3 className="admin-page-header">Accessories</h3>
             <MaterialReactTable
                 columns={columns}
                 data={data}
@@ -705,7 +705,7 @@ function MaterialsTable({ data, onEditClick, onDeleteClick }) {
 
     return (
         <div>
-            <h2 className="admin-page-header">Materials</h2>
+            <h3 className="admin-page-header">Materials</h3>
             <MaterialReactTable
                 columns={columns}
                 data={data}
@@ -759,7 +759,7 @@ function UsersTable({ data, onEditClick, onPasswordEditClick, onDeleteClick }) {
 
     return (
         <div>
-            <h2 className="admin-page-header">Users</h2>
+            <h3 className="admin-page-header">Users</h3>
             <MaterialReactTable
                 columns={columns}
                 data={data}
@@ -966,7 +966,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                 <form className="cue-form" onSubmit={handleSubmit(onSubmit)} ref={formRef}>
                     <div className="form-column">
                         <div>
-                            <h3 className="dialog-header">General Attributes</h3>
+                            <h2 className="dialog-header1">General Attributes</h2>
                             <div className="form-column">
                                 <div className="form-row">
                                     <div className="flex-1">
@@ -1050,7 +1050,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                             </div>
                         </div>
                         <div>
-                            <h3 className="dialog-header">Shaft</h3>
+                            <h2 className="dialog-header1">Shaft</h2>
                             <div>
                                 <div className='form-row'>
                                     <div className='flex-1'>
@@ -1083,7 +1083,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                 </div>
                             </div>
                             <div>
-                                <h2 className="dialog-header2">Ferrule</h2>
+                                <h3 className="dialog-header3">Ferrule</h3>
                                 <div className='form-row'>
                                     <div className='flex-1'>
                                         <FormSelect
@@ -1099,7 +1099,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                         </div>
                         <div>
                             <div className='form-row'>
-                                <h3 className="dialog-header">Butt</h3>
+                                <h2 className="dialog-header1">Butt</h2>
                                 <DefaultToggle titleOn={"Full Splice"} titleOff={"Standard"} onChange={setButtType} />
                             </div>
                             <div>
@@ -1123,7 +1123,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                 </div>
                             </div>
                             <div>
-                                <h2 className="dialog-header2">Joint Pin</h2>
+                                <h3 className="dialog-header3">Joint Pin</h3>
                                 <div className='form-row'>
                                     <div className='flex-1'>
                                         <FormSelect
@@ -1146,7 +1146,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                 </div>
                             </div>
                             <div>
-                                <h2 className="dialog-header2">Joint Collar</h2>
+                                <h3 className="dialog-header3">Joint Collar</h3>
                                 <div className='form-row'>
                                     <div className='flex-1'>
                                         <FormSelect
@@ -1160,7 +1160,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                 </div>
                             </div>
                             <div>
-                                <h2 className="dialog-header2">Forearm</h2>
+                                <h3 className="dialog-header3">Forearm</h3>
                                 <div className='form-row'>
                                     <div className='flex-1'>
                                         <FormSelect
@@ -1175,7 +1175,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                             </div>
                             <div>
                                 <div className='form-row'>
-                                    <h2 className="dialog-header2">Handle</h2>
+                                    <h3 className="dialog-header3">Handle</h3>
                                     <DefaultToggle titleOn={"Include Wrap"} titleOff={"Exclude Wrap"} onChange={setIncludeWrap}/>
                                 </div>
                                 
@@ -1262,7 +1262,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                 </div>
                             </div>
                             <div>
-                                <h2 className="dialog-header2">Butt Sleeve</h2>
+                                <h3 className="dialog-header3">Butt Sleeve</h3>
                                 <div className='form-row'>
                                     <div className='flex-1'>
                                         <FormSelect
@@ -1276,7 +1276,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                 </div>
                             </div>
                             <div>
-                                <h2 className="dialog-header2">Butt Cap</h2>
+                                <h3 className="dialog-header3">Butt Cap</h3>
                                 <div className='form-row'>
                                     <div className='flex-1'>
                                         <FormSelect
@@ -1291,7 +1291,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                             </div>
                         </div>
                         <div>
-                            <h3 className="dialog-header">Rings</h3>
+                            <h2 className="dialog-header1">Rings</h2>
                             <div className='form-row'>
                                 <div className='flex-1'>
                                     <FormSelect
@@ -1323,10 +1323,10 @@ function CueDialog({ open, onClose, title, getData, element = {
                             </div>
                         </div>
                         <div>
-                            <h3 className="dialog-header">Points</h3>
+                            <h2 className="dialog-header1">Points</h2>
                             <div>
                                 <div className='form-row'>
-                                    <h2 className="dialog-header2">Forearm Point</h2>
+                                    <h3 className="dialog-header3">Forearm Point</h3>
                                     <DefaultToggle titleOn={"Include Veneers"} titleOff={"Exclude Veneers"} onChange={setIncludeForearmPointVeneers}/>
                                 </div>
                                 <div className='form-row'>
@@ -1361,7 +1361,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                             </div>
                             <div>
                                 <div className='form-row'>
-                                    <h2 className="dialog-header2">Butt Sleeve Point</h2>
+                                    <h3 className="dialog-header3">Butt Sleeve Point</h3>
                                     <DefaultToggle titleOn={"Include Veneers"} titleOff={"Exclude Veneers"} onChange={setIncludeButtSleevePointVeneers}/>
                                 </div>
                                 
@@ -1398,12 +1398,12 @@ function CueDialog({ open, onClose, title, getData, element = {
                         </div>
                         <div>
                             <div className='form-row'>
-                                <h3 className="dialog-header">Inlays</h3>
+                                <h2 className="dialog-header1">Inlays</h2>
                                 <DefaultToggle titleOn={"Include Inlays"} titleOff={"Exclude Inlays"} onChange={setIncludeInlays}/>
                             </div>
                             {includeInlays && <>
                                 <div>
-                                    <h2 className="dialog-header2">Forearm Inlay</h2>
+                                    <h3 className="dialog-header3">Forearm Inlay</h3>
                                     <div className='form-row'>
                                         <div className='flex-1'>
                                             <FormField
@@ -1425,7 +1425,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                     </div>
                                 </div>
                                 <div>
-                                    <h2 className="dialog-header2">Buttsleeve Inlay</h2>
+                                    <h3 className="dialog-header3">Buttsleeve Inlay</h3>
                                     <div className='form-row'>
                                         <div className='flex-1'>
                                             <FormField
@@ -1447,7 +1447,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                     </div>
                                 </div>
                                 <div>
-                                    <h2 className="dialog-header2">Rings Inlay</h2>
+                                    <h3 className="dialog-header3">Rings Inlay</h3>
                                     <div className='form-row'>
                                         <div className='flex-1'>
                                             <FormField

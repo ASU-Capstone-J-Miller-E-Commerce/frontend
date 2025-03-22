@@ -305,14 +305,21 @@
     width: 100%;
 }
 
-.dialog-header {
+.dialog-header1 {
     margin: 0;
-    font-size: 1.75rem;
+    font-size: 2rem;
     font-weight: bold;
     font-family: system-ui, Helvetica, Arial, sans-serif;
 }
 
 .dialog-header2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-family: system-ui, Helvetica, Arial, sans-serif;
+}
+
+.dialog-header3 {
     margin: 0;
     font-size: 1rem;
     font-weight: bold;
