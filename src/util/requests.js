@@ -73,6 +73,17 @@ export function checkAuth() {
     });
 }
 
+export function updateName(email, firstName, lastName) {
+    return _ajax({
+        url: "/user/update-name/" + email,
+        method: "PUT",
+        data: { 
+            newFirstName: firstName, 
+            newLastName: lastName 
+        }
+    });
+}
+
 /*==============================================================
 # Products
 ==============================================================*/
