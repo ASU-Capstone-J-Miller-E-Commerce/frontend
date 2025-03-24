@@ -1018,6 +1018,84 @@ function CueDialog({ open, onClose, title, getData, element = {
         }
     }, [buttType, setValue]);
 
+    // Add these effects to reset fields when toggles are changed
+
+    // Reset forearm point fields when toggle changes
+    useEffect(() => {
+        if (!includeForearmPoint) {
+            setValue("forearmPointQuantity", "");
+            setValue("forearmPointSize", "");
+            setValue("forearmPointVeneerDescription", "");
+            setValue("forearmPointInlayDescription", "");
+            setIncludeForearmPointVeneers(false);
+            setIncludeForearmPointInlay(false);
+        }
+    }, [includeForearmPoint, setValue]);
+
+    // Reset butt sleeve point fields when toggle changes
+    useEffect(() => {
+        if (!includeButtSleevePoint) {
+            setValue("buttSleevePointQuantity", "");
+            setValue("buttSleevePointSize", "");
+            setValue("buttSleevePointVeneerDescription", "");
+            setValue("buttSleevePointInlayDescription", "");
+            setIncludeButtSleevePointVeneers(false);
+            setIncludeButtSleevePointInlay(false);
+        }
+    }, [includeButtSleevePoint, setValue]);
+
+    // Reset forearm inlay fields when toggle changes
+    useEffect(() => {
+        if (!includeForearmInlay) {
+            setValue("forearmInlayQuantity", "");
+            setValue("forearmInlaySize", "");
+            setValue("forearmInlayDescription", "");
+        }
+    }, [includeForearmInlay, setValue]);
+
+    // Reset handle inlay fields when toggle changes
+    useEffect(() => {
+        if (!includeHandleInlay) {
+            setValue("handleInlayQuantity", "");
+            setValue("handleInlaySize", "");
+            setValue("handleInlayDescription", "");
+        }
+    }, [includeHandleInlay, setValue]);
+
+    // Reset butt sleeve inlay fields when toggle changes
+    useEffect(() => {
+        if (!includeButtSleeveInlay) {
+            setValue("buttsleeveInlayQuantity", "");
+            setValue("buttsleeveInlaySize", "");
+            setValue("buttsleeveInlayDescription", "");
+        }
+    }, [includeButtSleeveInlay, setValue]);
+
+    // Reset specific veneer and inlay descriptions when their toggles change
+    useEffect(() => {
+        if (!includeForearmPointVeneers) {
+            setValue("forearmPointVeneerDescription", "");
+        }
+    }, [includeForearmPointVeneers, setValue]);
+
+    useEffect(() => {
+        if (!includeForearmPointInlay) {
+            setValue("forearmPointInlayDescription", "");
+        }
+    }, [includeForearmPointInlay, setValue]);
+
+    useEffect(() => {
+        if (!includeButtSleevePointVeneers) {
+            setValue("buttSleevePointVeneerDescription", "");
+        }
+    }, [includeButtSleevePointVeneers, setValue]);
+
+    useEffect(() => {
+        if (!includeButtSleevePointInlay) {
+            setValue("buttSleevePointInlayDescription", "");
+        }
+    }, [includeButtSleevePointInlay, setValue]);
+
     return (
         <Dialog open={open} onClose={onClose} fullScreen>
             <DialogTitle>
