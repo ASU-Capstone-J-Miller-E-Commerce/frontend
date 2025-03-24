@@ -9,7 +9,7 @@ import HomePage from "./components/pages/HomePage.jsx";
 import CollectionsPage from "./components/pages/CollectionsPage.jsx";
 import ProductPage from "./components/pages/ProductPage.jsx";
 import MaterialPage from "./components/pages/MaterialPage.jsx";
-import BuildAQuePage from "./components/pages/BuildAQuePage.jsx";
+import BuildACuePage from "./components/pages/BuildACuePage.jsx";
 import NotFoundPage from "./components/pages/NotFoundPage.jsx";
 import LoginPage from "./components/pages/user/LogInPage.jsx";
 import CreateAccountPage from "./components/pages/user/CreateAccountPage.jsx";
@@ -122,7 +122,7 @@ function App() {
                     <Route path="/products/:guid" element={<ProductPage />} />
                     <Route path="/products" element={<Navigate to="/" replace />} />
 
-                    <Route path="/build-a-que" element={<BuildAQuePage />} />
+                    <Route path="/build-a-cue" element={<BuildACuePage />} />
 
                     <Route path="/materials/:guid" element={<MaterialPage />} />
                     <Route path="/materials" element={<Navigate to="/" replace />} />
