@@ -210,25 +210,25 @@ export function deleteWood(id) {
 
 // Crystal/Stone Materials
 
-export function createCrystal(crystalName, description, status, tier, colors,
+export function createCrystal(crystalName, status, tier, colors,
     crystalCategory, psychologicalCorrespondence) {
     return _ajax({
         url: "/admin/materials/crystal",
         method: "POST",
         data: {
-            crystalName, description, status, tier, colors,
+            crystalName, status, tier, colors,
             crystalCategory, psychologicalCorrespondence
         }
     });
 }
 
-export function editCrystal(id, crystalName, description, status, tier, colors,
+export function editCrystal(id, crystalName, status, tier, colors,
     crystalCategory, psychologicalCorrespondence) {
     return _ajax({
         url: "/admin/materials/crystal/" + id,
         method: "PUT",
         data: {
-            crystalName, description, status, tier, colors,
+            crystalName, status, tier, colors,
             crystalCategory, psychologicalCorrespondence
         }
     });
