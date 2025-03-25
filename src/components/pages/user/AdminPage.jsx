@@ -837,6 +837,8 @@ function CueDialog({ open, onClose, title, getData, element = {
     const [includeButtSleevePointInlay, setIncludeButtSleevePointInlay] = useState(false);
     const [includeForearmPoint, setIncludeForarmPoint] = useState(false);
     const [includeButtSleevePoint, setIncludeButtSleevePoint] = useState(false);
+    const [isCustomJointPinSize, setIsCustomJointPinSize] = useState(false);
+    const [isCustomTipSize, setIsCustomTipSize] = useState(false);
 
     const { register, handleSubmit, watch, formState: { errors }, reset, setValue } = useForm({
         defaultValues: element
@@ -857,6 +859,8 @@ function CueDialog({ open, onClose, title, getData, element = {
             setIncludeButtSleevePointInlay(!!element.buttSleevePointInlayDescription);
             setIncludeForearmPointInlay(!!element.forearmPointInlayDescription);
             setIncludeButtSleevePointInlay(!!element.buttSleevePointInlayDescription);
+            setIsCustomJointPinSize(element.jointPinSize === 'custom');
+            setIsCustomTipSize(element.tipSize === 'custom');
         }
     }, [open, reset]);
 
@@ -1096,6 +1100,26 @@ function CueDialog({ open, onClose, title, getData, element = {
         }
     }, [includeButtSleevePointInlay, setValue]);
 
+    // Add state to track custom joint pin size
+
+    // Add effect to handle joint pin size changes
+    useEffect(() => {
+        if (jointPinSize === 'other') {
+            setValue("jointPinSize", "");
+            setIsCustomJointPinSize(true);
+        }
+    }, [jointPinSize, setValue]);
+
+    // Add state to track custom tip size
+
+    // Add effect to handle tip size changes
+    useEffect(() => {
+    if (tipSize === 'other') {
+        setValue("tipSize", "");
+        setIsCustomTipSize(true);
+    }
+    }, [tipSize, setValue]);
+
     return (
         <Dialog open={open} onClose={onClose} fullScreen>
             <DialogTitle>
@@ -1224,7 +1248,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                             {...register("shaftTaper")}
                                         />
                                     </div>
-                                    <div className='flex-1'>
+                                    {!isCustomTipSize && <div className='flex-1'>
                                         <FormSelect
                                             title="Tip Size (mm)"
                                             value={tipSize}
@@ -1232,8 +1256,17 @@ function CueDialog({ open, onClose, title, getData, element = {
                                             displayKey="label"
                                             {...register("tipSize")}
                                         />
-                                    </div>
+                                    </div>}
                                 </div>
+                                {isCustomTipSize && <div className='form-row'>
+                                    <div className='flex-1'>
+                                        <FormTextArea
+                                            title="Custom Tip Size Description"
+                                            value={tipSize}
+                                            {...register("tipSize")}
+                                        />
+                                    </div>
+                                </div>}
                             </div>
                             <div>
                                 <h3 className="dialog-header3">Ferrule</h3>
@@ -1280,8 +1313,17 @@ function CueDialog({ open, onClose, title, getData, element = {
                                     </div>
                                     <div>
                                         <h3 className="dialog-header3">Joint Pin</h3>
-                                        <div className='form-row'>
+                                        {isCustomJointPinSize && <div className='form-row'>
                                             <div className='flex-1'>
+                                                <FormTextArea
+                                                    title="Custom Joint Pin Size Description"
+                                                    value={jointPinSize}
+                                                    {...register("jointPinSize")}
+                                                />
+                                            </div>
+                                        </div>}
+                                        <div className='form-row'>
+                                            {!isCustomJointPinSize && <div className='flex-1'>
                                                 <FormSelect
                                                     title="Joint Pin Size (in)"
                                                     value={jointPinSize}
@@ -1289,7 +1331,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                     displayKey="label"
                                                     {...register("jointPinSize")}
                                                 />
-                                            </div>
+                                            </div>}
                                             <div className='flex-1'>
                                                 <FormSelect
                                                     title="Joint Pin Material"
