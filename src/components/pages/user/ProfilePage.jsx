@@ -3,33 +3,18 @@ import { useForm } from "react-hook-form";
 import AccountSection from "../../sections/AccountSection";
 import { checkAuth, updateName } from "../../../util/requests";
 import { receiveResponse } from "../../../util/notifications";
+import { FormField } from "../../util/Inputs";
+import { useSelector } from "react-redux";
 
 export default function ProfilePage() {
-    const [userData, setUserData] = useState(null);
+    const userData = useSelector(state => state.user);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const res = await checkAuth();
-                receiveResponse(res);
-                
-                if (res.status === "success" && res.data.authenticated) {
-                    setUserData(res.data);
-                }
-            } catch (error) {
-                console.log("Something went wrong.");
-            }
-        };
-
-        fetchUserData();
-    }, []);
-
     const openModal = () => {
         setIsModalOpen(true);
-        reset({ firstName: "", lastName: "" });  
+        reset({ firstName: userData.firstName || "", lastName: userData.lastName || "" });  
     };
 
     const onSubmit = async (data) => {
@@ -54,11 +39,9 @@ export default function ProfilePage() {
     return (
         <div className="user-content">
             <AccountSection title="Profile" onEdit={openModal}>
-                {userData ? (
                     <>
                         <div className="flex-h" style={{ alignItems: 'center', marginBottom: '1rem' }}>
                             <p style={{ 
-                                color: '#444', 
                                 margin: 0, 
                                 minWidth: '60px' 
                             }}>Name:</p> 
@@ -72,7 +55,6 @@ export default function ProfilePage() {
                         
                         <div className="flex-h" style={{ alignItems: 'center' }}>
                             <p style={{ 
-                                color: '#444', 
                                 margin: 0, 
                                 minWidth: '60px' 
                             }}>Email:</p>
@@ -84,9 +66,7 @@ export default function ProfilePage() {
                             </p>
                         </div>
                     </>
-                ) : (
-                    <p>Loading...</p>
-                )}
+                
             </AccountSection>
 
             {/* Popup Modal */}
@@ -95,19 +75,19 @@ export default function ProfilePage() {
                     <div className="modal-content">
                         <h2>Edit Name</h2>
                         <form onSubmit={handleSubmit(onSubmit)}>
-                            <label>First Name:</label>
-                            <input 
-                                type="text" 
-                                {...register("firstName")} 
+                            <FormField
+                                title="First Name"
+                                value={userData.firstName}
+                                error={errors.firstName && errors.name.firstName.message}
+                                {...register("firstName")}
                             />
-                            {errors.firstName && <p className="error">{errors.firstName.message}</p>}
 
-                            <label>Last Name:</label>
-                            <input 
-                                type="text" 
-                                {...register("lastName")} 
+                            <FormField
+                                title="Last Name"
+                                value={userData.lastName}
+                                error={errors.lastName && errors.lastName.message}
+                                {...register("lastName")}
                             />
-                            {errors.lastName && <p className="error">{errors.lastName.message}</p>}
 
                             <button type="submit">Save</button>
                             <button type="button" onClick={() => setIsModalOpen(false)}>Cancel</button>
