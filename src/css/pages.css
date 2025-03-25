@@ -275,6 +275,16 @@
     gap: 10px;
 }
 
+.flex-v {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-h {
+    display: flex;
+    flex-direction: row;
+}
+
 .flex-1 {
     flex: 1;
 }

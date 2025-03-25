@@ -53,14 +53,10 @@ export default function ProfilePage() {
 
     return (
         <div className="user-content">
-            <AccountSection title="Profile">
+            <AccountSection title="Profile" onEdit={openModal}>
                 {userData ? (
                     <>
-                        <div className="user-name">
-                            <p>Name: {userData.firstName || "(No First Name)"} {userData.lastName || "(No Last Name)"}</p>
-                            {/* Place holder Icon for Edit */}
-                            <button className="edit-button" onClick={openModal}>Edit</button>
-                        </div>
+                        <p>Name: {userData.firstName || "(No First Name)"} {userData.lastName || "(No Last Name)"}</p>
                         <p>Email: {userData.email}</p>
                     </>
                 ) : (
