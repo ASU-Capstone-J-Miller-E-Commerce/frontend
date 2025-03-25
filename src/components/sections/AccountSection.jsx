@@ -13,7 +13,7 @@ export default function AccountSection({ title, children, onEdit }) {
                             style={{ 
                                 display: 'inline-block', 
                                 justifySelf: 'right', 
-                                fontSize: '1.4rem',
+                                fontSize: '1.5rem',
                                 marginTop: '-0.05rem', 
                                 marginLeft: '0.5rem'
                             }}

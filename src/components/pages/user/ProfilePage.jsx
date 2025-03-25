@@ -56,8 +56,33 @@ export default function ProfilePage() {
             <AccountSection title="Profile" onEdit={openModal}>
                 {userData ? (
                     <>
-                        <p>Name: {userData.firstName || "(No First Name)"} {userData.lastName || "(No Last Name)"}</p>
-                        <p>Email: {userData.email}</p>
+                        <div className="flex-h" style={{ alignItems: 'center', marginBottom: '1rem' }}>
+                            <p style={{ 
+                                color: '#444', 
+                                margin: 0, 
+                                minWidth: '60px' 
+                            }}>Name:</p> 
+                            <p style={{ 
+                                margin: 0, 
+                                marginLeft: '20px' 
+                            }}>
+                                {userData.firstName || "(No First Name)"} {userData.lastName || "(No Last Name)"}
+                            </p>
+                        </div>
+                        
+                        <div className="flex-h" style={{ alignItems: 'center' }}>
+                            <p style={{ 
+                                color: '#444', 
+                                margin: 0, 
+                                minWidth: '60px' 
+                            }}>Email:</p>
+                            <p style={{ 
+                                margin: 0, 
+                                marginLeft: '20px' 
+                            }}>
+                                {userData.email}
+                            </p>
+                        </div>
                     </>
                 ) : (
                     <p>Loading...</p>
