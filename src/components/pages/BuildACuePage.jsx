@@ -1,9 +1,9 @@
 import React from "react";
 
-export default function BuildAQuePage () {
+export default function BuildACuePage () {
     return (
         <div>
-            buildaque
+            build a cue
         </div>
     );
 }

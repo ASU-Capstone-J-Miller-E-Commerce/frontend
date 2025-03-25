@@ -4,7 +4,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, B
 import { useForm } from 'react-hook-form';
 import { FormField, FormTextArea, FormSelect, DefaultToggle, FormMultiSelect } from '../../util/Inputs';
 import { DefaultButton } from '../../util/Buttons';
-import { getUsers, createUser, editUser, changePassword, deleteUser, getAccessories } from '../../../util/requests';
+import { getUsers, createUser, editUser, changePassword, deleteUser, getAccessories, createAccessory, editAccessory, deleteAccessory, getMaterials, createWood, editWood, createCrystal, editCrystal, deleteCrystal, deleteWood } from '../../../util/requests';
 import { receiveResponse } from '../../../util/notifications';
 import { AdminSkeletonLoader } from '../../util/Util';
 import { useSelector } from 'react-redux';
@@ -78,24 +78,35 @@ const METAPHYSICAL_OPTIONS = [
 ];
 
 const STATUS_OPTIONS_AVAILABLE = [
-    { value: 'available', label: 'Available' },
-    { value: 'not_available', label: 'Not Available' }
+    { label: 'Available' },
+    { label: 'Not Available' }
 ];
 
 const STATUS_OPTIONS_CUE = [
     ...STATUS_OPTIONS_AVAILABLE,
-    { value: 'sold', label: 'Sold' },
-    { value: 'coming_soon', label: 'Coming Soon' }
+    { label: 'Sold' },
+    { label: 'Coming Soon' }
 ];
 
 const TIP_SIZE_OPTIONS = [
-    { value: '11.75', label: '11.75' },
-    { value: '12.0', label: '12.0' },
-    { value: '12.25', label: '12.25' },
+    { value: '11.8', label: '11.8' },
+    { value: '12', label: '12' },
+    { value: '12.2', label: '12.2' },
     { value: '12.4', label: '12.4' },
-    { value: '12.5', label: '12.5' },
-    { value: '12.75', label: '12.75' },
-    { value: '13.0', label: '13.0' }
+    { value: '12.6', label: '12.6' },
+    { value: '12.8', label: '12.8' },
+    { value: '13', label: '13' },
+    { value: '14', label: '14' },
+    { value: 'other', label: 'Other' }
+];
+
+const SHAFT_MATERIAL_OPTIONS = [
+    { value: 'hard_maple', label: 'Hard Maple' },
+    { value: 'roasted_maple', label: 'Roasted Maple' },
+    { value: 'kielwood', label: 'Kielwood' },
+    { value: 'curly_kielwood', label: 'Curly Kielwood' },
+    { value: 'purpleheart', label: 'Purpleheart' },
+    { value: 'carbon_fiber', label: 'Carbon Fiber' }
 ];
 
 const SHAFT_TAPER_OPTIONS = [
@@ -105,15 +116,31 @@ const SHAFT_TAPER_OPTIONS = [
 ];
 
 const JOINT_PIN_SIZE_OPTIONS = [
-    { value: '5_16_14', label: '5/16-14 (Std.)' },
-    { value: '5_16_18', label: '5/16-18' },
-    { value: '3_8_10', label: '3/8-10' },
     { value: '3_8_10_mod', label: '3/8-10 Modified' },
-    { value: 'american_ball', label: 'American Ball Thd / Radial' },
+    { value: '3_8_10', label: '3/8-10' },
+    { value: '5_16_14', label: '5/16-14' },
+    { value: '5_16_18', label: '5/16-18' },
+    { value: 'american_ball', label: 'American Ball Thread / Radial' },
     { value: 'wavy', label: 'Wavy' },
     { value: 'quick_release', label: 'Quick Release' },
     { value: 'uni_loc', label: 'Uni-Loc' },
-    { value: 'special', label: 'Special' }
+    { value: 'other', label: 'Other' }
+];
+
+const JOINT_MATERIAL_OPTIONS = [
+    { value: 'stainless_steel', label: 'Stainless Steel' },
+    { value: 'aluminum', label: 'Aluminum' },
+    { value: 'titanium', label: 'Titanium' },
+    { value: 'brass', label: 'Brass' },
+    { value: 'g10', label: 'G10' }
+];
+
+const WRAP_TYPE_OPTIONS = [
+    { value: 'irish_linen', label: 'Irish Linen' },
+    { value: 'leather', label: 'Leather' },
+    { value: 'embossed_leather', label: 'Embossed Leather' },
+    { value: 'stacked_leather', label: 'Stacked Leather' },
+    { value: 'other', label: 'Other' }
 ];
 
 const BASIC_SIZE_OPTIONS = [
@@ -290,6 +317,57 @@ const CRYSTAL_CATEGORY_OPTIONS = [
     { value: 'well_being', label: 'For Well-Being' }
 ];
 
+const IRISH_LINEN_COLOR_OPTIONS = [
+    { value: 'black', label: 'Black' },
+    { value: 'black_w_blue', label: 'Black w/ Blue' },
+    { value: 'black_w_dbl_wht', label: 'Black w/ Dbl Wht' },
+    { value: 'black_w_green', label: 'Black w/ Green' },
+    { value: 'black_w_light_brown', label: 'Black w/ Light Brown' },
+    { value: 'black_w_light_green', label: 'Black w/ Light Green' },
+    { value: 'black_w_red', label: 'Black w/ Red' },
+    { value: 'black_w_walnut_brown', label: 'Black w/ Walnut Brown' },
+    { value: 'black_w_white', label: 'Black w/ White' },
+    { value: 'blue_w_black', label: 'Blue w/ Black' },
+    { value: 'blue_w_white', label: 'Blue w/ White' },
+    { value: 'burgundy_w_white', label: 'Burgundy w/ White' },
+    { value: 'green_w_white', label: 'Green w/ White' },
+    { value: 'green_w_black', label: 'Green w/ Black' },
+    { value: 'light_blue_w_white', label: 'Light Blue w/ White' },
+    { value: 'light_brown_w_white', label: 'Light Brown w White' },
+    { value: 'purple_w_white', label: 'Purple w/ White' },
+    { value: 'red_w_black', label: 'Red w/ Black' },
+    { value: 'red_w_white', label: 'Red w/ White' },
+    { value: 'walnut_brown_w_black', label: 'Walnut Brown w/ Black' },
+    { value: 'walnut_brown_w_dbl_wht', label: 'Walnut Brown w/ Dbl Wht' },
+    { value: 'walnut_brown_w_white', label: 'Walnut Brown w/ White' },
+    { value: 'white_antique', label: 'White (Antique)' },
+    { value: 'white_w_black', label: 'White w/ Black' },
+    { value: 'white_w_blue', label: 'White w/ Blue' },
+    { value: 'white_w_burgundy', label: 'White w/ Burgundy' },
+    { value: 'white_w_dbl_blk', label: 'White w/ Dbl Blk' },
+    { value: 'white_w_dbl_brown', label: 'White w/ Dbl Brown' },
+    { value: 'white_w_green', label: 'White w/ Green' },
+    { value: 'white_w_light_brown', label: 'White w/ Light Brown' },
+    { value: 'white_w_light_green', label: 'White w/ Light Green' },
+    { value: 'white_w_red', label: 'White w/ Red' },
+    { value: 'white_w_walnut_brown', label: 'White w/ Walnut Brown' }
+];
+
+const LEATHER_COLOR_OPTIONS = [
+    { value: 'black', label: 'Black' },
+    { value: 'brown', label: 'Brown' },
+    { value: 'red', label: 'Red' },
+    { value: 'white', label: 'White' },
+    { value: 'other', label: 'Other' }
+];
+
+// Add this constant with the ring options
+const RING_TYPE_OPTIONS = [
+    { value: 'accent_rings', label: 'Accent Rings' },
+    { value: 'simple_inlays', label: 'Simple Inlays' },
+    { value: 'intricate_inlays', label: 'Intricate Inlays' },
+];
+
 export default function AdminPage() {
     const user = useSelector(state => state.user);
     const isAdmin = user?.role === "Admin";
@@ -306,10 +384,10 @@ export default function AdminPage() {
     const [passwordDialogProps, setPasswordDialogProps] = useState({});
     const [deleteDialogProps, setDeleteDialogProps] = useState({});
 
-    const [cueData, setCueData] = useState([]);
-    const [accessoryData, setAccessoryData] = useState([]);
-    const [materialData, setMaterialData] = useState([]);
-    const [userData, setUserData] = useState([]);
+    const [cueData, setCueData] = useState(null);
+    const [accessoryData, setAccessoryData] = useState(null);
+    const [materialData, setMaterialData] = useState(null);
+    const [userData, setUserData] = useState(null);
 
     const getData = async () => {
         setLoading(true);
@@ -329,7 +407,14 @@ export default function AdminPage() {
                     });
                 break;
             case 'Materials':
-                setLoading(false);
+                getMaterials()
+                    .then((res) => {
+                        setLoading(false);
+                        setMaterialData(res.data);
+                    })
+                    .catch((err) => {
+                        setLoading(false);
+                    });
                 break;
             case 'Users':
                 getUsers()
@@ -347,7 +432,15 @@ export default function AdminPage() {
     };
 
     useEffect(() => {
-        getData();
+        // Only load data if it's null for the current page
+        if (
+            (adminPage === 'Cues' && cueData === null) ||
+            (adminPage === 'Accessories' && accessoryData === null) ||
+            (adminPage === 'Materials' && materialData === null) ||
+            (adminPage === 'Users' && userData === null)
+        ) {
+            getData();
+        }
     }, [adminPage]);
 
     const handleDialogOpen = (props) => {
@@ -384,7 +477,7 @@ export default function AdminPage() {
         <div>
             <AdminHeader setAdminPage={setAdminPage} adminPage={adminPage} loading={loading} onPlusClick={handleDialogOpen} />
             <div className='user-content'>
-                <AdminContent adminPage={adminPage} loading={loading} onEditClick={handleDialogOpen} onPasswordEditClick={handlePasswordDialogOpen} onDeleteClick={handleDeleteDialogOpen} cueData={cueData} accessoryData={accessoryData} materialData={materialData} userData={userData}/>
+                <AdminContent adminPage={adminPage} loading={loading} onEditClick={handleDialogOpen} onPasswordEditClick={handlePasswordDialogOpen} onDeleteClick={handleDeleteDialogOpen} cueData={cueData || []} accessoryData={accessoryData || []} materialData={materialData || []} userData={userData || []} />
             </div>
             {adminPage === 'Cues' && <CueDialog open={dialogOpen} onClose={handleDialogClose} getData={getData} {...dialogProps} />}
             {adminPage === 'Accessories' && <AccessoryDialog open={dialogOpen} onClose={handleDialogClose} getData={getData} {...dialogProps} />}
@@ -478,7 +571,7 @@ function AdminContent({ adminPage, loading, onEditClick, onPasswordEditClick, on
         case 'Accessories':
             return <AccessoriesTable data={accessoryData} onEditClick={onEditClick} onDeleteClick={onDeleteClick} />;
         case 'Materials':
-            return <MaterialsTable data={data} onEditClick={onEditClick} onDeleteClick={onDeleteClick} />;
+            return <MaterialsTable data={materialData} onEditClick={onEditClick} onDeleteClick={onDeleteClick} />;
         case 'Users':
             return <UsersTable data={userData} onEditClick={onEditClick} onPasswordEditClick={onPasswordEditClick} onDeleteClick={onDeleteClick} />;
         default:
@@ -517,7 +610,7 @@ function CuesTable({ data, onEditClick }) {
 
     return (
         <div>
-            <h2 className="admin-page-header">Cues</h2>
+            <h3 className="admin-page-header">Cues</h3>
             <MaterialReactTable
                 columns={columns}
                 data={data}
@@ -527,7 +620,7 @@ function CuesTable({ data, onEditClick }) {
     );
 }
 
-function AccessoriesTable({ data, onEditClick }) {
+function AccessoriesTable({ data, onEditClick, onDeleteClick }) {
     const columns = [
         {
             accessorKey: 'accessoryNumber',
@@ -546,7 +639,6 @@ function AccessoriesTable({ data, onEditClick }) {
             header: 'Status',
         },
         {
-            id: 'actions',
             header: 'Actions',
             Cell: ({ row }) => (
                 <div className='admin-actions'>
@@ -554,7 +646,13 @@ function AccessoriesTable({ data, onEditClick }) {
                         className='fa-solid fa-pencil admin-action-button'
                         onClick={() => onEditClick({ element: row.original })}
                     />
-                    <button className='fa-solid fa-trash admin-action-button' />
+                    <button
+                        className='fa-solid fa-trash admin-action-button'
+                        onClick={() => onDeleteClick({
+                            element: row.original,
+                            title: `Delete Accessory '${row.original.name}'`
+                        })}
+                    />
                 </div>
             ),
         },
@@ -562,7 +660,7 @@ function AccessoriesTable({ data, onEditClick }) {
 
     return (
         <div>
-            <h2 className="admin-page-header">Accessories</h2>
+            <h3 className="admin-page-header">Accessories</h3>
             <MaterialReactTable
                 columns={columns}
                 data={data}
@@ -572,22 +670,27 @@ function AccessoriesTable({ data, onEditClick }) {
     );
 }
 
-function MaterialsTable({ data, onEditClick }) {
+function MaterialsTable({ data, onEditClick, onDeleteClick }) {
     const columns = [
         {
-            accessorKey: 'firstName',
-            header: 'First Name',
+            header: 'Type',
+            accessorFn: (row) => row.commonName ? 'Wood' : row.crystalName ? 'Stone/Crystal' : 'Unknown',
+            id: 'materialType',
         },
         {
-            accessorKey: 'lastName',
-            header: 'Last Name',
+            header: 'Name',
+            accessorFn: (row) => row.commonName || row.crystalName || '',
+            id: 'materialName',
         },
         {
-            accessorKey: 'age',
-            header: 'Age',
+            header: 'Tier',
+            accessorKey: 'tier',
         },
         {
-            id: 'actions',
+            header: 'Status',
+            accessorKey: 'status',
+        },
+        {
             header: 'Actions',
             Cell: ({ row }) => (
                 <div className='admin-actions'>
@@ -595,7 +698,13 @@ function MaterialsTable({ data, onEditClick }) {
                         className='fa-solid fa-pencil admin-action-button'
                         onClick={() => onEditClick({ element: row.original })}
                     />
-                    <button className='fa-solid fa-trash admin-action-button' />
+                    <button
+                        className='fa-solid fa-trash admin-action-button'
+                        onClick={() => onDeleteClick({
+                            element: row.original,
+                            title: `Delete ${row.original.commonName ? 'Wood' : 'Stone/Crystal'} '${row.original.commonName || row.original.crystalName}'`
+                        })}
+                    />
                 </div>
             ),
         },
@@ -603,7 +712,7 @@ function MaterialsTable({ data, onEditClick }) {
 
     return (
         <div>
-            <h2 className="admin-page-header">Materials</h2>
+            <h3 className="admin-page-header">Materials</h3>
             <MaterialReactTable
                 columns={columns}
                 data={data}
@@ -657,7 +766,7 @@ function UsersTable({ data, onEditClick, onPasswordEditClick, onDeleteClick }) {
 
     return (
         <div>
-            <h2 className="admin-page-header">Users</h2>
+            <h3 className="admin-page-header">Users</h3>
             <MaterialReactTable
                 columns={columns}
                 data={data}
@@ -667,27 +776,34 @@ function UsersTable({ data, onEditClick, onPasswordEditClick, onDeleteClick }) {
     );
 }
 
+// Add handleWrapColor to the CueDialog default element properties
 function CueDialog({ open, onClose, title, getData, element = {
     cueNumber: '',
     name: '',
     description: '',
+    notes: '', // Add this new field
     price: '',
     overallWeight: '',
     overallLength: '',
-    tipSize: '12.4', // Default to 12.4
+    tipSize: '12.4',
     ferruleMaterial: 'juma',
-    shaftMaterial: '',
-    shaftTaper: '',
-    jointPinSize: '3_8_10',
-    jointPinMaterial: '',
+    shaftMaterial: 'hard_maple',
+    shaftTaper: 'pro_taper',
+    jointPinSize: '3_8_10_mod',
+    jointPinMaterial: 'stainless_steel',
     jointCollarMaterial: 'black_juma',
     forearmMaterial: '',
     handleMaterial: '',
-    handleWrapMaterial: '',
+    handleWrapType: '',
+    handleWrapColor: '',
     buttSleeveMaterial: '',
-    jointRings: '',
-    handleRings: '',
-    buttRings: '',
+    // Remove these three properties
+    // jointRings: '',
+    // handleRings: '',
+    // buttRings: '',
+    // Add these new properties
+    ringType: '',
+    ringsDescription: '',
     buttWeight: '',
     buttLength: '',
     buttCapMaterial: 'juma',
@@ -696,21 +812,35 @@ function CueDialog({ open, onClose, title, getData, element = {
     forearmInlaySize: '',
     buttsleeveInlayQuantity: '',
     buttsleeveInlaySize: '',
-    ringsInlayQuantity: '',
-    ringsInlaySize: '',
     forearmPointQuantity: '',
     forearmPointSize: '',
-    forearmPointVeneerColors: [], // Changed to plural and array
+    forearmPointVeneerDescription: '', // Changed to plural and array
     buttSleevePointQuantity: '',
     buttSleevePointSize: '',
-    buttSleevePointVeneerColors: [], // Changed to plural and array
+    buttSleevePointVeneerDescription: '', // Changed to plural and array
+    handleInlayQuantity: '', // Add this new field
+    handleInlaySize: '', // Add this new field
+    forearmPointInlayDescription: '', // Add this new field
+    buttSleevePointInlayDescription: '', // Add this new field
+    forearmInlayDescription: '',
+    handleInlayDescription: '', // Add this new field
+    buttsleeveInlayDescription: '', // Add this new field
   }}) {
     const [includeWrap, setIncludeWrap] = useState(false);
     const [includeForearmPointVeneers, setIncludeForearmPointVeneers] = useState(false);
     const [includeButtSleevePointVeneers, setIncludeButtSleevePointVeneers] = useState(false);
-    const [includeInlays, setIncludeInlays] = useState(false);
+    const [buttType, setButtType] = useState(false);
+    const [includeForearmInlay, setIncludeForearmInlay] = useState(false);
+    const [includeHandleInlay, setIncludeHandleInlay] = useState(false);
+    const [includeButtSleeveInlay, setIncludeButtSleeveInlay] = useState(false);
+    const [includeForearmPointInlay, setIncludeForearmPointInlay] = useState(false);
+    const [includeButtSleevePointInlay, setIncludeButtSleevePointInlay] = useState(false);
+    const [includeForearmPoint, setIncludeForarmPoint] = useState(false);
+    const [includeButtSleevePoint, setIncludeButtSleevePoint] = useState(false);
+    const [isCustomJointPinSize, setIsCustomJointPinSize] = useState(false);
+    const [isCustomTipSize, setIsCustomTipSize] = useState(false);
 
-    const { register, handleSubmit, watch, formState: { errors }, reset } = useForm({
+    const { register, handleSubmit, watch, formState: { errors }, reset, setValue } = useForm({
         defaultValues: element
     });
 
@@ -719,6 +849,18 @@ function CueDialog({ open, onClose, title, getData, element = {
     useEffect(() => {
         if (open) {
             reset(element);
+            setIncludeWrap(!!element.handleWrapType);
+            setIncludeForearmInlay(!!element.forearmInlayQuantity);
+            setIncludeHandleInlay(!!element.handleInlayQuantity);
+            setIncludeButtSleeveInlay(!!element.buttsleeveInlayQuantity);
+            setIncludeForearmPointVeneers(!!element.forearmPointVeneerDescription);
+            setIncludeButtSleevePointVeneers(!!element.buttSleevePointVeneerDescription);
+            setIncludeForearmPointInlay(!!element.forearmPointInlayDescription);
+            setIncludeButtSleevePointInlay(!!element.buttSleevePointInlayDescription);
+            setIncludeForearmPointInlay(!!element.forearmPointInlayDescription);
+            setIncludeButtSleevePointInlay(!!element.buttSleevePointInlayDescription);
+            setIsCustomJointPinSize(element.jointPinSize === 'custom');
+            setIsCustomTipSize(element.tipSize === 'custom');
         }
     }, [open, reset]);
 
@@ -736,6 +878,7 @@ function CueDialog({ open, onClose, title, getData, element = {
     const cueNumber = watch("cueNumber");
     const name = watch("name");
     const description = watch("description");
+    const notes = watch("notes"); 
     const price = watch("price");
     const overallWeight = watch("overallWeight");
     const overallLength = watch("overallLength");
@@ -749,26 +892,32 @@ function CueDialog({ open, onClose, title, getData, element = {
     const jointCollarMaterial = watch("jointCollarMaterial");
     const forearmMaterial = watch("forearmMaterial");
     const handleMaterial = watch("handleMaterial");
-    const handleWrapMaterial = watch("handleWrapMaterial");
+    const handleWrapType = watch("handleWrapType");
+    const handleWrapColor = watch("handleWrapColor");
     const buttSleeveMaterial = watch("buttSleeveMaterial");
-    const jointRings = watch("jointRings");
-    const handleRings = watch("handleRings");
-    const buttRings = watch("buttRings");
     const buttWeight = watch("buttWeight");
     const buttLength = watch("buttLength");
     const buttCapMaterial = watch("buttCapMaterial");
     const forearmPointQuantity = watch("forearmPointQuantity");
     const forearmPointSize = watch("forearmPointSize");
-    const forearmPointVeneerColors = watch("forearmPointVeneerColors");
+    const forearmPointVeneerDescription = watch("forearmPointVeneerDescription");
     const buttSleevePointQuantity = watch("buttSleevePointQuantity");
     const buttSleevePointSize = watch("buttSleevePointSize");
-    const buttSleevePointVeneerColors = watch("buttSleevePointVeneerColors");
+    const buttSleevePointVeneerDescription = watch("buttSleevePointVeneerDescription");
     const forearmInlayQuantity = watch("forearmInlayQuantity");
     const forearmInlaySize = watch("forearmInlaySize");
     const buttsleeveInlayQuantity = watch("buttsleeveInlayQuantity");
     const buttsleeveInlaySize = watch("buttsleeveInlaySize");
-    const ringsInlayQuantity = watch("ringsInlayQuantity");
-    const ringsInlaySize = watch("ringsInlaySize");
+    const handleInlayQuantity = watch("handleInlayQuantity");
+    const handleInlaySize = watch("handleInlaySize");
+    const forearmPointInlayDescription = watch("forearmPointInlayDescription");
+    const buttSleevePointInlayDescription = watch("buttSleevePointInlayDescription");
+    const forearmInlayDescription = watch("forearmInlayDescription");
+    const handleInlayDescription = watch("handleInlayDescription");
+    const buttsleeveInlayDescription = watch("buttsleeveInlayDescription");
+    // Add these new watches
+    const ringType = watch("ringType");
+    const ringsDescription = watch("ringsDescription");
 
     const materialOptions = [
         { value: 'juma', label: 'Juma' },
@@ -776,6 +925,200 @@ function CueDialog({ open, onClose, title, getData, element = {
         { value: 'rubber', label: 'Rubber' },
         { value: 'wood', label: 'Wood' }
     ];
+
+    // Set default colors when wrap type changes
+    useEffect(() => {
+        if (handleWrapType === 'irish_linen') {
+            setValue("handleWrapColor", 'black_w_white');
+        } else if (['leather', 'embossed_leather', 'stacked_leather'].includes(handleWrapType)) {
+            setValue("handleWrapColor", 'black');
+        }
+    }, [handleWrapType, setValue]);
+
+    // Handle include wrap toggle
+    useEffect(() => {
+        if (includeWrap) {
+            setValue("handleMaterial", '');
+            setValue("handleWrapType", 'irish_linen');
+            setValue("handleWrapColor", 'black_w_white');
+            setIsCustomWrapType(false);
+            setIsCustomColor(false);
+        } else {
+            setValue("handleWrapType", '');
+            setValue("handleWrapColor", '');
+            setValue("handleCustomLeatherColor", '');
+        }
+    }, [includeWrap, setValue]);
+
+    // Watch these values for conditional rendering
+    const [isCustomColor, setIsCustomColor] = useState(false);
+    
+    // Check if we need to show custom color input when wrap type or color changes
+    useEffect(() => {
+        if (['leather', 'embossed_leather', 'stacked_leather'].includes(handleWrapType) && 
+            handleWrapColor === 'other') {
+            setIsCustomColor(true);
+        }
+    }, [handleWrapType, handleWrapColor]);
+    
+    // Handle wrap type changes to set default colors
+    useEffect(() => {
+        if (handleWrapType === 'irish_linen') {
+            setValue("handleWrapColor", 'black_w_white');
+            setIsCustomColor(false);
+        } else if (['leather', 'embossed_leather', 'stacked_leather'].includes(handleWrapType)) {
+            setValue("handleWrapColor", 'black');
+            setIsCustomColor(false);
+        }
+    }, [handleWrapType, setValue]);
+
+    // Add a state to track custom wrap type
+    const [isCustomWrapType, setIsCustomWrapType] = useState(false);
+
+    // Add effect to handle wrap type changes
+    useEffect(() => {
+        if (handleWrapType === 'other') {
+            setIsCustomWrapType(true);
+            setValue("handleWrapColor", '');
+        }
+    }, [handleWrapType, isCustomWrapType, setValue]);
+
+    // Add effect to handle buttType changes
+    useEffect(() => {
+        if (buttType) {
+            // Full Splice mode - reset butt sleeve fields and set forearm points to 4
+            setValue("buttSleeveMaterial", "");
+            setValue("buttsleeveInlayQuantity", "");
+            setValue("buttsleeveInlaySize", "");
+            setValue("buttsleeveInlayDescription", "");
+            setValue("buttSleevePointQuantity", "");
+            setValue("buttSleevePointSize", "");
+            setValue("buttSleevePointVeneerDescription", "");
+            setValue("buttSleevePointInlayDescription", "");
+            setValue("forearmPointQuantity", "4"); // Set forearm points to fixed value of 4
+            
+            // Reset related toggle states
+            setIncludeButtSleeveInlay(false);
+            setIncludeButtSleevePoint(false);
+            setIncludeButtSleevePointVeneers(false);
+            setIncludeButtSleevePointInlay(false);
+        } else {
+            // Full Splice mode - reset butt sleeve fields and set forearm points to 4
+            setValue("buttSleeveMaterial", "");
+            setValue("buttsleeveInlayQuantity", "");
+            setValue("buttsleeveInlaySize", "");
+            setValue("buttsleeveInlayDescription", "");
+            setValue("buttSleevePointQuantity", "");
+            setValue("buttSleevePointSize", "");
+            setValue("buttSleevePointVeneerDescription", "");
+            setValue("buttSleevePointInlayDescription", "");
+            setValue("forearmPointQuantity", ""); // Set forearm points to fixed value of 4
+
+            // Reset related toggle states
+            setIncludeButtSleeveInlay(false);
+            setIncludeButtSleevePoint(false);
+            setIncludeButtSleevePointVeneers(false);
+            setIncludeButtSleevePointInlay(false);
+        }
+    }, [buttType, setValue]);
+
+    // Add these effects to reset fields when toggles are changed
+
+    // Reset forearm point fields when toggle changes
+    useEffect(() => {
+        if (!includeForearmPoint) {
+            setValue("forearmPointQuantity", "");
+            setValue("forearmPointSize", "");
+            setValue("forearmPointVeneerDescription", "");
+            setValue("forearmPointInlayDescription", "");
+            setIncludeForearmPointVeneers(false);
+            setIncludeForearmPointInlay(false);
+        }
+    }, [includeForearmPoint, setValue]);
+
+    // Reset butt sleeve point fields when toggle changes
+    useEffect(() => {
+        if (!includeButtSleevePoint) {
+            setValue("buttSleevePointQuantity", "");
+            setValue("buttSleevePointSize", "");
+            setValue("buttSleevePointVeneerDescription", "");
+            setValue("buttSleevePointInlayDescription", "");
+            setIncludeButtSleevePointVeneers(false);
+            setIncludeButtSleevePointInlay(false);
+        }
+    }, [includeButtSleevePoint, setValue]);
+
+    // Reset forearm inlay fields when toggle changes
+    useEffect(() => {
+        if (!includeForearmInlay) {
+            setValue("forearmInlayQuantity", "");
+            setValue("forearmInlaySize", "");
+            setValue("forearmInlayDescription", "");
+        }
+    }, [includeForearmInlay, setValue]);
+
+    // Reset handle inlay fields when toggle changes
+    useEffect(() => {
+        if (!includeHandleInlay) {
+            setValue("handleInlayQuantity", "");
+            setValue("handleInlaySize", "");
+            setValue("handleInlayDescription", "");
+        }
+    }, [includeHandleInlay, setValue]);
+
+    // Reset butt sleeve inlay fields when toggle changes
+    useEffect(() => {
+        if (!includeButtSleeveInlay) {
+            setValue("buttsleeveInlayQuantity", "");
+            setValue("buttsleeveInlaySize", "");
+            setValue("buttsleeveInlayDescription", "");
+        }
+    }, [includeButtSleeveInlay, setValue]);
+
+    // Reset specific veneer and inlay descriptions when their toggles change
+    useEffect(() => {
+        if (!includeForearmPointVeneers) {
+            setValue("forearmPointVeneerDescription", "");
+        }
+    }, [includeForearmPointVeneers, setValue]);
+
+    useEffect(() => {
+        if (!includeForearmPointInlay) {
+            setValue("forearmPointInlayDescription", "");
+        }
+    }, [includeForearmPointInlay, setValue]);
+
+    useEffect(() => {
+        if (!includeButtSleevePointVeneers) {
+            setValue("buttSleevePointVeneerDescription", "");
+        }
+    }, [includeButtSleevePointVeneers, setValue]);
+
+    useEffect(() => {
+        if (!includeButtSleevePointInlay) {
+            setValue("buttSleevePointInlayDescription", "");
+        }
+    }, [includeButtSleevePointInlay, setValue]);
+
+    // Add state to track custom joint pin size
+
+    // Add effect to handle joint pin size changes
+    useEffect(() => {
+        if (jointPinSize === 'other') {
+            setValue("jointPinSize", "");
+            setIsCustomJointPinSize(true);
+        }
+    }, [jointPinSize, setValue]);
+
+    // Add state to track custom tip size
+
+    // Add effect to handle tip size changes
+    useEffect(() => {
+    if (tipSize === 'other') {
+        setValue("tipSize", "");
+        setIsCustomTipSize(true);
+    }
+    }, [tipSize, setValue]);
 
     return (
         <Dialog open={open} onClose={onClose} fullScreen>
@@ -800,7 +1143,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                 <form className="cue-form" onSubmit={handleSubmit(onSubmit)} ref={formRef}>
                     <div className="form-column">
                         <div>
-                            <h3 className="dialog-header">General Attributes</h3>
+                            <h1 className="dialog-header1">General Attributes</h1>
                             <div className="form-column">
                                 <div className="form-row">
                                     <div className="flex-1">
@@ -866,6 +1209,11 @@ function CueDialog({ open, onClose, title, getData, element = {
                                     value={description}
                                     {...register("description")}
                                 />
+                                <FormTextArea
+                                    title="Notes"
+                                    value={notes}
+                                    {...register("notes")}
+                                />
                                 <FormSelect
                                     title="Status*"
                                     value={status}
@@ -879,14 +1227,14 @@ function CueDialog({ open, onClose, title, getData, element = {
                             </div>
                         </div>
                         <div>
-                            <h3 className="dialog-header">Shaft</h3>
+                            <h1 className="dialog-header1">Shaft</h1>
                             <div>
                                 <div className='form-row'>
                                     <div className='flex-1'>
                                         <FormSelect
                                             title="Shaft Material"
                                             value={shaftMaterial}
-                                            options={materialOptions}
+                                            options={SHAFT_MATERIAL_OPTIONS}
                                             displayKey="label"
                                             {...register("shaftMaterial")}
                                         />
@@ -900,7 +1248,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                             {...register("shaftTaper")}
                                         />
                                     </div>
-                                    <div className='flex-1'>
+                                    {!isCustomTipSize && <div className='flex-1'>
                                         <FormSelect
                                             title="Tip Size (mm)"
                                             value={tipSize}
@@ -908,11 +1256,20 @@ function CueDialog({ open, onClose, title, getData, element = {
                                             displayKey="label"
                                             {...register("tipSize")}
                                         />
-                                    </div>
+                                    </div>}
                                 </div>
+                                {isCustomTipSize && <div className='form-row'>
+                                    <div className='flex-1'>
+                                        <FormTextArea
+                                            title="Custom Tip Size Description"
+                                            value={tipSize}
+                                            {...register("tipSize")}
+                                        />
+                                    </div>
+                                </div>}
                             </div>
                             <div>
-                                <h2 className="dialog-header2">Ferrule</h2>
+                                <h3 className="dialog-header3">Ferrule</h3>
                                 <div className='form-row'>
                                     <div className='flex-1'>
                                         <FormSelect
@@ -927,314 +1284,466 @@ function CueDialog({ open, onClose, title, getData, element = {
                             </div>
                         </div>
                         <div>
-                            <h3 className="dialog-header">Butt</h3>
-                            <div>
-                                <div className='form-row'>
-                                    <div className='flex-1'>
-                                        <FormField
-                                            title="Butt Weight (oz)"
-                                            type="number"
-                                            value={buttWeight}
-                                            {...register("buttWeight")}
-                                        />
-                                    </div>
-                                    <div className='flex-1'>
-                                        <FormField
-                                            title="Butt Length (in)"
-                                            type="number"
-                                            value={buttLength}
-                                            {...register("buttLength")}
-                                        />
-                                    </div>
-                                </div>
+                            <div className='form-row'>
+                                <h1 className="dialog-header1">Butt</h1>
+                                <DefaultToggle titleOn={"Full Splice"} titleOff={"Standard"} onChange={setButtType} />
                             </div>
-                            <div>
-                                <h2 className="dialog-header2">Joint Pin</h2>
-                                <div className='form-row'>
-                                    <div className='flex-1'>
-                                        <FormSelect
-                                            title="Joint Pin Size (in)"
-                                            value={jointPinSize}
-                                            options={JOINT_PIN_SIZE_OPTIONS}
-                                            displayKey="label"
-                                            {...register("jointPinSize")}
-                                        />
-                                    </div>
-                                    <div className='flex-1'>
-                                        <FormSelect
-                                            title="Joint Pin Material"
-                                            value={jointPinMaterial}
-                                            options={materialOptions}
-                                            displayKey="label"
-                                            {...register("jointPinMaterial")}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <h2 className="dialog-header2">Joint Collar</h2>
-                                <div className='form-row'>
-                                    <div className='flex-1'>
-                                        <FormSelect
-                                            title="Joint Collar Material"
-                                            value={jointCollarMaterial}
-                                            options={materialOptions}
-                                            displayKey="label"
-                                            {...register("jointCollarMaterial")}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <h2 className="dialog-header2">Forearm</h2>
-                                <div className='form-row'>
-                                    <div className='flex-1'>
-                                        <FormSelect
-                                            title="Forearm Material"
-                                            value={forearmMaterial}
-                                            options={materialOptions}
-                                            displayKey="label"
-                                            {...register("forearmMaterial")}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div className='form-row'>
-                                    <h2 className="dialog-header2">Handle</h2>
-                                    <DefaultToggle titleOn={"Include Wrap"} titleOff={"Exclude Wrap"} onChange={setIncludeWrap}/>
-                                </div>
-                                
-                                <div className='form-row'>
-                                    <div className='flex-1'>
-                                        {includeWrap ? 
-                                            <FormSelect
-                                            title="Handle Wrap Material"
-                                            value={handleWrapMaterial}
-                                            options={materialOptions}
-                                            displayKey="label"
-                                            {...register("handleWrapMaterial")}
+
+                            <div className='form-column'> 
+                                {/* Butt Attributes */}
+                                <div>
+                                    <h2 className="dialog-header2">General Attributes</h2>
+                                    <div className='form-row'>
+                                        <div className='flex-1'>
+                                            <FormField
+                                                title="Butt Weight (oz)"
+                                                type="number"
+                                                value={buttWeight}
+                                                {...register("buttWeight")}
                                             />
-                                        :
-                                            <FormSelect
-                                                title="Handle Material"
-                                                value={handleMaterial}
-                                                options={materialOptions}
-                                                displayKey="label"
-                                                {...register("handleMaterial")}
-                                            />}
+                                        </div>
+                                        <div className='flex-1'>
+                                            <FormField
+                                                title="Butt Length (in)"
+                                                type="number"
+                                                value={buttLength}
+                                                {...register("buttLength")}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 className="dialog-header3">Joint Pin</h3>
+                                        {isCustomJointPinSize && <div className='form-row'>
+                                            <div className='flex-1'>
+                                                <FormTextArea
+                                                    title="Custom Joint Pin Size Description"
+                                                    value={jointPinSize}
+                                                    {...register("jointPinSize")}
+                                                />
+                                            </div>
+                                        </div>}
+                                        <div className='form-row'>
+                                            {!isCustomJointPinSize && <div className='flex-1'>
+                                                <FormSelect
+                                                    title="Joint Pin Size (in)"
+                                                    value={jointPinSize}
+                                                    options={JOINT_PIN_SIZE_OPTIONS}
+                                                    displayKey="label"
+                                                    {...register("jointPinSize")}
+                                                />
+                                            </div>}
+                                            <div className='flex-1'>
+                                                <FormSelect
+                                                    title="Joint Pin Material"
+                                                    value={jointPinMaterial}
+                                                    options={JOINT_MATERIAL_OPTIONS}
+                                                    displayKey="label"
+                                                    {...register("jointPinMaterial")}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 className="dialog-header3">Joint Collar</h3>
+                                        <div className='form-row'>
+                                            <div className='flex-1'>
+                                                <FormSelect
+                                                    title="Joint Collar Material"
+                                                    value={jointCollarMaterial}
+                                                    options={materialOptions}
+                                                    displayKey="label"
+                                                    {...register("jointCollarMaterial")}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 className="dialog-header3">Butt Cap</h3>
+                                        <div className='form-row'>
+                                            <div className='flex-1'>
+                                                <FormSelect
+                                                    title="Butt Cap Material"
+                                                    value={buttCapMaterial}
+                                                    options={materialOptions}
+                                                    displayKey="label"
+                                                    {...register("buttCapMaterial")}
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div>
-                                <h2 className="dialog-header2">Butt Sleeve</h2>
-                                <div className='form-row'>
-                                    <div className='flex-1'>
-                                        <FormSelect
-                                            title="Butt Sleeve Material"
-                                            value={buttSleeveMaterial}
-                                            options={materialOptions}
-                                            displayKey="label"
-                                            {...register("buttSleeveMaterial")}
-                                        />
+
+                                {/* Forearm Attributes */}
+                                <div>
+                                    <h2 className="dialog-header2">Forearm Attributes</h2>
+                                    <div>
+                                        <div className='form-row'>
+                                            <div className='flex-1'>
+                                                <FormSelect
+                                                    title="Forearm Material"
+                                                    value={forearmMaterial}
+                                                    options={materialOptions}
+                                                    displayKey="label"
+                                                    {...register("forearmMaterial")}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className='form-row'>
+                                            <h3 className="dialog-header3">Forearm Inlay</h3>
+                                            <DefaultToggle titleOn={"Include Forearm Inlays"} titleOff={"Exclude Forearm Inlays"} onChange={setIncludeForearmInlay} />
+                                        </div>
+                                        {includeForearmInlay && (
+                                            <div className='form-row'>
+                                                <div className='flex-1'>
+                                                    <FormField
+                                                        title="Quantity"
+                                                        type="number"
+                                                        value={forearmInlayQuantity}
+                                                        {...register("forearmInlayQuantity")}
+                                                    />
+                                                </div>
+                                                <div className='flex-1'>
+                                                    <FormSelect
+                                                        title="Size"
+                                                        value={forearmInlaySize}
+                                                        options={BASIC_SIZE_OPTIONS}
+                                                        displayKey="label"
+                                                        {...register("forearmInlaySize")}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+                                        {includeForearmInlay && (
+                                            <div className='form-row'>
+                                                <div className='flex-1'>
+                                                    <FormTextArea
+                                                        title="Forearm Inlay Description"
+                                                        value={forearmInlayDescription}
+                                                        {...register("forearmInlayDescription")}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                    
+                                    {/* Moved Forearm Point here */}
+                                    <div>
+                                        <div className='form-row'>
+                                            <h3 className="dialog-header3">Forearm Point</h3>
+                                            <DefaultToggle titleOn={"Include Forearm Points"} titleOff={"Exclude Forearm Points"} onChange={setIncludeForarmPoint} />
+                                            {includeForearmPoint && <DefaultToggle titleOn={"Include Forearm Point Veneers"} titleOff={"Exclude Forearm Point Veneers"} onChange={setIncludeForearmPointVeneers}/>}
+                                            {includeForearmPoint && <DefaultToggle titleOn={"Include Forearm Point Inlays"} titleOff={"Exclude Forearm Point Inlays"} onChange={setIncludeForearmPointInlay} />}
+                                        </div>
+                                        {includeForearmPoint && ( <>
+                                            <div className='form-row'>
+                                                <div className='flex-1'>
+                                                    <FormField
+                                                        title="Quantity"
+                                                        type="number"
+                                                        value={forearmPointQuantity}
+                                                        {...register("forearmPointQuantity")}
+                                                    />
+                                                </div>
+                                                <div className='flex-1'>
+                                                    <FormSelect
+                                                        title="Size"
+                                                        value={forearmPointSize}
+                                                        options={BASIC_SIZE_OPTIONS}
+                                                        displayKey="label"
+                                                        {...register("forearmPointSize")}
+                                                    />
+                                                </div>
+                                            </div>
+                                            {includeForearmPointVeneers &&<div className='form-row'>
+                                                <div className='flex-1'>
+                                                    <FormTextArea
+                                                        title="Forearm Point Veneer Description"
+                                                        value={forearmPointVeneerDescription}
+                                                        {...register("forearmPointVeneerDescription")}
+                                                    />
+                                                </div>
+                                            </div>}
+                                            {includeForearmPointInlay && (
+                                                <div className='form-row'>
+                                                    <div className='flex-1'>
+                                                        <FormTextArea
+                                                            title="Forearm Point Inlay Description"
+                                                            value={forearmPointInlayDescription}
+                                                            {...register("forearmPointInlayDescription")}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </>)}
                                     </div>
                                 </div>
-                            </div>
-                            <div>
-                                <h2 className="dialog-header2">Butt Cap</h2>
-                                <div className='form-row'>
-                                    <div className='flex-1'>
-                                        <FormSelect
-                                            title="Butt Cap Material"
-                                            value={buttCapMaterial}
-                                            options={materialOptions}
-                                            displayKey="label"
-                                            {...register("buttCapMaterial")}
-                                        />
+
+                                {/* Handle Attributes */}
+                                <div>
+                                    <div className='form-row'>
+                                        <h2 className="dialog-header2">Handle Attributes</h2>
+                                        <DefaultToggle titleOn={"Include Handle Wrap"} titleOff={"Exclude Handle Wrap"} onChange={setIncludeWrap} />
                                     </div>
+                                    
+                                    <div className='form-row'>
+                                        {includeWrap ? (
+                                            <>
+                                                <div className='flex-1'>
+                                                    {isCustomWrapType ? (
+                                                        <FormTextArea
+                                                            title="Custom Wrap Type"
+                                                            type="text"
+                                                            value={handleWrapType === 'other' ? '' : handleWrapType}
+                                                            onChange={(e) => setValue("handleWrapType", e.target.value)}
+                                                        />
+                                                    ) : (
+                                                        <FormSelect
+                                                            title="Handle Wrap Type"
+                                                            value={handleWrapType}
+                                                            options={WRAP_TYPE_OPTIONS}
+                                                            displayKey="label"
+                                                            onChange={(e) => {
+                                                                if (e.target.value === 'other') {
+                                                                    setValue("handleWrapType", 'other');
+                                                                } else {
+                                                                    setValue("handleWrapType", e.target.value);
+                                                                }
+                                                            }}
+                                                        />
+                                                    )}
+                                                </div>
+
+                                                {/* Only show standard color selector in the same row */}
+                                                {!isCustomWrapType && !isCustomColor && (
+                                                    <div className='flex-1'>
+                                                        {handleWrapType === 'irish_linen' ? (
+                                                            <FormSelect
+                                                                title="Wrap Color"
+                                                                value={handleWrapColor}
+                                                                options={IRISH_LINEN_COLOR_OPTIONS}
+                                                                displayKey="label"
+                                                                {...register("handleWrapColor")}
+                                                            />
+                                                        ) : ['leather', 'embossed_leather', 'stacked_leather'].includes(handleWrapType) ? (
+                                                            <FormSelect
+                                                                title="Wrap Color"
+                                                                value={handleWrapColor}
+                                                                options={LEATHER_COLOR_OPTIONS}
+                                                                displayKey="label"
+                                                                {...register("handleWrapColor")}
+                                                            />
+                                                        ) : (
+                                                            <FormField
+                                                                title="Wrap Color/Description"
+                                                                type="text"
+                                                                value={handleWrapColor}
+                                                                {...register("handleWrapColor")}
+                                                            />
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <div className='flex-1'>
+                                                <FormSelect
+                                                    title="Handle Material"
+                                                    value={handleMaterial}
+                                                    options={materialOptions}
+                                                    displayKey="label"
+                                                    {...register("handleMaterial")}
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Add custom color in its own row */}
+                                    {includeWrap && !isCustomWrapType && isCustomColor && (
+                                        <div className='form-row'>
+                                            <div className='flex-1'>
+                                                <FormTextArea
+                                                    title="Custom Leather Color"
+                                                    type="text"
+                                                    value={handleWrapColor === 'other' ? '' : handleWrapColor}
+                                                    onChange={(e) => setValue("handleWrapColor", e.target.value)}
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+                                    
+                                    {/* Move Handle Inlay inside here instead of as a separate section */}
+                                    <div className='form-row'>
+                                        <h3 className="dialog-header3">Handle Inlay</h3>
+                                        <DefaultToggle titleOn={"Include Handle Inlays"} titleOff={"Exclude Handle Inlays"} onChange={setIncludeHandleInlay} />
+                                    </div>
+                                    {includeHandleInlay && (
+                                        <div className='form-row'>
+                                            <div className='flex-1'>
+                                                <FormField
+                                                    title="Quantity"
+                                                    type="number"
+                                                    value={handleInlayQuantity}
+                                                    {...register("handleInlayQuantity")}
+                                                />
+                                            </div>
+                                            <div className='flex-1'>
+                                                <FormSelect
+                                                    title="Size"
+                                                    value={handleInlaySize}
+                                                    options={BASIC_SIZE_OPTIONS}
+                                                    displayKey="label"
+                                                    {...register("handleInlaySize")}
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+                                    {includeHandleInlay && (
+                                        <div className='form-row'>
+                                            <div className='flex-1'>
+                                                <FormTextArea
+                                                    title="Handle Inlay Description"
+                                                    value={handleInlayDescription}
+                                                    {...register("handleInlayDescription")}
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
+
+                                {/* Butt Sleeve Attributes */}
+                                {!buttType && (<div>
+                                    <h2 className="dialog-header2">Butt Sleeve Attributes</h2>
+                                    <div>
+                                        <div className='form-row'>
+                                            <div className='flex-1'>
+                                                <FormSelect
+                                                    title="Butt Sleeve Material"
+                                                    value={buttSleeveMaterial}
+                                                    options={materialOptions}
+                                                    displayKey="label"
+                                                    {...register("buttSleeveMaterial")}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className='form-row'>
+                                            <h3 className="dialog-header3">Buttsleeve Inlay</h3>
+                                            <DefaultToggle titleOn={"Include Butt Sleeve Inlay"} titleOff={"Exclude Butt Sleeve Inlay"} onChange={setIncludeButtSleeveInlay} />
+                                        </div>
+                                        {includeButtSleeveInlay && (
+                                            <div className='form-row'>
+                                                <div className='flex-1'>
+                                                    <FormField
+                                                        title="Quantity"
+                                                        type="number"
+                                                        value={buttsleeveInlayQuantity}
+                                                        {...register("buttsleeveInlayQuantity")}
+                                                    />
+                                                </div>
+                                                <div className='flex-1'>
+                                                    <FormSelect
+                                                        title="Size"
+                                                        value={buttsleeveInlaySize}
+                                                        options={BASIC_SIZE_OPTIONS}
+                                                        displayKey="label"
+                                                        {...register("buttsleeveInlaySize")}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+                                        {includeButtSleeveInlay && (
+                                            <div className='form-row'>
+                                                <div className='flex-1'>
+                                                    <FormTextArea
+                                                        title="Butt Sleeve Inlay Description"
+                                                        value={buttsleeveInlayDescription}
+                                                        {...register("buttsleeveInlayDescription")}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                    
+                                    {/* Moved Butt Sleeve Point here */}
+                                    <div>
+                                        <div className='form-row'>
+                                            <h3 className="dialog-header3">Butt Sleeve Point</h3>
+                                            <DefaultToggle titleOn={"Include Butt Sleeve Points"} titleOff={"Exclude Butt Sleeve Points"} onChange={setIncludeButtSleevePoint} />
+                                            {includeButtSleevePoint && <DefaultToggle titleOn={"Include Butt Sleeve Point Veneers"} titleOff={"Exclude  Butt Sleeve Point Veneers"} onChange={setIncludeButtSleevePointVeneers}/>}
+                                            {includeButtSleevePoint && <DefaultToggle titleOn={"Include Butt Sleeve Point Inlays"} titleOff={"Exclude Butt Sleeve Point Inlays"} onChange={setIncludeButtSleevePointInlay} />}
+                                        </div>
+                                        
+                                        {includeButtSleevePoint && (<>
+                                            <div className='form-row'>
+                                                <div className='flex-1'>
+                                                    <FormField
+                                                        title="Quantity"
+                                                        type="number"
+                                                        value={buttSleevePointQuantity}
+                                                        {...register("buttSleevePointQuantity")}
+                                                    />
+                                                </div>
+                                                <div className='flex-1'>
+                                                    <FormSelect
+                                                        title="Size"
+                                                        value={buttSleevePointSize}
+                                                        options={BASIC_SIZE_OPTIONS}
+                                                        displayKey="label"
+                                                        {...register("buttSleevePointSize")}
+                                                    />
+                                                </div>
+                                            </div>
+                                            {includeButtSleevePointVeneers &&<div className='form-row'>
+                                                <div className='flex-1'>
+                                                    <FormTextArea
+                                                        title="Butt Sleeve Point Veneer Description"
+                                                        value={buttSleevePointVeneerDescription}
+                                                        {...register("buttSleevePointVeneerDescription")}
+                                                    />
+                                                </div>
+                                            </div>}
+                                            {includeButtSleevePointInlay && (
+                                                <div className='form-row'>
+                                                    <div className='flex-1'>
+                                                        <FormTextArea
+                                                            title="Butt Sleeve Point Inlay Description"
+                                                            value={buttSleevePointInlayDescription}
+                                                            {...register("buttSleevePointInlayDescription")}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </>)}
+                                    </div>
+                                </div>)}
                             </div>
                         </div>
                         <div>
-                            <h3 className="dialog-header">Rings</h3>
+                            <h1 className="dialog-header1">Rings</h1>
                             <div className='form-row'>
                                 <div className='flex-1'>
                                     <FormSelect
-                                        title="Joint Rings Material"
-                                        value={jointRings}
-                                        options={materialOptions}
+                                        title="Ring Type"
+                                        value={ringType}
+                                        options={RING_TYPE_OPTIONS}
                                         displayKey="label"
-                                        {...register("jointRings")}
-                                    />
-                                </div>
-                                <div className='flex-1'>
-                                    <FormSelect
-                                        title="Handle Rings Material"
-                                        value={handleRings}
-                                        options={materialOptions}
-                                        displayKey="label"
-                                        {...register("handleRings")}
-                                    />
-                                </div>
-                                <div className='flex-1'>
-                                    <FormSelect
-                                        title="Butt Rings Material"
-                                        value={buttRings}
-                                        options={materialOptions}
-                                        displayKey="label"
-                                        {...register("buttRings")}
+                                        {...register("ringType")}
                                     />
                                 </div>
                             </div>
-                        </div>
-                        <div>
-                            <h3 className="dialog-header">Points</h3>
-                            <div>
-                                <div className='form-row'>
-                                    <h2 className="dialog-header2">Forearm Point</h2>
-                                    <DefaultToggle titleOn={"Include Veneers"} titleOff={"Exclude Veneers"} onChange={setIncludeForearmPointVeneers}/>
-                                </div>
-                                <div className='form-row'>
-                                    <div className='flex-1'>
-                                        <FormField
-                                            title="Quantity"
-                                            type="number"
-                                            value={forearmPointQuantity}
-                                            {...register("forearmPointQuantity")}
-                                        />
-                                    </div>
-                                    <div className='flex-1'>
-                                        <FormSelect
-                                            title="Size"
-                                            value={forearmPointSize}
-                                            options={BASIC_SIZE_OPTIONS}
-                                            displayKey="label"
-                                            {...register("forearmPointSize")}
-                                        />
-                                    </div>
-                                    {includeForearmPointVeneers &&
-                                        <div className='flex-1'>
-                                        <FormMultiSelect
-                                            title="Point Veneer Colors"
-                                            value={forearmPointVeneerColors || []}
-                                            options={COLOR_OPTIONS}
-                                            displayKey="label"
-                                            {...register("forearmPointVeneerColors")}
-                                        />
-                                    </div>}
-                                </div>
-                            </div>
-                            <div>
-                                <div className='form-row'>
-                                    <h2 className="dialog-header2">Butt Sleeve Point</h2>
-                                    <DefaultToggle titleOn={"Include Veneers"} titleOff={"Exclude Veneers"} onChange={setIncludeButtSleevePointVeneers}/>
-                                </div>
-                                
-                                <div className='form-row'>
-                                    <div className='flex-1'>
-                                        <FormField
-                                            title="Quantity"
-                                            type="number"
-                                            value={buttSleevePointQuantity}
-                                            {...register("buttSleevePointQuantity")}
-                                        />
-                                    </div>
-                                    <div className='flex-1'>
-                                        <FormSelect
-                                            title="Size"
-                                            value={buttSleevePointSize}
-                                            options={BASIC_SIZE_OPTIONS}
-                                            displayKey="label"
-                                            {...register("buttSleevePointSize")}
-                                        />
-                                    </div>
-                                    {includeButtSleevePointVeneers &&
-                                        <div className='flex-1'>
-                                        <FormMultiSelect
-                                            title="Point Veneer Colors"
-                                            value={buttSleevePointVeneerColors || []}
-                                            options={COLOR_OPTIONS}
-                                            displayKey="label"
-                                            {...register("buttSleevePointVeneerColors")}
-                                        />
-                                    </div>}
-                                </div>
-                            </div>
-                        </div>
-                        <div>
                             <div className='form-row'>
-                                <h3 className="dialog-header">Inlays</h3>
-                                <DefaultToggle titleOn={"Include Inlays"} titleOff={"Exclude Inlays"} onChange={setIncludeInlays}/>
+                                <div className='flex-1'>
+                                    <FormTextArea
+                                        title="Rings Description"
+                                        value={ringsDescription}
+                                        {...register("ringsDescription")}
+                                    />
+                                </div>
                             </div>
-                            {includeInlays && <>
-                                <div>
-                                    <h2 className="dialog-header2">Forearm Inlay</h2>
-                                    <div className='form-row'>
-                                        <div className='flex-1'>
-                                            <FormField
-                                                title="Quantity"
-                                                type="number"
-                                                value={forearmInlayQuantity}
-                                                {...register("forearmInlayQuantity")}
-                                            />
-                                        </div>
-                                        <div className='flex-1'>
-                                            <FormSelect
-                                                title="Size"
-                                                value={forearmInlaySize}
-                                                options={BASIC_SIZE_OPTIONS}
-                                                displayKey="label"
-                                                {...register("forearmInlaySize")}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h2 className="dialog-header2">Buttsleeve Inlay</h2>
-                                    <div className='form-row'>
-                                        <div className='flex-1'>
-                                            <FormField
-                                                title="Quantity"
-                                                type="number"
-                                                value={buttsleeveInlayQuantity}
-                                                {...register("buttsleeveInlayQuantity")}
-                                            />
-                                        </div>
-                                        <div className='flex-1'>
-                                            <FormSelect
-                                                title="Size"
-                                                value={buttsleeveInlaySize}
-                                                options={BASIC_SIZE_OPTIONS}
-                                                displayKey="label"
-                                                {...register("buttsleeveInlaySize")}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h2 className="dialog-header2">Rings Inlay</h2>
-                                    <div className='form-row'>
-                                        <div className='flex-1'>
-                                            <FormField
-                                                title="Quantity"
-                                                type="number"
-                                                value={ringsInlayQuantity}
-                                                {...register("ringsInlayQuantity")}
-                                            />
-                                        </div>
-                                        <div className='flex-1'>
-                                            <FormSelect
-                                                title="Size"
-                                                value={ringsInlaySize}
-                                                options={BASIC_SIZE_OPTIONS}
-                                                displayKey="label"
-                                                {...register("ringsInlaySize")}
-                                            />
-                                        </div>
-                                    </div>
-                                </div> 
-                            </>}
                         </div>
+
                     </div>
                 </form>
             </DialogContent>
@@ -1246,6 +1755,8 @@ function AccessoryDialog({ open, onClose, title, getData, element = { name: '', 
     const { register, handleSubmit, watch, formState: { errors }, reset } = useForm({
         defaultValues: element
     });
+
+    const existingAccessory = !!element._id;
     
     const formRef = useRef(null);
 
@@ -1256,8 +1767,21 @@ function AccessoryDialog({ open, onClose, title, getData, element = { name: '', 
     }, [open, reset]);
 
     const onSubmit = (data) => {
-        console.log(data);
-        onClose();
+        if (existingAccessory) {
+            editAccessory(data._id, data.accessoryNumber, data.name, data.description, data.price, data.status)
+                .then((res) => {
+                    receiveResponse(res);
+                    getData();
+                    onClose();
+                })
+        } else {
+            createAccessory(data.accessoryNumber, data.name, data.description, data.price, data.status)
+                .then((res) => {
+                    receiveResponse(res);
+                    getData();
+                    onClose();
+                })
+        }
     };
     
     const handleSaveClick = () => {
@@ -1358,7 +1882,7 @@ function AccessoryDialog({ open, onClose, title, getData, element = { name: '', 
                             error={errors.status && errors.status.message}
                             options={STATUS_OPTIONS_AVAILABLE}
                             displayKey="label"
-                            valueKey="value"
+                            valueKey="label"
                             {...register("status", {
                                 required: "Status is required"
                             })}
@@ -1371,11 +1895,11 @@ function AccessoryDialog({ open, onClose, title, getData, element = { name: '', 
 }
 
 function MaterialDialog({ open, onClose, title, getData, element = false }) {
+    const [materialType, setMaterialType] = useState('');
+
     const getDefaultValues = (type) => {
         const commonDefaults = {
-            materialType: type || '',
             status: '',
-            description: '',
             tier: '',
             colors: [],
         };
@@ -1387,6 +1911,7 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                 alternateName1: '',
                 alternateName2: '',
                 scientificName: '',
+                description: '',
                 brief: '',
                 jankaHardness: '',
                 treeHeight: '',
@@ -1413,27 +1938,118 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
         defaultValues: element || getDefaultValues('')
     });
 
-    const materialType = watch("materialType");
-    useEffect(() => {
-        if (materialType && materialType !== '') {
-            // Keep current materialType when resetting
-            reset({...getDefaultValues(materialType), materialType});
-        }
-    }, [materialType]);
+    const existingMaterial = !!element._id;
     
     useEffect(() => {
         if (open) {
-            if (element && element.materialType) {
+            if (element && element._id) {
+                // Determine material type from element properties
+                if (element.commonName || element.scientificName || element.jankaHardness) {
+                    setMaterialType('wood');
+                } else if (element.crystalName || element.crystalCategory || element.psychologicalCorrespondence) {
+                    setMaterialType('crystal');
+                }
                 reset(element);
             } else {
-                reset(getDefaultValues(''));
+                // New material
+                setMaterialType('');
+                reset(getDefaultValues());
             }
         }
     }, [open, reset]);
 
+    useEffect(() => {
+        if (materialType && !element._id) {
+            reset({ ...getDefaultValues() });
+        }
+    }, [materialType]);
+
     const onSubmit = (data) => {
-        console.log(data);
-        onClose();
+        if (materialType === 'wood') {
+            if (existingMaterial) {
+                editWood(
+                    data._id,
+                    data.commonName,
+                    data.description,
+                    data.status,
+                    data.tier,
+                    data.colors,
+                    data.alternateName1,
+                    data.alternateName2,
+                    data.scientificName,
+                    data.brief,
+                    data.jankaHardness,
+                    data.treeHeight,
+                    data.trunkDiameter,
+                    data.geographicOrigin,
+                    data.streaksVeins,
+                    data.texture,
+                    data.grainPattern,
+                    data.metaphysicalTags
+                )
+                    .then(res => {
+                        receiveResponse(res);
+                        getData();
+                        onClose();
+                    })
+            } else {
+                createWood(
+                    data.commonName,
+                    data.description,
+                    data.status,
+                    data.tier,
+                    data.colors,
+                    data.alternateName1,
+                    data.alternateName2,
+                    data.scientificName,
+                    data.brief,
+                    data.jankaHardness,
+                    data.treeHeight,
+                    data.trunkDiameter,
+                    data.geographicOrigin,
+                    data.streaksVeins,
+                    data.texture,
+                    data.grainPattern,
+                    data.metaphysicalTags
+                )
+                    .then(res => {
+                        receiveResponse(res);
+                        getData();
+                        onClose();
+                    })
+            }
+        } else if (materialType === 'crystal') {
+            if (existingMaterial) {
+                editCrystal(
+                    data._id,
+                    data.crystalName,
+                    data.status,
+                    data.tier,
+                    data.colors,
+                    data.crystalCategory,
+                    data.psychologicalCorrespondence
+                )
+                    .then(res => {
+                        receiveResponse(res);
+                        getData();
+                        onClose();
+                    })
+            } else {
+                createCrystal(
+                    data.crystalName,
+                    data.status,
+                    data.tier,
+                    data.colors,
+                    data.crystalCategory,
+                    data.psychologicalCorrespondence
+                )
+                    .then(res => {
+                        receiveResponse(res);
+                        getData();
+                        onClose();
+                    })
+            }
+        }
     };
 
     const formRef = useRef(null);
@@ -1450,24 +2066,13 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
     ];
 
     const tierOptions = [
-        { value: 'tier1', label: 'Tier 1' },
-        { value: 'tier2', label: 'Tier 2' },
-        { value: 'tier3', label: 'Tier 3' },
-        { value: 'tier4', label: 'Tier 4' }
-    ];
-
-    const chakraOptions = [
-        { value: 'root', label: 'Root' },
-        { value: 'sacral', label: 'Sacral' },
-        { value: 'solar', label: 'Solar Plexus' },
-        { value: 'heart', label: 'Heart' },
-        { value: 'throat', label: 'Throat' },
-        { value: 'third_eye', label: 'Third Eye' },
-        { value: 'crown', label: 'Crown' }
+        { label: 'Tier 1' },
+        { label: 'Tier 2' },
+        { label: 'Tier 3' },
+        { label: 'Tier 4' }
     ];
 
     const renderWoodAttributes = () => {
-        // Watch all wood-specific values
         const commonName = watch("commonName");
         const alternateName1 = watch("alternateName1");
         const alternateName2 = watch("alternateName2");
@@ -1553,6 +2158,7 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                             value={status}
                             options={STATUS_OPTIONS_AVAILABLE}
                             displayKey="label"
+                            valueKey="label"
                             error={errors.status && errors.status.message}
                             {...register("status", {
                                 required: "Status is required"
@@ -1567,6 +2173,7 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                             value={tier}
                             options={tierOptions}
                             displayKey="label"
+                            valueKey="label"
                             error={errors.tier && errors.tier.message}
                             {...register("tier", {
                                 required: "Tier is required"
@@ -1713,23 +2320,12 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                 </div>
                 <div className='form-row'>
                     <div className='flex-1'>
-                        <FormTextArea
-                            title="Description*"
-                            value={description}
-                            error={errors.description && errors.description.message}
-                            {...register("description", {
-                                required: "Description is required"
-                            })}
-                        />
-                    </div>
-                </div>
-                <div className='form-row'>
-                    <div className='flex-1'>
                         <FormSelect
                             title="Status*"
                             value={status}
                             options={STATUS_OPTIONS_AVAILABLE}
                             displayKey="label"
+                            valueKey="label"
                             error={errors.status && errors.status.message}
                             {...register("status", {
                                 required: "Status is required"
@@ -1744,6 +2340,7 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                             value={tier}
                             options={tierOptions}
                             displayKey="label"
+                            valueKey="label"
                             error={errors.tier && errors.tier.message}
                             {...register("tier", {
                                 required: "Tier is required"
@@ -1822,12 +2419,10 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                         <FormSelect
                             title="Material Type*"
                             value={materialType}
-                            error={errors.materialType && errors.materialType.message}
                             options={materialTypeOptions}
                             displayKey="label"
-                            {...register("materialType", {
-                                required: "Material Type is required"
-                            })}
+                            valueKey="value"
+                            onChange={(e) => setMaterialType(e.target.value)}
                         />
                         {materialType === 'wood' && renderWoodAttributes()}
                         {materialType === 'crystal' && renderCrystalAttributes()}
@@ -1843,7 +2438,7 @@ function UserDialog({ open, onClose, title, getData, element = { email: '', pass
         defaultValues: element
     });
 
-    const existingUser = !!element.email;
+    const existingUser = !!element._id;
 
     useEffect(() => {
         if (open) {
@@ -1993,10 +2588,34 @@ function DeleteDialog({ open, onClose, title, adminPage, getData, element }) {
 
                 break;
             case 'Accessories':
-
+                deleteAccessory(element._id)
+                    .then((res) => {
+                        receiveResponse(res);
+                        getData();
+                        onClose();
+                    });
                 break;
             case 'Materials':
-
+                if (element.commonName) {
+                    // It's a wood material
+                    deleteWood(element._id)
+                        .then((res) => {
+                            receiveResponse(res);
+                            getData();
+                            onClose();
+                        })
+                } else if (element.crystalName) {
+                    // It's a crystal material
+                    deleteCrystal(element._id)
+                        .then((res) => {
+                            receiveResponse(res);
+                            getData();
+                            onClose();
+                        })
+                } else {
+                    console.error("Unknown material type");
+                    onClose();
+                }
                 break;
             case 'Users':
                 deleteUser(element.email)
@@ -2022,7 +2641,7 @@ function DeleteDialog({ open, onClose, title, adminPage, getData, element }) {
             <DialogContent>
                 <div className="form-column">
                     <DialogContentText>
-                        Are you sure you want to delete?
+                        This action is irreversible. Are you sure you want to proceed?
                     </DialogContentText>
                     <DialogActions>
                         <div className='form-row'>

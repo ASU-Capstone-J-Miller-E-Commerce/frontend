@@ -156,17 +156,98 @@ export function createAccessory(accessoryNumber, name, description, price, statu
     });
 }
 
-export function editAccessory(accessoryNumber, name, description, price, status) {
+export function editAccessory(id, accessoryNumber, name, description, price, status) {
     return _ajax({
-        url: "/admin/accessories/" + accessoryNumber,
+        url: "/admin/accessories/" + id,
         method: "PUT",
-        data: { name, description, price, status }
+        data: { accessoryNumber, name, description, price, status }
     });
 }
 
 export function deleteAccessory(id) {
     return _ajax({
         url: "/admin/accessories/" + id,
+        method: "DELETE",
+    });
+}
+
+// admin materials sections
+
+export function getMaterials() {
+    return _ajax({
+        url: "/admin/materials",
+        method: "GET",
+    });
+}
+
+export function createWood(commonName, description, status, tier, colors, alternateName1,
+    alternateName2, scientificName, brief, jankaHardness, treeHeight,
+    trunkDiameter, geographicOrigin, streaksVeins, texture,
+    grainPattern, metaphysicalTags) {
+    return _ajax({
+        url: "/admin/materials/wood",
+        method: "POST",
+        data: {
+            commonName, description, status, tier, colors, alternateName1,
+            alternateName2, scientificName, brief, jankaHardness, treeHeight,
+            trunkDiameter, geographicOrigin, streaksVeins, texture,
+            grainPattern, metaphysicalTags
+        }
+    });
+}
+
+export function editWood(id, commonName, description, status, tier, colors, alternateName1,
+    alternateName2, scientificName, brief, jankaHardness, treeHeight,
+    trunkDiameter, geographicOrigin, streaksVeins, texture,
+    grainPattern, metaphysicalTags) {
+    return _ajax({
+        url: "/admin/materials/wood/" + id,
+        method: "PUT",
+        data: {
+            commonName, description, status, tier, colors, alternateName1,
+            alternateName2, scientificName, brief, jankaHardness, treeHeight,
+            trunkDiameter, geographicOrigin, streaksVeins, texture,
+            grainPattern, metaphysicalTags
+        }
+    });
+}
+
+export function deleteWood(id) {
+    return _ajax({
+        url: "/admin/materials/wood/" + id,
+        method: "DELETE",
+    });
+}
+
+// Crystal/Stone Materials
+
+export function createCrystal(crystalName, status, tier, colors,
+    crystalCategory, psychologicalCorrespondence) {
+    return _ajax({
+        url: "/admin/materials/crystal",
+        method: "POST",
+        data: {
+            crystalName, status, tier, colors,
+            crystalCategory, psychologicalCorrespondence
+        }
+    });
+}
+
+export function editCrystal(id, crystalName, status, tier, colors,
+    crystalCategory, psychologicalCorrespondence) {
+    return _ajax({
+        url: "/admin/materials/crystal/" + id,
+        method: "PUT",
+        data: {
+            crystalName, status, tier, colors,
+            crystalCategory, psychologicalCorrespondence
+        }
+    });
+}
+
+export function deleteCrystal(id) {
+    return _ajax({
+        url: "/admin/materials/crystal/" + id,
         method: "DELETE",
     });
 }
