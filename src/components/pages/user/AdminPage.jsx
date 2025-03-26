@@ -2709,7 +2709,7 @@ function PasswordDialog({ open, onClose, title, element = { password: '', firstN
                     <div className="form-column">
                         <FormField
                             title="Password"
-                            type="text"
+                            type="password"
                             value={password}
                             error={errors.password && errors.password.message}
                             {...register("password", {
