@@ -108,13 +108,23 @@ export default function ProfilePage() {
                                     <FormField
                                         title="Email"
                                         value={userData.email}
+                                        onChange={() => {}}
+                                        disabled={true}
                                     />
+                                    <p style={{ 
+                                        color: '#888', 
+                                        fontSize: '0.8rem', 
+                                        margin: '-11px 0 0 0',
+                                        fontStyle: 'italic' 
+                                    }}>
+                                        Email used for login can't be changed.
+                                    </p>
                                 </div>
                             </div>
 
                             <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
-                                <button type="submit">Save</button>
                                 <button type="button" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                                <button type="submit">Save</button>
                             </div>
                         </div>
                     </form>

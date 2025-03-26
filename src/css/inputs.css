@@ -232,3 +232,41 @@
 .clear-icon:hover {
     color: var(--miller-red);
 }
+
+/* Updated styles for disabled form fields */
+
+/* Make the input text darker than before but still visually disabled */
+.form-field-input:disabled,
+.form-field-textarea:disabled {
+  border: 1px solid #e0e0e0;
+  color: #888888;  /* Darker text color */
+  background-color: #f8f8f8;
+  cursor: not-allowed;
+}
+
+/* Style for labels in disabled form fields - slightly lighter */
+.form-field-input:disabled ~ .form-field-title,
+.form-field-textarea:disabled ~ .form-field-title {
+  color: #666666;  /* Lighter than normal but darker than input text */
+}
+
+/* Prevent hover effects on disabled inputs */
+.form-field-input:disabled:hover,
+.form-field-textarea:disabled:hover {
+  border: 1px solid #e0e0e0;
+  box-shadow: none;
+}
+
+/* Prevent focus effects on disabled inputs */
+.form-field-input:disabled:focus,
+.form-field-textarea:disabled:focus {
+  border: 1px solid #e0e0e0;
+  box-shadow: none;
+}
+
+/* Override any other focus styles for disabled inputs */
+.form-field:focus-within .form-field-input:disabled,
+.form-field:focus-within .form-field-textarea:disabled {
+  box-shadow: none;
+  border: 1px solid #e0e0e0;
+}

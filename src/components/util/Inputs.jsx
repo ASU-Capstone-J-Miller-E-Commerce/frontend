@@ -13,7 +13,7 @@ import { useOutsideClick } from '../../util/hooks';
  * @param {React.Ref} ref - Forwarded ref
  * @returns {JSX.Element} Styled input field with floating label
  */
-export const FormField = forwardRef(({ type = "text", title, value, onChange, error, ...restProps }, ref) => {
+export const FormField = forwardRef(({ type = "text", title, value, onChange, error, disabled, ...restProps }, ref) => {
     const classes = ["form-field"];
     if (value !== undefined && value !== null && value !== '') classes.push("text-within");
     if (error) classes.push("input-error");
@@ -28,6 +28,8 @@ export const FormField = forwardRef(({ type = "text", title, value, onChange, er
                     autoCorrect="off"
                     className="form-field-input"
                     onChange={onChange}
+                    value={value}
+                    disabled={disabled}
                     {...restProps}
                 />
                 <label className="form-field-title">
