@@ -72,10 +72,15 @@ export default function ProfilePage() {
             </AccountSection>
 
             {/* Material UI Dialog */}
-            <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)} fullWidth maxWidth="sm" className="miller-dialog-typography"
-  PaperProps={{
-    className: "miller-dialog-typography"
-  }}>
+            <Dialog 
+                open={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                fullWidth maxWidth="sm" 
+                className="miller-dialog-typography"
+                PaperProps={{
+                    className: "miller-dialog-typography"
+                }}
+            >
                 <DialogTitle>
                     Edit Profile
                     <button
