@@ -6,6 +6,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { login, test } from "../../../util/requests";
 import { receiveResponse } from "../../../util/notifications";
 import { updateUser } from "../../../util/redux/actionCreators";
+import { checkUserAuth } from "../../../util/functions";
 
 export default function LoginPage () {
     const navigate = useNavigate();
@@ -20,9 +21,7 @@ export default function LoginPage () {
         login(data.email, data.password)
             .then((res) => {
                 receiveResponse(res);
-                updateUser({
-                    authenticated: true
-                });
+                checkUserAuth();
                 navigate("/");
             });
     };
