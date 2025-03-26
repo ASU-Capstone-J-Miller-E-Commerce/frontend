@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Dialog, DialogTitle, DialogContent } from "@mui/material";
 import AccountSection from "../../sections/AccountSection";
-import { checkAuth, updateName } from "../../../util/requests";
+import { updateName } from "../../../util/requests";
 import { receiveResponse } from "../../../util/notifications";
 import { FormField } from "../../util/Inputs";
 import { useSelector } from "react-redux";
+import { DefaultButton } from "../../util/Buttons";
 
 export default function ProfilePage() {
     const userData = useSelector(state => state.user);
@@ -122,9 +123,22 @@ export default function ProfilePage() {
                                 </div>
                             </div>
 
-                            <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
-                                <button type="button" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                                <button type="submit">Save</button>
+                            <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '1rem' }}>
+                                <span 
+                                    onClick={() => setIsModalOpen(false)} 
+                                    style={{ 
+                                        textDecoration: 'underline', 
+                                        cursor: 'pointer',
+                                        color: '#333',
+                                        fontSize: '1rem'
+                                    }}
+                                >
+                                    Cancel
+                                </span>
+                                <DefaultButton 
+                                    text="Save" 
+                                    onClick={handleSubmit(onSubmit)}
+                                />
                             </div>
                         </div>
                     </form>
