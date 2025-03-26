@@ -395,3 +395,38 @@ select.form-field-input::-ms-expand {
   border: none;
   font-size: 1.125 rem;
 }
+
+/*==============================================================
+# Dialog Typography
+==============================================================*/
+.miller-dialog-typography {
+  font-family: 'VTGoblinHand', system-ui, Helvetica, Arial, sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.06rem;
+}
+
+/* Headers in dialogs */
+.miller-dialog-typography h1,
+.miller-dialog-typography h2,
+.miller-dialog-typography h3,
+.miller-dialog-typography .MuiDialogTitle-root {
+  font-family: 'bouwsma-uncial', system-ui, Helvetica, Arial, sans-serif;
+}
+
+/* Fix for Font Awesome icons - preserve their font */
+.miller-dialog-typography .fa-solid,
+.miller-dialog-typography .fas,
+.miller-dialog-typography [class^="fa-"] {
+  font-family: 'Font Awesome 6 Free', 'Font Awesome 6 Solid', 'FontAwesome' !important;
+}
+
+/* Fix MUI's default styles that might conflict */
+.miller-dialog-typography .MuiDialogContent-root {
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+}
+
+.miller-dialog-typography button:not([class^="fa-"]) {
+  font-family: inherit;
+}
