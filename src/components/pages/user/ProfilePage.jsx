@@ -7,6 +7,7 @@ import { receiveResponse } from "../../../util/notifications";
 import { FormField } from "../../util/Inputs";
 import { useSelector } from "react-redux";
 import { DefaultButton } from "../../util/Buttons";
+import { checkUserAuth } from "../../../util/functions";
 
 export default function ProfilePage() {
     const userData = useSelector(state => state.user);
@@ -22,18 +23,14 @@ export default function ProfilePage() {
     const firstName = watch("firstName");
     const lastName = watch("lastName");
 
-    const onSubmit = async (data) => {
-        try {
-            const res = await updateName(userData.email, data.firstName, data.lastName);
-            receiveResponse(res);
-
-            if (res.status === "success") {
+    const onSubmit = (data) => {
+        updateName(userData.email, data.firstName, data.lastName)
+            .then((res) => {
+                receiveResponse(res);
                 setIsModalOpen(false);
-            }
-        } catch (error) {
-            console.log("Something went wrong.");
-        }
-    };
+                checkUserAuth();
+            });
+    }
 
     return (
         <div className="user-content">
