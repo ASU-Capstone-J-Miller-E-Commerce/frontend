@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 /*==============================================================
 # Defaults
 ==============================================================*/
-export function DefaultButton({text, onClick}) {
+export function DefaultButton({text, onClick, disabled}) {
     const [ripples, setRipples] = useState([]);
 
     const createRipple = (event) => {
@@ -53,7 +53,7 @@ export function DefaultButton({text, onClick}) {
     };
 
     return (
-        <button className="default-button" onClick={handleClick}>
+        <button className="default-button" onClick={handleClick} disabled={disabled}>
             {text}
             {ripples.map(ripple => (
                 <span key={ripple.id} className="ripple" style={ripple.style}></span>

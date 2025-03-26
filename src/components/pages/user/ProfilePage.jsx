@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { Dialog, DialogTitle, DialogContent } from "@mui/material";
 import AccountSection from "../../sections/AccountSection";
 import { updateName } from "../../../util/requests";
@@ -7,10 +7,12 @@ import { receiveResponse } from "../../../util/notifications";
 import { FormField } from "../../util/Inputs";
 import { useSelector } from "react-redux";
 import { DefaultButton } from "../../util/Buttons";
+import { checkUserAuth } from "../../../util/functions";
 
 export default function ProfilePage() {
     const userData = useSelector(state => state.user);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const { register, handleSubmit, formState: { errors }, reset, watch } = useForm();
 
@@ -22,18 +24,20 @@ export default function ProfilePage() {
     const firstName = watch("firstName");
     const lastName = watch("lastName");
 
-    const onSubmit = async (data) => {
-        try {
-            const res = await updateName(userData.email, data.firstName, data.lastName);
-            receiveResponse(res);
+    const onSubmit = (data) => {
+        if (loading) return;
+        setIsModalOpen(false);
+        setLoading(true);
 
-            if (res.status === "success") {
-                setIsModalOpen(false);
-            }
-        } catch (error) {
-            console.log("Something went wrong.");
-        }
-    };
+        updateName(userData.email, data.firstName, data.lastName)
+            .then((res) => {
+                receiveResponse(res);
+                checkUserAuth();
+            })
+            .always(() => {
+                setLoading(false);
+            });
+    }
 
     return (
         <div className="user-content">
@@ -147,9 +151,10 @@ export default function ProfilePage() {
                                 >
                                     Cancel
                                 </span>
-                                <DefaultButton 
-                                    text="Save" 
-                                    onClick={handleSubmit(onSubmit)}
+                                <DefaultButton
+                                    text="Save"
+                                    type="submit"
+                                    disabled={loading}
                                 />
                             </div>
                         </div>
