@@ -39,7 +39,6 @@ export default function ProfilePage() {
                 <>
                     <div className="flex-h" style={{ alignItems: 'center', marginBottom: '1rem' }}>
                         <p style={{ 
-                            color: '#888', 
                             margin: 0, 
                             minWidth: '60px' 
                         }}>Name:</p> 
@@ -53,7 +52,6 @@ export default function ProfilePage() {
                     
                     <div className="flex-h" style={{ alignItems: 'center' }}>
                         <p style={{ 
-                            color: '#888', 
                             margin: 0, 
                             minWidth: '60px' 
                         }}>Email:</p>
