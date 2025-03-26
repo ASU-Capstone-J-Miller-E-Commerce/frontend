@@ -92,9 +92,12 @@ export default function ProfilePage() {
                                     <FormField
                                         title="First Name"
                                         value={firstName}
-                                        error={errors.firstName && "First name is required"}
+                                        error={errors.firstName && errors.firstName.message}
                                         {...register("firstName", { 
-                                            required: true 
+                                            maxLength: {
+                                                value: 30,
+                                                message: "30 characters maximum"
+                                            }
                                         })}
                                     />
                                 </div>
@@ -103,9 +106,12 @@ export default function ProfilePage() {
                                     <FormField
                                         title="Last Name"
                                         value={lastName}
-                                        error={errors.lastName && "Last name is required"}
+                                        error={errors.lastName && errors.lastName.message}
                                         {...register("lastName", { 
-                                            required: true 
+                                            maxLength: {
+                                                value: 30,
+                                                message: "30 characters maximum"
+                                            }
                                         })}
                                     />
                                 </div>
