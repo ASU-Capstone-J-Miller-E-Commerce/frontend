@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { Dialog, DialogTitle, DialogContent } from "@mui/material";
 import AccountSection from "../../sections/AccountSection";
 import { updateName } from "../../../util/requests";
@@ -12,6 +12,7 @@ import { checkUserAuth } from "../../../util/functions";
 export default function ProfilePage() {
     const userData = useSelector(state => state.user);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const { register, handleSubmit, formState: { errors }, reset, watch } = useForm();
 
@@ -24,11 +25,17 @@ export default function ProfilePage() {
     const lastName = watch("lastName");
 
     const onSubmit = (data) => {
+        if (loading) return;
+        setIsModalOpen(false);
+        setLoading(true);
+
         updateName(userData.email, data.firstName, data.lastName)
             .then((res) => {
                 receiveResponse(res);
-                setIsModalOpen(false);
                 checkUserAuth();
+            })
+            .always(() => {
+                setLoading(false);
             });
     }
 
@@ -144,9 +151,10 @@ export default function ProfilePage() {
                                 >
                                     Cancel
                                 </span>
-                                <DefaultButton 
-                                    text="Save" 
-                                    onClick={handleSubmit(onSubmit)}
+                                <DefaultButton
+                                    text="Save"
+                                    type="submit"
+                                    disabled={loading}
                                 />
                             </div>
                         </div>
