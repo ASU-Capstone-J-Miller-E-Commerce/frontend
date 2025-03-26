@@ -10,15 +10,17 @@ import { DefaultButton } from "../../util/Buttons";
 
 export default function ProfilePage() {
     const userData = useSelector(state => state.user);
-    console.log(userData.email)
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const { register, handleSubmit, formState: { errors }, reset } = useForm();
+    const { register, handleSubmit, formState: { errors }, reset, watch } = useForm();
 
     const openModal = () => {
         setIsModalOpen(true);
         reset({ firstName: userData.firstName || "", lastName: userData.lastName || "" });  
     };
+
+    const firstName = watch("firstName");
+    const lastName = watch("lastName");
 
     const onSubmit = async (data) => {
         try {
@@ -84,25 +86,31 @@ export default function ProfilePage() {
                 </DialogTitle>
                 <DialogContent>
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        <div className="flex-v" style={{ width: '100%' }}>
-                            <div className="flex-h" style={{ width: '100%', gap: '1rem' }}>
+                        <div className="form-column" style={{ width: '100%' }}>
+                            <div className="form-row" style={{ width: '100%' }}>
                                 <div className="flex-1">
                                     <FormField
                                         title="First Name"
-                                        value={userData.firstName}
-                                        {...register("firstName")}
+                                        value={firstName}
+                                        error={errors.firstName && "First name is required"}
+                                        {...register("firstName", { 
+                                            required: true 
+                                        })}
                                     />
                                 </div>
                                 
                                 <div className="flex-1">
                                     <FormField
                                         title="Last Name"
-                                        value={userData.lastName}
-                                        {...register("lastName")}
+                                        value={lastName}
+                                        error={errors.lastName && "Last name is required"}
+                                        {...register("lastName", { 
+                                            required: true 
+                                        })}
                                     />
                                 </div>
                             </div>
-                            <div className="flex-h" style={{ width: '100%', gap: '1rem' }}>
+                            <div className="form-row" style={{ width: '100%' }}>
                                 <div className="flex-1">
                                     <FormField
                                         title="Email"
