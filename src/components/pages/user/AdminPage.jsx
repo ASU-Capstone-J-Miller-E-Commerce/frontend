@@ -2464,7 +2464,7 @@ function UserDialog({ open, onClose, title, getData, element = { email: '', pass
                     onClose();
                 });
         } else {
-            editUser(element.email, userData.email, userData.firstName, userData.lastName)
+            editUser(element._id, userData.email, userData.firstName, userData.lastName)
                 .then((res) => {
                     receiveResponse(res);
                     getData();
@@ -2618,7 +2618,7 @@ function DeleteDialog({ open, onClose, title, adminPage, getData, element }) {
                 }
                 break;
             case 'Users':
-                deleteUser(element.email)
+                deleteUser(element._id)
                     .then((res) => {
                         receiveResponse(res);
                         getData();
@@ -2667,7 +2667,7 @@ function PasswordDialog({ open, onClose, title, element = { password: '', firstN
     }, [open, reset]);
 
     const onSubmit = (data) => {
-        changePassword(element.email, data.password)
+        changePassword(element._id, data.password)
             .then((res) => {
                 receiveResponse(res);
             });
