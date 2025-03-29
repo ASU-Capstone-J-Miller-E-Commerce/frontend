@@ -73,6 +73,20 @@ export function checkAuth() {
     });
 }
 
+export function generate2FA(){
+    return _ajax({
+        url: "/account/generate2FA",
+        method: "PUT",
+    })
+}
+
+export function verify2FA(code){
+    return _ajax({
+        url: "/account/verify2FA",
+        method: "PUT",
+        data: {code}
+    })
+}
 
 export function updateName(email, firstName, lastName) {
     return _ajax({
@@ -84,6 +98,8 @@ export function updateName(email, firstName, lastName) {
         }
     });
 }
+
+
 
 /*==============================================================
 # Products
