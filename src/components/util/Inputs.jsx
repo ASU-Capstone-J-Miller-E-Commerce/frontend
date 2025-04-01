@@ -98,14 +98,16 @@ export const FormSelect = forwardRef(({
     options, 
     displayKey = "label",
     valueKey = "value",
+    disabled = false,
     ...restProps 
 }, ref) => {
     const classes = ["form-field"];
     if (value !== undefined && value !== null && value !== '') classes.push("text-within");
     if (error) classes.push("input-error");
+    if (disabled) classes.push("disabled");
 
     const handleClick = () => {
-        if (ref.current) {
+        if (ref.current && !disabled) {
             ref.current.click();
         }
     };
@@ -118,6 +120,7 @@ export const FormSelect = forwardRef(({
                     className="form-field-input"
                     onChange={onChange}
                     value={value}
+                    disabled={disabled}
                     {...restProps}
                 >
                     <option value={""}/>
@@ -132,7 +135,10 @@ export const FormSelect = forwardRef(({
                 </label>
                 <i 
                     className={'fa-solid form-select-chevron fa-chevron-down'}
-                    style={{ pointerEvents: 'none' }}
+                    style={{ 
+                        pointerEvents: 'none',
+                        opacity: disabled ? 0.6 : 1 
+                    }}
                     onClick={handleClick}
                 />
             </div>
@@ -154,7 +160,7 @@ export const FormSelect = forwardRef(({
  * @param {React.Ref} ref - Forwarded ref
  * @returns {JSX.Element} Custom multi-select dropdown with tags for selected values
  */
-export const FormMultiSelect = forwardRef(({ title, value = [], onChange, error, options, displayKey, ...restProps }, ref) => {
+export const FormMultiSelect = forwardRef(({ title, value = [], onChange, error, options, displayKey, valueKey = "value", ...restProps }, ref) => {
     const [isOpen, setIsOpen] = useState(false);
     const selectRef = useRef(null);
     const classes = ["form-field"];
@@ -204,11 +210,12 @@ export const FormMultiSelect = forwardRef(({ title, value = [], onChange, error,
                     onClick={() => setIsOpen(!isOpen)}
                 >
                     <div className="selected-options">
-                        {value.map((selectedValue, index) => {
-                            const option = options?.find(opt => opt.value === selectedValue);
+                        {value && value.length > 0 && value.map((selectedValue, index) => {
+                            // Find matching option by value
+                            const option = options?.find(opt => opt[valueKey] === selectedValue);
                             return (
                                 <div key={index} className="selected-option">
-                                    {option?.[displayKey]}
+                                    {option ? option[displayKey] : selectedValue}
                                 </div>
                             );
                         })}
@@ -217,10 +224,10 @@ export const FormMultiSelect = forwardRef(({ title, value = [], onChange, error,
                         {options?.map((option, index) => (
                             <div
                                 key={index}
-                                className={`multi-select-option ${value.includes(option.value) ? 'selected' : ''}`}
+                                className={`multi-select-option ${value && value.includes(option[valueKey]) ? 'selected' : ''}`}
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    handleChange({ target: { value: option.value } });
+                                    handleChange({ target: { value: option[valueKey] } });
                                 }}
                             >
                                 {option[displayKey]}
@@ -228,7 +235,7 @@ export const FormMultiSelect = forwardRef(({ title, value = [], onChange, error,
                         ))}
                     </div>
                     <div className="multi-select-icon-container">
-                        {value.length > 0 && (
+                        {value && value.length > 0 && (
                             <i 
                                 className="fa-solid fa-xmark clear-icon"
                                 onClick={handleClear}
@@ -255,25 +262,22 @@ export const FormMultiSelect = forwardRef(({ title, value = [], onChange, error,
  * @param {function} props.onChange - Callback function that receives boolean indicating new state
  * @returns {JSX.Element} Styled toggle switch with text
  */
-export function DefaultToggle({ titleOn, titleOff, onChange }) {
-    const [isOn, setIsOn] = useState(false);
-
+export function DefaultToggle({ titleOn, titleOff, onChange, value }) {
     const handleToggle = () => {
-        const newIsOn = !isOn;
-        setIsOn(newIsOn);
+        const newValue = !value;
         if (onChange) {
-            onChange(newIsOn);
+            onChange(newValue);
         }
     };
 
     return (
         <div className="toggle-container" onClick={handleToggle}>
-            <div className={`toggle-switch ${isOn ? 'on' : 'off'}`}>
+            <div className={`toggle-switch ${value ? 'on' : 'off'}`}>
                 <div className="toggle-circle"></div>
             </div>
             <div className="toggle-title">
-                {isOn ? titleOn : titleOff}
+                {value ? titleOn : titleOff}
             </div>
         </div>
     );
-};
+}

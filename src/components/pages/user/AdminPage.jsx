@@ -1,13 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { MaterialReactTable } from 'material-react-table';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, IconButton } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, IconButton, ImageList, ImageListItem, ImageListItemBar } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { FormField, FormTextArea, FormSelect, DefaultToggle, FormMultiSelect } from '../../util/Inputs';
 import { DefaultButton } from '../../util/Buttons';
-import { getUsers, createUser, editUser, changePassword, deleteUser, getAccessories, createAccessory, editAccessory, deleteAccessory, getMaterials, createWood, editWood, createCrystal, editCrystal, deleteCrystal, deleteWood } from '../../../util/requests';
+import { getAdminUsers, createUser, editUser, changePassword, deleteUser, getAdminAccessories, createAccessory, editAccessory, deleteAccessory, getAdminMaterials, createWood, editWood, createCrystal, editCrystal, deleteCrystal, deleteWood, getAdminCues, createCue, editCue, deleteCue, deleteImages } from '../../../util/requests';
 import { receiveResponse } from '../../../util/notifications';
 import { AdminSkeletonLoader } from '../../util/Util';
 import { useSelector } from 'react-redux';
+import { ImageUploader } from '../../util/Util';
+
 
 const COLOR_OPTIONS = [
     { value: 'black', label: 'Black' },
@@ -389,15 +391,23 @@ export default function AdminPage() {
     const [materialData, setMaterialData] = useState(null);
     const [userData, setUserData] = useState(null);
 
-    const getData = async () => {
+    const getData = async (pageOverride = null) => {
         setLoading(true);
 
-        switch (adminPage) {
+        const currentPage = pageOverride || adminPage;
+        switch (currentPage) {
             case 'Cues':
-                setLoading(false);
+                getAdminCues()
+                    .then((res) => {
+                        setLoading(false);
+                        setCueData(res.data);
+                    })
+                    .catch((err) => {
+                        setLoading(false);
+                    });
                 break;
             case 'Accessories':
-                getAccessories()
+                getAdminAccessories()
                     .then((res) => {
                         setLoading(false);
                         setAccessoryData(res.data);
@@ -407,7 +417,8 @@ export default function AdminPage() {
                     });
                 break;
             case 'Materials':
-                getMaterials()
+                if (pageOverride && materialData !== null) return setLoading(false);
+                getAdminMaterials()
                     .then((res) => {
                         setLoading(false);
                         setMaterialData(res.data);
@@ -417,7 +428,7 @@ export default function AdminPage() {
                     });
                 break;
             case 'Users':
-                getUsers()
+                getAdminUsers()
                     .then((res) => {
                         setLoading(false);
                         setUserData(res.data);
@@ -427,6 +438,7 @@ export default function AdminPage() {
                     });
                 break;
             default:
+                setLoading(false);
                 break;
         }
     };
@@ -479,7 +491,7 @@ export default function AdminPage() {
             <div className='user-content'>
                 <AdminContent adminPage={adminPage} loading={loading} onEditClick={handleDialogOpen} onPasswordEditClick={handlePasswordDialogOpen} onDeleteClick={handleDeleteDialogOpen} cueData={cueData || []} accessoryData={accessoryData || []} materialData={materialData || []} userData={userData || []} />
             </div>
-            {adminPage === 'Cues' && <CueDialog open={dialogOpen} onClose={handleDialogClose} getData={getData} {...dialogProps} />}
+            {adminPage === 'Cues' && <CueDialog open={dialogOpen} onClose={handleDialogClose} getData={getData} cueData={cueData} materialData={materialData} {...dialogProps} />}
             {adminPage === 'Accessories' && <AccessoryDialog open={dialogOpen} onClose={handleDialogClose} getData={getData} {...dialogProps} />}
             {adminPage === 'Materials' && <MaterialDialog open={dialogOpen} onClose={handleDialogClose} getData={getData} {...dialogProps} />}
             {adminPage === 'Users' && <UserDialog open={dialogOpen} onClose={handleDialogClose} getData={getData} {...dialogProps} />}
@@ -541,33 +553,13 @@ function AdminHeader({ setAdminPage, adminPage, loading, onPlusClick }) {
 }
 
 function AdminContent({ adminPage, loading, onEditClick, onPasswordEditClick, onDeleteClick, cueData, accessoryData, materialData, userData }) {
-    const data = [
-        { id: 1, firstName: 'John', lastName: 'Doe', age: 30 },
-        { id: 2, firstName: 'Jane', lastName: 'Smith', age: 25 },
-        { id: 3, firstName: 'Alice', lastName: 'Johnson', age: 22 },
-        { id: 4, firstName: 'Bob', lastName: 'Brown', age: 45 },
-        { id: 5, firstName: 'Carol', lastName: 'Martinez', age: 32 },
-        { id: 6, firstName: 'Dave', lastName: 'Wilson', age: 28 },
-        { id: 7, firstName: 'Eva', lastName: 'Davis', age: 35 },
-        { id: 8, firstName: 'Frank', lastName: 'Garcia', age: 40 },
-        { id: 9, firstName: 'Grace', lastName: 'Lee', age: 29 },
-        { id: 10, firstName: 'Henry', lastName: 'Anderson', age: 31 },
-        { id: 11, firstName: 'Isabel', lastName: 'Thomas', age: 26 },
-        { id: 12, firstName: 'Jack', lastName: 'Moore', age: 23 },
-        { id: 13, firstName: 'Laura', lastName: 'Taylor', age: 27 },
-        { id: 14, firstName: 'Mike', lastName: 'Jackson', age: 33 },
-        { id: 15, firstName: 'Nora', lastName: 'White', age: 34 },
-        { id: 16, firstName: 'Oscar', lastName: 'Harris', age: 37 },
-        { id: 17, firstName: 'Pamela', lastName: 'Clark', age: 38 },
-    ];
-
     if (loading) {
         return <AdminSkeletonLoader />;
     }
 
     switch (adminPage) {
         case 'Cues':
-            return <CuesTable data={data} onEditClick={onEditClick} onDeleteClick={onDeleteClick} />;
+            return <CuesTable data={cueData} onEditClick={onEditClick} onDeleteClick={onDeleteClick} />;
         case 'Accessories':
             return <AccessoriesTable data={accessoryData} onEditClick={onEditClick} onDeleteClick={onDeleteClick} />;
         case 'Materials':
@@ -579,22 +571,30 @@ function AdminContent({ adminPage, loading, onEditClick, onPasswordEditClick, on
     }
 }
 
-function CuesTable({ data, onEditClick }) {
+function CuesTable({ data, onEditClick, onDeleteClick }) {
     const columns = [
         {
-            accessorKey: 'firstName',
-            header: 'First Name',
+            accessorKey: 'cueNumber',
+            header: 'Cue Number',
+            id: 'cueNumber',
         },
         {
-            accessorKey: 'lastName',
-            header: 'Last Name',
+            accessorKey: 'name',
+            header: 'Name',
+            id: 'cueName',
         },
         {
-            accessorKey: 'age',
-            header: 'Age',
+            header: 'Price',
+            accessorFn: (row) => row.price ? `$${row.price}` : '',
+            id: 'cuePrice',
         },
         {
-            id: 'actions',
+            accessorKey: 'status',
+            header: 'Status',
+            id: 'cueStatus',
+        },
+        {
+            id: 'actions1',
             header: 'Actions',
             Cell: ({ row }) => (
                 <div className='admin-actions'>
@@ -602,7 +602,10 @@ function CuesTable({ data, onEditClick }) {
                         className='fa-solid fa-pencil admin-action-button'
                         onClick={() => onEditClick({ element: row.original, title: `Edit Cue '${row.original.name}'` })}
                     />
-                    <button className='fa-solid fa-trash admin-action-button' />
+                    <button
+                        className='fa-solid fa-trash admin-action-button'
+                        onClick={() => onDeleteClick({ element: row.original, title: `Delete Cue '${row.original.name}'` })}
+                    />
                 </div>
             ),
         },
@@ -625,26 +628,31 @@ function AccessoriesTable({ data, onEditClick, onDeleteClick }) {
         {
             accessorKey: 'accessoryNumber',
             header: 'Accessory Number',
+            id: 'accessoryNumber',
         },
         {
             accessorKey: 'name',
             header: 'Name',
+            id: 'accessoryName',
         },
         {
-            accessorKey: 'price',
             header: 'Price',
+            accessorFn: (row) => row.price ? `$${row.price}` : '',
+            id: 'accessoryPrice',
         },
         {
             accessorKey: 'status',
             header: 'Status',
+            id: 'accessoryStatus',
         },
         {
+            id: 'actions2',
             header: 'Actions',
             Cell: ({ row }) => (
                 <div className='admin-actions'>
                     <button
                         className='fa-solid fa-pencil admin-action-button'
-                        onClick={() => onEditClick({ element: row.original })}
+                        onClick={() => onEditClick({ element: row.original, title: `Edit Accessory '${row.original.name}'` })}
                     />
                     <button
                         className='fa-solid fa-trash admin-action-button'
@@ -685,18 +693,21 @@ function MaterialsTable({ data, onEditClick, onDeleteClick }) {
         {
             header: 'Tier',
             accessorKey: 'tier',
+            id: 'materialTier',
         },
         {
             header: 'Status',
             accessorKey: 'status',
+            id: 'materialStatus',
         },
         {
+            id: 'actions3',
             header: 'Actions',
             Cell: ({ row }) => (
                 <div className='admin-actions'>
                     <button
                         className='fa-solid fa-pencil admin-action-button'
-                        onClick={() => onEditClick({ element: row.original })}
+                        onClick={() => onEditClick({ element: row.original, title: `Edit ${row.original.commonName ? 'Wood' : 'Stone/Crystal'} '${row.original.commonName ? row.original.commonName : row.original.crystalName}'` })}
                     />
                     <button
                         className='fa-solid fa-trash admin-action-button'
@@ -727,14 +738,17 @@ function UsersTable({ data, onEditClick, onPasswordEditClick, onDeleteClick }) {
         {
             accessorKey: 'firstName',
             header: 'First Name',
+            id: 'userFirstName',
         },
         {
             accessorKey: 'lastName',
             header: 'Last Name',
+            id: 'userLastName',
         },
         {
             accessorKey: 'email',
             header: 'Email',
+            id: 'userEmail',
         },
         {
             header: 'Password',
@@ -746,8 +760,10 @@ function UsersTable({ data, onEditClick, onPasswordEditClick, onDeleteClick }) {
                     />
                 </div>
             ),
+            id: 'userPassword',
         },
         {
+            id: 'actions4',
             header: 'Actions',
             Cell: ({ row }) => (
                 <div className='admin-actions'>
@@ -777,36 +793,31 @@ function UsersTable({ data, onEditClick, onPasswordEditClick, onDeleteClick }) {
 }
 
 // Add handleWrapColor to the CueDialog default element properties
-function CueDialog({ open, onClose, title, getData, element = {
-    cueNumber: '',
+function CueDialog({ open, onClose, title, getData, cueData, materialData, element = {
+    cueNumber: new Date().getFullYear() + '-',
     name: '',
     description: '',
-    notes: '', // Add this new field
+    notes: '',
     price: '',
     overallWeight: '',
     overallLength: '',
     tipSize: '12.4',
-    ferruleMaterial: 'juma',
-    shaftMaterial: 'hard_maple',
-    shaftTaper: 'pro_taper',
-    jointPinSize: '3_8_10_mod',
-    jointPinMaterial: 'stainless_steel',
-    jointCollarMaterial: 'black_juma',
+    ferruleMaterial: 'Juma',
+    shaftMaterial: 'Hard Maple',
+    shaftTaper: 'Pro-Taper',
+    jointPinSize: '3/8-10 Modified',
+    jointPinMaterial: 'Stainless Steel',
+    jointCollarMaterial: 'Black Juma',
     forearmMaterial: '',
     handleMaterial: '',
     handleWrapType: '',
     handleWrapColor: '',
     buttSleeveMaterial: '',
-    // Remove these three properties
-    // jointRings: '',
-    // handleRings: '',
-    // buttRings: '',
-    // Add these new properties
     ringType: '',
     ringsDescription: '',
     buttWeight: '',
     buttLength: '',
-    buttCapMaterial: 'juma',
+    buttCapMaterial: 'Juma',
     status: '',
     forearmInlayQuantity: '',
     forearmInlaySize: '',
@@ -814,17 +825,17 @@ function CueDialog({ open, onClose, title, getData, element = {
     buttsleeveInlaySize: '',
     forearmPointQuantity: '',
     forearmPointSize: '',
-    forearmPointVeneerDescription: '', // Changed to plural and array
+    forearmPointVeneerDescription: '',
     buttSleevePointQuantity: '',
     buttSleevePointSize: '',
-    buttSleevePointVeneerDescription: '', // Changed to plural and array
-    handleInlayQuantity: '', // Add this new field
-    handleInlaySize: '', // Add this new field
-    forearmPointInlayDescription: '', // Add this new field
-    buttSleevePointInlayDescription: '', // Add this new field
+    buttSleevePointVeneerDescription: '',
+    handleInlayQuantity: '',
+    handleInlaySize: '',
+    forearmPointInlayDescription: '',
+    buttSleevePointInlayDescription: '',
     forearmInlayDescription: '',
-    handleInlayDescription: '', // Add this new field
-    buttsleeveInlayDescription: '', // Add this new field
+    handleInlayDescription: '',
+    buttsleeveInlayDescription: '',
   }}) {
     const [includeWrap, setIncludeWrap] = useState(false);
     const [includeForearmPointVeneers, setIncludeForearmPointVeneers] = useState(false);
@@ -835,38 +846,121 @@ function CueDialog({ open, onClose, title, getData, element = {
     const [includeButtSleeveInlay, setIncludeButtSleeveInlay] = useState(false);
     const [includeForearmPointInlay, setIncludeForearmPointInlay] = useState(false);
     const [includeButtSleevePointInlay, setIncludeButtSleevePointInlay] = useState(false);
-    const [includeForearmPoint, setIncludeForarmPoint] = useState(false);
+    const [includeForearmPoint, setIncludeForearmPoint] = useState(false);
     const [includeButtSleevePoint, setIncludeButtSleevePoint] = useState(false);
     const [isCustomJointPinSize, setIsCustomJointPinSize] = useState(false);
     const [isCustomTipSize, setIsCustomTipSize] = useState(false);
+    const [deletedUrls, setDeletedUrls] = useState([]);
+    const woods = materialData?.filter(item => item.commonName && item.status === "Available") || [];
+    const crystals = materialData?.filter(item => item.crystalName && item.status === "Available") || [];
+    
 
-    const { register, handleSubmit, watch, formState: { errors }, reset, setValue } = useForm({
+    const { register, handleSubmit, watch, formState: { errors }, reset, setValue, getValues } = useForm({
         defaultValues: element
     });
 
     const formRef = useRef(null);
+
+    const getNextCueNumber = (cuesArray) => {
+        const currentYear = new Date().getFullYear();
+        const yearPrefix = `${currentYear}-`;
+
+        if (!cuesArray || !cuesArray.length) return `${yearPrefix}001`;
+
+        const cueNumbers = cuesArray
+            .filter(cue => cue.cueNumber && cue.cueNumber.startsWith(yearPrefix))
+            .map(cue => {
+                const numPart = cue.cueNumber.substring(yearPrefix.length);
+                return parseInt(numPart, 10) || 0;
+            });
+
+        const highestNum = cueNumbers.length > 0 ? Math.max(...cueNumbers) : 0;
+
+        const nextNumber = (highestNum + 1).toString().padStart(3, '0');
+        return `${yearPrefix}${nextNumber}`;
+    };
     
     useEffect(() => {
         if (open) {
+            getData('Materials');
             reset(element);
+            setButtType(element.isFullSplice || false);
             setIncludeWrap(!!element.handleWrapType);
             setIncludeForearmInlay(!!element.forearmInlayQuantity);
             setIncludeHandleInlay(!!element.handleInlayQuantity);
             setIncludeButtSleeveInlay(!!element.buttsleeveInlayQuantity);
+            setIncludeForearmPoint(!!element.forearmPointQuantity);
+            setIncludeButtSleevePoint(!!element.buttSleevePointQuantity);
             setIncludeForearmPointVeneers(!!element.forearmPointVeneerDescription);
             setIncludeButtSleevePointVeneers(!!element.buttSleevePointVeneerDescription);
             setIncludeForearmPointInlay(!!element.forearmPointInlayDescription);
             setIncludeButtSleevePointInlay(!!element.buttSleevePointInlayDescription);
-            setIncludeForearmPointInlay(!!element.forearmPointInlayDescription);
-            setIncludeButtSleevePointInlay(!!element.buttSleevePointInlayDescription);
-            setIsCustomJointPinSize(element.jointPinSize === 'custom');
-            setIsCustomTipSize(element.tipSize === 'custom');
+            setIsCustomJointPinSize(JOINT_PIN_SIZE_OPTIONS.every(option => option.label !== element.jointPinSize));
+            setIsCustomTipSize(TIP_SIZE_OPTIONS.every(option => option.label !== element.tipSize));
+            setIsCustomWrapType(WRAP_TYPE_OPTIONS.every(option => option.label !== element.handleWrapType));
+            if (!existingCue && cueData) {
+                const nextCueNumber = getNextCueNumber(cueData);
+                setValue('cueNumber', nextCueNumber);
+            }
+            setDeletedUrls([]);
         }
     }, [open, reset]);
 
+    useEffect(() => {
+        // Only run when editing an existing cue AND materials have been loaded
+        if (open && materialData?.length > 0 && element._id) {
+            // For each material field, find the matching object from woods array
+            if (element.forearmMaterial) {
+                const forearmWood = woods.find(wood => wood._id === element.forearmMaterial);
+                if (forearmWood) {
+                    setValue('forearmMaterial', forearmWood);
+                }
+            }
+
+            if (element.handleMaterial) {
+                const handleWood = woods.find(wood => wood._id === element.handleMaterial);
+                if (handleWood) {
+                    setValue('handleMaterial', handleWood);
+                }
+            }
+
+            if (element.buttSleeveMaterial) {
+                const buttSleeveWood = woods.find(wood => wood._id === element.buttSleeveMaterial);
+                if (buttSleeveWood) {
+                    setValue('buttSleeveMaterial', buttSleeveWood);
+                }
+            }
+        }
+    }, [materialData, open, element._id]);
+
+    const existingCue = !!element._id;
+
     const onSubmit = (data) => {
-        console.log(data);
-        onClose();
+        data.isFullSplice = buttType;
+        data.includeWrap = includeWrap;
+        console.log(data)
+        if (existingCue) {
+            editCue(element._id, data)
+                .then((res) => {
+                    receiveResponse(res);
+                    getData();
+                    onClose();
+                })
+            if (deletedUrls.length > 0) {
+                deleteImages(deletedUrls)
+                    .then((res) => {
+                        setDeletedUrls([]);
+                    })
+            }
+        }
+        else {
+            createCue(data)
+                .then((res) => {
+                    receiveResponse(res);
+                    getData();
+                    onClose();
+                })
+        }
     };
 
     const handleSaveClick = () => {
@@ -927,61 +1021,65 @@ function CueDialog({ open, onClose, title, getData, element = {
     ];
 
     // Set default colors when wrap type changes
-    useEffect(() => {
-        if (handleWrapType === 'irish_linen') {
-            setValue("handleWrapColor", 'black_w_white');
-        } else if (['leather', 'embossed_leather', 'stacked_leather'].includes(handleWrapType)) {
-            setValue("handleWrapColor", 'black');
-        }
-    }, [handleWrapType, setValue]);
-
-    // Handle include wrap toggle
-    useEffect(() => {
-        if (includeWrap) {
+    const handleIncludeWrapChange = (newValue) => {
+        if (newValue) {
+            // Only set default values if there are no current values
             setValue("handleMaterial", '');
-            setValue("handleWrapType", 'irish_linen');
-            setValue("handleWrapColor", 'black_w_white');
-            setIsCustomWrapType(false);
-            setIsCustomColor(false);
+
+            // Only set defaults if no existing wrap type
+            if (!handleWrapType) {
+                setValue("handleWrapType", 'Irish Linen');
+                setValue("handleWrapColor", 'Black w/ White');
+                setIsCustomWrapType(false);
+                setIsCustomColor(false);
+            }
         } else {
             setValue("handleWrapType", '');
             setValue("handleWrapColor", '');
             setValue("handleCustomLeatherColor", '');
         }
-    }, [includeWrap, setValue]);
+
+        // Update the state
+        setIncludeWrap(newValue);
+    };
 
     // Watch these values for conditional rendering
     const [isCustomColor, setIsCustomColor] = useState(false);
     
     // Check if we need to show custom color input when wrap type or color changes
     useEffect(() => {
-        if (['leather', 'embossed_leather', 'stacked_leather'].includes(handleWrapType) && 
-            handleWrapColor === 'other') {
+        if (['Leather', 'Embossed Leather', 'Stacked Leather'].includes(handleWrapType) && 
+            handleWrapColor === 'Other') {
+            setValue("handleWrapColor", '');
             setIsCustomColor(true);
         }
     }, [handleWrapType, handleWrapColor]);
     
-    // Handle wrap type changes to set default colors
-    useEffect(() => {
-        if (handleWrapType === 'irish_linen') {
-            setValue("handleWrapColor", 'black_w_white');
-            setIsCustomColor(false);
-        } else if (['leather', 'embossed_leather', 'stacked_leather'].includes(handleWrapType)) {
-            setValue("handleWrapColor", 'black');
-            setIsCustomColor(false);
-        }
-    }, [handleWrapType, setValue]);
 
     // Add a state to track custom wrap type
     const [isCustomWrapType, setIsCustomWrapType] = useState(false);
 
-    // Add effect to handle wrap type changes
-    useEffect(() => {
-        if (handleWrapType === 'other') {
+    const handleWrapTypeChange = (e) => {
+        const newWrapType = e.target.value;
+
+        if (newWrapType === 'Other') {
             setIsCustomWrapType(true);
+            setValue("handleWrapType", '');
             setValue("handleWrapColor", '');
+        } else {
+            setValue("handleWrapType", newWrapType);
+            setIsCustomWrapType(false);
+
+            // Only set default colors for new selections when the user explicitly changes the wrap type
+            if (newWrapType === 'Irish Linen') {
+                setValue("handleWrapColor", 'Black w/ White');
+                setIsCustomColor(false);
+            } else if (['Leather', 'Embossed Leather', 'Stacked Leather'].includes(newWrapType)) {
+                setValue("handleWrapColor", 'Black');
+                setIsCustomColor(false);
+            }
         }
-    }, [handleWrapType, isCustomWrapType, setValue]);
+    };
 
     // Add effect to handle buttType changes
     useEffect(() => {
@@ -1100,21 +1198,17 @@ function CueDialog({ open, onClose, title, getData, element = {
         }
     }, [includeButtSleevePointInlay, setValue]);
 
-    // Add state to track custom joint pin size
-
     // Add effect to handle joint pin size changes
     useEffect(() => {
-        if (jointPinSize === 'other') {
+        if (jointPinSize === 'Other') {
             setValue("jointPinSize", "");
             setIsCustomJointPinSize(true);
         }
     }, [jointPinSize, setValue]);
 
-    // Add state to track custom tip size
-
     // Add effect to handle tip size changes
     useEffect(() => {
-    if (tipSize === 'other') {
+    if (tipSize === 'Other') {
         setValue("tipSize", "");
         setIsCustomTipSize(true);
     }
@@ -1122,7 +1216,7 @@ function CueDialog({ open, onClose, title, getData, element = {
 
     return (
         <Dialog open={open} onClose={onClose} fullScreen>
-            <DialogTitle>
+            <DialogTitle style={dialogTitleStyle}>
                 {title}
                 <div style={{ float: 'right', display: 'flex' }}>
                     <button
@@ -1220,6 +1314,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                     error={errors.status && errors.status.message}
                                     options={STATUS_OPTIONS_CUE}
                                     displayKey="label"
+                                    valueKey="label"
                                     {...register("status", {
                                         required: "Status is required"
                                     })}
@@ -1236,6 +1331,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                             value={shaftMaterial}
                                             options={SHAFT_MATERIAL_OPTIONS}
                                             displayKey="label"
+                                            valueKey="label"
                                             {...register("shaftMaterial")}
                                         />
                                     </div>
@@ -1245,6 +1341,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                             value={shaftTaper}
                                             options={SHAFT_TAPER_OPTIONS} // Use the global constant instead of sizeOptions
                                             displayKey="label"
+                                            valueKey="label"
                                             {...register("shaftTaper")}
                                         />
                                     </div>
@@ -1254,6 +1351,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                             value={tipSize}
                                             options={TIP_SIZE_OPTIONS} // Use the global constant here
                                             displayKey="label"
+                                            valueKey="label"
                                             {...register("tipSize")}
                                         />
                                     </div>}
@@ -1277,6 +1375,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                             value={ferruleMaterial}
                                             options={materialOptions}
                                             displayKey="label"
+                                            valueKey="label"
                                             {...register("ferruleMaterial")}
                                         />
                                     </div>
@@ -1286,7 +1385,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                         <div>
                             <div className='form-row'>
                                 <h1 className="dialog-header1">Butt</h1>
-                                <DefaultToggle titleOn={"Full Splice"} titleOff={"Standard"} onChange={setButtType} />
+                                <DefaultToggle titleOn={"Full Splice"} titleOff={"Standard"} onChange={setButtType} value={buttType} />
                             </div>
 
                             <div className='form-column'> 
@@ -1329,6 +1428,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                     value={jointPinSize}
                                                     options={JOINT_PIN_SIZE_OPTIONS}
                                                     displayKey="label"
+                                                    valueKey="label"
                                                     {...register("jointPinSize")}
                                                 />
                                             </div>}
@@ -1338,6 +1438,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                     value={jointPinMaterial}
                                                     options={JOINT_MATERIAL_OPTIONS}
                                                     displayKey="label"
+                                                    valueKey="label"
                                                     {...register("jointPinMaterial")}
                                                 />
                                             </div>
@@ -1352,6 +1453,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                     value={jointCollarMaterial}
                                                     options={materialOptions}
                                                     displayKey="label"
+                                                    valueKey="label"
                                                     {...register("jointCollarMaterial")}
                                                 />
                                             </div>
@@ -1366,6 +1468,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                     value={buttCapMaterial}
                                                     options={materialOptions}
                                                     displayKey="label"
+                                                    valueKey="label"
                                                     {...register("buttCapMaterial")}
                                                 />
                                             </div>
@@ -1382,9 +1485,15 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                 <FormSelect
                                                     title="Forearm Material"
                                                     value={forearmMaterial}
-                                                    options={materialOptions}
-                                                    displayKey="label"
-                                                    {...register("forearmMaterial")}
+                                                    options={woods}
+                                                    displayKey="commonName"
+                                                    valueKey="_id"
+                                                    {...register("forearmMaterial", {
+                                                        setValueAs: value => {
+                                                            return typeof value === 'object' && value?._id ? value._id : value;
+                                                        },
+                                                        value: forearmMaterial // Make sure this value is passed to the select
+                                                    })}
                                                 />
                                             </div>
                                         </div>
@@ -1392,7 +1501,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                     <div>
                                         <div className='form-row'>
                                             <h3 className="dialog-header3">Forearm Inlay</h3>
-                                            <DefaultToggle titleOn={"Include Forearm Inlays"} titleOff={"Exclude Forearm Inlays"} onChange={setIncludeForearmInlay} />
+                                            <DefaultToggle titleOn={"Include Forearm Inlays"} titleOff={"Exclude Forearm Inlays"} onChange={setIncludeForearmInlay} value={includeForearmInlay} />
                                         </div>
                                         {includeForearmInlay && (
                                             <div className='form-row'>
@@ -1410,6 +1519,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                         value={forearmInlaySize}
                                                         options={BASIC_SIZE_OPTIONS}
                                                         displayKey="label"
+                                                        valueKey="label"
                                                         {...register("forearmInlaySize")}
                                                     />
                                                 </div>
@@ -1432,9 +1542,9 @@ function CueDialog({ open, onClose, title, getData, element = {
                                     <div>
                                         <div className='form-row'>
                                             <h3 className="dialog-header3">Forearm Point</h3>
-                                            <DefaultToggle titleOn={"Include Forearm Points"} titleOff={"Exclude Forearm Points"} onChange={setIncludeForarmPoint} />
-                                            {includeForearmPoint && <DefaultToggle titleOn={"Include Forearm Point Veneers"} titleOff={"Exclude Forearm Point Veneers"} onChange={setIncludeForearmPointVeneers}/>}
-                                            {includeForearmPoint && <DefaultToggle titleOn={"Include Forearm Point Inlays"} titleOff={"Exclude Forearm Point Inlays"} onChange={setIncludeForearmPointInlay} />}
+                                            <DefaultToggle titleOn={"Include Forearm Points"} titleOff={"Exclude Forearm Points"} onChange={setIncludeForearmPoint} value={includeForearmPoint} />
+                                            {includeForearmPoint && <DefaultToggle titleOn={"Include Forearm Point Veneers"} titleOff={"Exclude Forearm Point Veneers"} onChange={setIncludeForearmPointVeneers} value={includeForearmPointVeneers} />}
+                                            {includeForearmPoint && <DefaultToggle titleOn={"Include Forearm Point Inlays"} titleOff={"Exclude Forearm Point Inlays"} onChange={setIncludeForearmPointInlay} value={includeForearmPointInlay} />}
                                         </div>
                                         {includeForearmPoint && ( <>
                                             <div className='form-row'>
@@ -1452,6 +1562,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                         value={forearmPointSize}
                                                         options={BASIC_SIZE_OPTIONS}
                                                         displayKey="label"
+                                                        valueKey="label"
                                                         {...register("forearmPointSize")}
                                                     />
                                                 </div>
@@ -1484,7 +1595,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                 <div>
                                     <div className='form-row'>
                                         <h2 className="dialog-header2">Handle Attributes</h2>
-                                        <DefaultToggle titleOn={"Include Handle Wrap"} titleOff={"Exclude Handle Wrap"} onChange={setIncludeWrap} />
+                                        <DefaultToggle titleOn={"Include Handle Wrap"} titleOff={"Exclude Handle Wrap"} onChange={handleIncludeWrapChange} value={includeWrap} />
                                     </div>
                                     
                                     <div className='form-row'>
@@ -1495,8 +1606,8 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                         <FormTextArea
                                                             title="Custom Wrap Type"
                                                             type="text"
-                                                            value={handleWrapType === 'other' ? '' : handleWrapType}
-                                                            onChange={(e) => setValue("handleWrapType", e.target.value)}
+                                                            value={handleWrapType}
+                                                            {...register("handleWrapType")}
                                                         />
                                                     ) : (
                                                         <FormSelect
@@ -1504,13 +1615,8 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                             value={handleWrapType}
                                                             options={WRAP_TYPE_OPTIONS}
                                                             displayKey="label"
-                                                            onChange={(e) => {
-                                                                if (e.target.value === 'other') {
-                                                                    setValue("handleWrapType", 'other');
-                                                                } else {
-                                                                    setValue("handleWrapType", e.target.value);
-                                                                }
-                                                            }}
+                                                            valueKey="label"
+                                                            onChange={handleWrapTypeChange}
                                                         />
                                                     )}
                                                 </div>
@@ -1518,20 +1624,22 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                 {/* Only show standard color selector in the same row */}
                                                 {!isCustomWrapType && !isCustomColor && (
                                                     <div className='flex-1'>
-                                                        {handleWrapType === 'irish_linen' ? (
+                                                        {handleWrapType === 'Irish Linen' ? (
                                                             <FormSelect
                                                                 title="Wrap Color"
                                                                 value={handleWrapColor}
                                                                 options={IRISH_LINEN_COLOR_OPTIONS}
                                                                 displayKey="label"
+                                                                valueKey="label"
                                                                 {...register("handleWrapColor")}
                                                             />
-                                                        ) : ['leather', 'embossed_leather', 'stacked_leather'].includes(handleWrapType) ? (
+                                                        ) : ['Leather', 'Embossed Leather', 'Stacked Leather'].includes(handleWrapType) ? (
                                                             <FormSelect
                                                                 title="Wrap Color"
                                                                 value={handleWrapColor}
                                                                 options={LEATHER_COLOR_OPTIONS}
                                                                 displayKey="label"
+                                                                valueKey="label"
                                                                 {...register("handleWrapColor")}
                                                             />
                                                         ) : (
@@ -1550,9 +1658,15 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                 <FormSelect
                                                     title="Handle Material"
                                                     value={handleMaterial}
-                                                    options={materialOptions}
-                                                    displayKey="label"
-                                                    {...register("handleMaterial")}
+                                                    options={woods}
+                                                    displayKey="commonName"
+                                                    valueKey="_id"
+                                                    {...register("handleMaterial", {
+                                                        setValueAs: value => {
+                                                            return typeof value === 'object' && value?._id ? value._id : value;
+                                                        },
+                                                        value: handleMaterial
+                                                    })}
                                                 />
                                             </div>
                                         )}
@@ -1565,8 +1679,8 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                 <FormTextArea
                                                     title="Custom Leather Color"
                                                     type="text"
-                                                    value={handleWrapColor === 'other' ? '' : handleWrapColor}
-                                                    onChange={(e) => setValue("handleWrapColor", e.target.value)}
+                                                    value={handleWrapColor}
+                                                    {...register("handleWrapColor")}
                                                 />
                                             </div>
                                         </div>
@@ -1575,7 +1689,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                     {/* Move Handle Inlay inside here instead of as a separate section */}
                                     <div className='form-row'>
                                         <h3 className="dialog-header3">Handle Inlay</h3>
-                                        <DefaultToggle titleOn={"Include Handle Inlays"} titleOff={"Exclude Handle Inlays"} onChange={setIncludeHandleInlay} />
+                                        <DefaultToggle titleOn={"Include Handle Inlays"} titleOff={"Exclude Handle Inlays"} onChange={setIncludeHandleInlay} value={includeHandleInlay} />
                                     </div>
                                     {includeHandleInlay && (
                                         <div className='form-row'>
@@ -1593,6 +1707,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                     value={handleInlaySize}
                                                     options={BASIC_SIZE_OPTIONS}
                                                     displayKey="label"
+                                                    valueKey="label"
                                                     {...register("handleInlaySize")}
                                                 />
                                             </div>
@@ -1620,9 +1735,15 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                 <FormSelect
                                                     title="Butt Sleeve Material"
                                                     value={buttSleeveMaterial}
-                                                    options={materialOptions}
-                                                    displayKey="label"
-                                                    {...register("buttSleeveMaterial")}
+                                                    options={woods}
+                                                    displayKey="commonName"
+                                                    valueKey="_id"
+                                                    {...register("buttSleeveMaterial", {
+                                                        setValueAs: value => {
+                                                            return typeof value === 'object' && value?._id ? value._id : value;
+                                                        },
+                                                        value: buttSleeveMaterial
+                                                    })}
                                                 />
                                             </div>
                                         </div>
@@ -1630,7 +1751,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                     <div>
                                         <div className='form-row'>
                                             <h3 className="dialog-header3">Buttsleeve Inlay</h3>
-                                            <DefaultToggle titleOn={"Include Butt Sleeve Inlay"} titleOff={"Exclude Butt Sleeve Inlay"} onChange={setIncludeButtSleeveInlay} />
+                                            <DefaultToggle titleOn={"Include Butt Sleeve Inlay"} titleOff={"Exclude Butt Sleeve Inlay"} onChange={setIncludeButtSleeveInlay} value={includeButtSleeveInlay} />
                                         </div>
                                         {includeButtSleeveInlay && (
                                             <div className='form-row'>
@@ -1648,6 +1769,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                         value={buttsleeveInlaySize}
                                                         options={BASIC_SIZE_OPTIONS}
                                                         displayKey="label"
+                                                        valueKey="label"
                                                         {...register("buttsleeveInlaySize")}
                                                     />
                                                 </div>
@@ -1670,9 +1792,9 @@ function CueDialog({ open, onClose, title, getData, element = {
                                     <div>
                                         <div className='form-row'>
                                             <h3 className="dialog-header3">Butt Sleeve Point</h3>
-                                            <DefaultToggle titleOn={"Include Butt Sleeve Points"} titleOff={"Exclude Butt Sleeve Points"} onChange={setIncludeButtSleevePoint} />
-                                            {includeButtSleevePoint && <DefaultToggle titleOn={"Include Butt Sleeve Point Veneers"} titleOff={"Exclude  Butt Sleeve Point Veneers"} onChange={setIncludeButtSleevePointVeneers}/>}
-                                            {includeButtSleevePoint && <DefaultToggle titleOn={"Include Butt Sleeve Point Inlays"} titleOff={"Exclude Butt Sleeve Point Inlays"} onChange={setIncludeButtSleevePointInlay} />}
+                                            <DefaultToggle titleOn={"Include Butt Sleeve Points"} titleOff={"Exclude Butt Sleeve Points"} onChange={setIncludeButtSleevePoint} value={includeButtSleevePoint} />
+                                            {includeButtSleevePoint && <DefaultToggle titleOn={"Include Butt Sleeve Point Veneers"} titleOff={"Exclude  Butt Sleeve Point Veneers"} onChange={setIncludeButtSleevePointVeneers} value={includeButtSleevePointVeneers} />}
+                                            {includeButtSleevePoint && <DefaultToggle titleOn={"Include Butt Sleeve Point Inlays"} titleOff={"Exclude Butt Sleeve Point Inlays"} onChange={setIncludeButtSleevePointInlay} value={includeButtSleevePointInlay} />}
                                         </div>
                                         
                                         {includeButtSleevePoint && (<>
@@ -1691,6 +1813,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                                         value={buttSleevePointSize}
                                                         options={BASIC_SIZE_OPTIONS}
                                                         displayKey="label"
+                                                        valueKey="label"
                                                         {...register("buttSleevePointSize")}
                                                     />
                                                 </div>
@@ -1729,6 +1852,7 @@ function CueDialog({ open, onClose, title, getData, element = {
                                         value={ringType}
                                         options={RING_TYPE_OPTIONS}
                                         displayKey="label"
+                                        valueKey="label"
                                         {...register("ringType")}
                                     />
                                 </div>
@@ -1743,7 +1867,27 @@ function CueDialog({ open, onClose, title, getData, element = {
                                 </div>
                             </div>
                         </div>
-
+                        <DialogImageSection
+                            folder={'cues'}
+                            existingItem={existingCue}
+                            imageUrls={getValues('imageUrls') || []}
+                            onImageDelete={(imageUrl) => {
+                                setDeletedUrls(prev => [...prev, imageUrl]);
+                                const newImageUrls = (getValues('imageUrls') || []).filter(url => url !== imageUrl);
+                                setValue('imageUrls', newImageUrls);
+                            }}
+                            onImageUpload={(imageUrls, isReorder) => {
+                                if (isReorder) {
+                                    setValue('imageUrls', imageUrls);
+                                } else {
+                                    // Add new images to the existing array (for uploading new images)
+                                    const currentImageUrls = getValues('imageUrls') || [];
+                                    const updatedImageUrls = [...currentImageUrls, ...imageUrls];
+                                    setValue('imageUrls', updatedImageUrls);
+                                    handleSubmit(onSubmit)();
+                                }
+                            }}
+                        />
                     </div>
                 </form>
             </DialogContent>
@@ -1751,8 +1895,10 @@ function CueDialog({ open, onClose, title, getData, element = {
     );
 }
 
-function AccessoryDialog({ open, onClose, title, getData, element = { name: '', description: '', price: '', accessoryNumber: '', status: '' } }) {
-    const { register, handleSubmit, watch, formState: { errors }, reset } = useForm({
+function AccessoryDialog({ open, onClose, title, getData, element = { name: '', description: '', price: '', accessoryNumber: '', status: '', imageUrls: [] } }) {
+    const [deletedUrls, setDeletedUrls] = useState([]);
+    
+    const { register, handleSubmit, watch, formState: { errors }, reset, setValue, getValues } = useForm({
         defaultValues: element
     });
 
@@ -1763,17 +1909,24 @@ function AccessoryDialog({ open, onClose, title, getData, element = { name: '', 
     useEffect(() => {
         if (open) {
             reset(element);
+            setDeletedUrls([]);
         }
     }, [open, reset]);
 
     const onSubmit = (data) => {
         if (existingAccessory) {
-            editAccessory(data._id, data.accessoryNumber, data.name, data.description, data.price, data.status)
+            editAccessory(data._id, data.accessoryNumber, data.name, data.description, data.price, data.status, data.imageUrls)
                 .then((res) => {
                     receiveResponse(res);
                     getData();
                     onClose();
                 })
+            if (deletedUrls.length > 0) {
+                deleteImages(deletedUrls)
+                    .then((res) => {
+                        setDeletedUrls([]);
+                    })
+            }
         } else {
             createAccessory(data.accessoryNumber, data.name, data.description, data.price, data.status)
                 .then((res) => {
@@ -1798,7 +1951,7 @@ function AccessoryDialog({ open, onClose, title, getData, element = { name: '', 
 
     return (
         <Dialog open={open} onClose={onClose} fullScreen>
-            <DialogTitle>
+            <DialogTitle style={dialogTitleStyle}>
                 {title}
                 <div style={{ float: 'right', display: 'flex' }}>
                     <button
@@ -1815,7 +1968,7 @@ function AccessoryDialog({ open, onClose, title, getData, element = { name: '', 
                     />
                 </div>
             </DialogTitle>
-            <DialogContent>
+            <DialogContent style={dialogContentStyle}>
                 <form className="accessory-form" onSubmit={handleSubmit(onSubmit)} ref={formRef}>
                     <div className="form-column">
                         <div className='form-row'>
@@ -1887,6 +2040,28 @@ function AccessoryDialog({ open, onClose, title, getData, element = { name: '', 
                                 required: "Status is required"
                             })}
                         />
+                        {/* Image section */}
+                        <DialogImageSection
+                            folder={'accessories'}
+                            existingItem={existingAccessory}
+                            imageUrls={getValues('imageUrls') || []}
+                            onImageDelete={(imageUrl) => {
+                                setDeletedUrls(prev => [...prev, imageUrl]);
+                                const newImageUrls = (getValues('imageUrls') || []).filter(url => url !== imageUrl);
+                                setValue('imageUrls', newImageUrls);
+                            }}
+                            onImageUpload={(imageUrls, isReorder) => {
+                                if (isReorder) {
+                                    setValue('imageUrls', imageUrls);
+                                } else {
+                                    // Add new images to the existing array (for uploading new images)
+                                    const currentImageUrls = getValues('imageUrls') || [];
+                                    const updatedImageUrls = [...currentImageUrls, ...imageUrls];
+                                    setValue('imageUrls', updatedImageUrls);
+                                    handleSubmit(onSubmit)();
+                                }
+                            }}
+                        />
                     </div>
                 </form>
             </DialogContent>
@@ -1896,12 +2071,14 @@ function AccessoryDialog({ open, onClose, title, getData, element = { name: '', 
 
 function MaterialDialog({ open, onClose, title, getData, element = false }) {
     const [materialType, setMaterialType] = useState('');
+    const [deletedUrls, setDeletedUrls] = useState([]);
 
     const getDefaultValues = (type) => {
         const commonDefaults = {
             status: '',
             tier: '',
             colors: [],
+            imageUrls: [],
         };
 
         if (type === 'wood') {
@@ -1934,7 +2111,7 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
         return commonDefaults;
     };
 
-    const { register, handleSubmit, watch, formState: { errors }, reset, setValue } = useForm({
+    const { register, handleSubmit, watch, formState: { errors }, reset, setValue, getValues } = useForm({
         defaultValues: element || getDefaultValues('')
     });
 
@@ -1955,6 +2132,7 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                 setMaterialType('');
                 reset(getDefaultValues());
             }
+            setDeletedUrls([]);
         }
     }, [open, reset]);
 
@@ -1985,13 +2163,20 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                     data.streaksVeins,
                     data.texture,
                     data.grainPattern,
-                    data.metaphysicalTags
+                    data.metaphysicalTags,
+                    data.imageUrls,
                 )
                     .then(res => {
                         receiveResponse(res);
                         getData();
                         onClose();
                     })
+                if (deletedUrls.length > 0) {
+                    deleteImages(deletedUrls)
+                        .then((res) => {
+                            setDeletedUrls([]);
+                        })
+                }
             } else {
                 createWood(
                     data.commonName,
@@ -2010,7 +2195,8 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                     data.streaksVeins,
                     data.texture,
                     data.grainPattern,
-                    data.metaphysicalTags
+                    data.metaphysicalTags,
+                    data.imageUrls,
                 )
                     .then(res => {
                         receiveResponse(res);
@@ -2027,13 +2213,20 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                     data.tier,
                     data.colors,
                     data.crystalCategory,
-                    data.psychologicalCorrespondence
+                    data.psychologicalCorrespondence,
+                    data.imageUrls,
                 )
                     .then(res => {
                         receiveResponse(res);
                         getData();
                         onClose();
                     })
+                if (deletedUrls.length > 0) {
+                    deleteImages(deletedUrls)
+                        .then((res) => {
+                            setDeletedUrls([]);
+                        })
+                }
             } else {
                 createCrystal(
                     data.crystalName,
@@ -2041,7 +2234,8 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                     data.tier,
                     data.colors,
                     data.crystalCategory,
-                    data.psychologicalCorrespondence
+                    data.psychologicalCorrespondence,
+                    data.imageUrls,
                 )
                     .then(res => {
                         receiveResponse(res);
@@ -2243,6 +2437,7 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                             value={colors || []}
                             options={COLOR_OPTIONS}
                             displayKey="label"
+                            valueKey="label"
                             error={errors.colors && errors.colors.message}
                             {...register("colors", {
                                 required: "At least one color must be selected"
@@ -2283,6 +2478,7 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                             value={metaphysicalTags || []}
                             options={METAPHYSICAL_OPTIONS}
                             displayKey="label"
+                            valueKey="label"
                             error={errors.metaphysicalTags && errors.metaphysicalTags.message}
                             {...register("metaphysicalTags", {
                                 required: "At least one metaphysical tag must be selected"
@@ -2295,14 +2491,12 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
     };
 
     const renderCrystalAttributes = () => {
-        // Watch crystal-specific values
         const crystalName = watch("crystalName");
-        const description = watch("description"); // Added description watch
         const crystalCategory = watch("crystalCategory");
         const colors = watch("colors");
         const psychologicalCorrespondence = watch("psychologicalCorrespondence");
         const status = watch("status");
-        const tier = watch("tier"); // Added tier watch
+        const tier = watch("tier");
         
         return (
             <>
@@ -2355,6 +2549,7 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                             value={crystalCategory}
                             options={CRYSTAL_CATEGORY_OPTIONS}
                             displayKey="label"
+                            valueKey="label"
                             error={errors.crystalCategory && errors.crystalCategory.message}
                             {...register("crystalCategory", {
                                 required: "Crystal Category is required"
@@ -2369,6 +2564,7 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                             value={colors || []}
                             options={COLOR_OPTIONS}
                             displayKey="label"
+                            valueKey="label"
                             error={errors.colors && errors.colors.message}
                             {...register("colors", {
                                 required: "At least one color must be selected"
@@ -2383,6 +2579,7 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                             value={psychologicalCorrespondence || []}
                             options={PSYCHOLOGICAL_CORRESPONDENCE_OPTIONS}
                             displayKey="label"
+                            valueKey="label"
                             error={errors.psychologicalCorrespondence && errors.psychologicalCorrespondence.message}
                             {...register("psychologicalCorrespondence", {
                                 required: "At least one psychological correspondence must be selected"
@@ -2396,7 +2593,7 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
     
     return (
         <Dialog open={open} onClose={onClose} fullScreen>
-            <DialogTitle>
+            <DialogTitle style={dialogTitleStyle}>
                 {title}
                 <div style={{ float: 'right', display: 'flex' }}>
                     {materialType && <button
@@ -2413,11 +2610,12 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                     />
                 </div>
             </DialogTitle>
-            <DialogContent>
+            <DialogContent style={dialogContentStyle}>
                 <form className="material-form" onSubmit={handleSubmit(onSubmit)} ref={formRef}>
                     <div className="form-column">
                         <FormSelect
                             title="Material Type*"
+                            disabled={!!existingMaterial}
                             value={materialType}
                             options={materialTypeOptions}
                             displayKey="label"
@@ -2426,6 +2624,27 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                         />
                         {materialType === 'wood' && renderWoodAttributes()}
                         {materialType === 'crystal' && renderCrystalAttributes()}
+                        <DialogImageSection
+                            folder={'materials'}
+                            existingItem={existingMaterial}
+                            imageUrls={getValues('imageUrls') || []}
+                            onImageDelete={(imageUrl) => {
+                                setDeletedUrls(prev => [...prev, imageUrl]);
+                                const newImageUrls = (getValues('imageUrls') || []).filter(url => url !== imageUrl);
+                                setValue('imageUrls', newImageUrls);
+                            }}
+                            onImageUpload={(imageUrls, isReorder) => {
+                                if (isReorder) {
+                                    setValue('imageUrls', imageUrls);
+                                } else {
+                                    // Add new images to the existing array (for uploading new images)
+                                    const currentImageUrls = getValues('imageUrls') || [];
+                                    const updatedImageUrls = [...currentImageUrls, ...imageUrls];
+                                    setValue('imageUrls', updatedImageUrls);
+                                    handleSubmit(onSubmit)();
+                                }
+                            }}
+                        />
                     </div>
                 </form>
             </DialogContent>
@@ -2488,7 +2707,7 @@ function UserDialog({ open, onClose, title, getData, element = { email: '', pass
 
     return (
         <Dialog open={open} onClose={onClose} fullScreen>
-            <DialogTitle>
+            <DialogTitle style={dialogTitleStyle}>
                 {title}
                 <div style={{ float: 'right', display: 'flex' }}>
                     <button
@@ -2505,7 +2724,7 @@ function UserDialog({ open, onClose, title, getData, element = { email: '', pass
                     />
                 </div>
             </DialogTitle>
-            <DialogContent>
+            <DialogContent style={dialogContentStyle}>
                 <form className="user-form" onSubmit={handleSubmit(onSubmit)} ref={formRef}>
                     <div className="form-column">
                         <FormField
@@ -2528,7 +2747,7 @@ function UserDialog({ open, onClose, title, getData, element = { email: '', pass
                         {!existingUser && (
                             <FormField
                                 title="Password*"
-                                type="text"
+                                type="password"
                                 value={password}
                                 error={errors.password && errors.password.message}
                                 {...register("password", {
@@ -2585,7 +2804,12 @@ function DeleteDialog({ open, onClose, title, adminPage, getData, element }) {
     const handleDelete = () => {
         switch (adminPage) {
             case 'Cues':
-
+                deleteCue(element._id)
+                    .then((res) => {
+                        receiveResponse(res);
+                        getData();
+                        onClose();
+                    });
                 break;
             case 'Accessories':
                 deleteAccessory(element._id)
@@ -2643,12 +2867,24 @@ function DeleteDialog({ open, onClose, title, adminPage, getData, element }) {
                     <DialogContentText>
                         This action is irreversible. Are you sure you want to proceed?
                     </DialogContentText>
-                    <DialogActions>
-                        <div className='form-row'>
-                            <DefaultButton text={"Cancel"} onClick={onClose} />
-                            <DefaultButton text={"Confirm"} onClick={handleDelete} />
-                        </div>
-                    </DialogActions>
+                    
+                    <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '1rem' }}>
+                        <span 
+                            onClick={onClose} 
+                            style={{ 
+                                textDecoration: 'underline', 
+                                cursor: 'pointer',
+                                color: '#333',
+                                fontSize: '1rem'
+                            }}
+                        >
+                            Cancel
+                        </span>
+                        <DefaultButton
+                            text="Delete"
+                            onClick={handleDelete}
+                        />
+                    </div>
                 </div>
             </DialogContent>
         </Dialog>
@@ -2670,18 +2906,11 @@ function PasswordDialog({ open, onClose, title, element = { password: '', firstN
         changePassword(element._id, data.password)
             .then((res) => {
                 receiveResponse(res);
+                onClose();
             });
-        onClose();
     };
 
     const formRef = useRef(null);
-    
-    const handleSaveClick = () => {
-        if (formRef.current) {
-            formRef.current.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-        }
-    };
-
     const firstName = element.firstName;
     const password = watch("password");
 
@@ -2689,20 +2918,12 @@ function PasswordDialog({ open, onClose, title, element = { password: '', firstN
         <Dialog open={open} onClose={onClose} >
             <DialogTitle>
                 {title} {firstName && `'${firstName}'`}
-                <div style={{ float: 'right', display: 'flex' }}>
-                    <button
-                        type="button"
-                        className='fa-solid fa-floppy-disk admin-action-button'
-                        style={{ display: 'inline-block', justifySelf: 'right', fontSize: '1.5rem', marginTop: '-0.05rem', marginRight: '20px' }}
-                        onClick={handleSaveClick}
-                    />
-                    <button
-                        type="button"
-                        className='fa-solid fa-xmark admin-action-button'
-                        style={{ display: 'inline-block', justifySelf: 'right', fontSize: '1.5rem', marginTop: '-0.05rem' }}
-                        onClick={onClose}
-                    />
-                </div>
+                <button
+                    type="button"
+                    className='fa-solid fa-xmark admin-action-button'
+                    style={{ display: 'inline-block', float: 'right', justifySelf: 'right', fontSize: '1.5rem', marginTop: '-0.05rem' }}
+                    onClick={onClose}
+                />
             </DialogTitle>
             <DialogContent>
                 <form className="password-form" onSubmit={handleSubmit(onSubmit)} ref={formRef}>
@@ -2724,6 +2945,24 @@ function PasswordDialog({ open, onClose, title, element = { password: '', firstN
                                 }
                             })}
                         />
+                        
+                        <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '1rem' }}>
+                            <span 
+                                onClick={onClose} 
+                                style={{ 
+                                    textDecoration: 'underline', 
+                                    cursor: 'pointer',
+                                    color: '#333',
+                                    fontSize: '1rem'
+                                }}
+                            >
+                                Cancel
+                            </span>
+                            <DefaultButton
+                                text="Save"
+                                type="submit"
+                            />
+                        </div>
                     </div>
                 </form>
             </DialogContent>
@@ -2731,8 +2970,202 @@ function PasswordDialog({ open, onClose, title, element = { password: '', firstN
     );
 }
 
+function DialogImageSection({ folder = 'general', existingItem, imageUrls = [], onImageDelete, onImageUpload }) {
+    const [draggedIndex, setDraggedIndex] = useState(null);
+    const [localImageUrls, setLocalImageUrls] = useState(imageUrls);
+    
+    // Keep local state in sync with props when props change
+    useEffect(() => {
+        setLocalImageUrls(imageUrls);
+    }, [imageUrls]);
+    
+    // Handle drag start
+    const handleDragStart = (e, index) => {
+        setDraggedIndex(index);
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/html', e.target.parentNode);
+        
+        setTimeout(() => {
+            e.target.style.opacity = '0.4';
+        }, 0);
+    };
+    
+    // Handle drag end
+    const handleDragEnd = (e) => {
+        e.target.style.opacity = '1';
+        document.querySelectorAll('.image-over').forEach(item => {
+            item.classList.remove('image-over');
+        });
+    };
+    
+    // Handle drag over another item
+    const handleDragOver = (e, index) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        return false;
+    };
+    
+    // Apply visual cue when dragging over a drop target
+    const handleDragEnter = (e, index) => {
+        const listItem = e.target.closest('.MuiImageListItem-root');
+        if (listItem) {
+            listItem.classList.add('image-over');
+        }
+    };
+    
+    // Remove visual cue when leaving a drop target
+    const handleDragLeave = (e) => {
+        const listItem = e.target.closest('.MuiImageListItem-root');
+        if (listItem) {
+            listItem.classList.remove('image-over');
+        }
+    };
+    
+    // Handle the actual drop - update local state immediately for visual feedback
+    const handleDrop = (e, dropIndex) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (draggedIndex === null || draggedIndex === dropIndex) return;
+        
+        // Create a copy of the local image URLs array
+        const newImageUrls = [...localImageUrls];
+        
+        // Remove the dragged item
+        const draggedItem = newImageUrls[draggedIndex];
+        newImageUrls.splice(draggedIndex, 1);
+        
+        // Insert at the new position
+        newImageUrls.splice(dropIndex, 0, draggedItem);
+        
+        // Update local state immediately to show the change visually
+        setLocalImageUrls(newImageUrls);
+        
+        // Notify parent component about the reordering
+        onReorder(newImageUrls);
+        
+        // Reset
+        setDraggedIndex(null);
+        const listItem = e.target.closest('.MuiImageListItem-root');
+        if (listItem) {
+            listItem.classList.remove('image-over');
+        }
+        return false;
+    };
+    
+    // Function to pass the reordered array to the parent component
+    const onReorder = (newOrder) => {
+        if (typeof onImageUpload === 'function') {
+            onImageUpload(newOrder, true);
+        }
+    };
+
+    return (
+        <>
+            {existingItem && localImageUrls && localImageUrls.length > 0 && (
+                <div>
+                    <h2 className="dialog-header2" style={{ marginTop: '20px' }}>Images</h2>
+                    <p style={{ fontSize: '14px', color: '#666', marginBottom: '10px' }}>
+                        Drag and drop images to reorder them
+                    </p>
+                    <ImageList sx={{ 
+                        width: '100%', 
+                        height: 'auto', 
+                        maxHeight: 400, 
+                        margin: "0px 0px 0px 0px" 
+                    }} cols={4} rowHeight={200} gap={8}>
+                        {localImageUrls.map((imageUrl, index) => (
+                            <ImageListItem 
+                                key={`${imageUrl}-${index}`} 
+                                sx={{
+                                    overflow: 'hidden',
+                                    borderRadius: '4px',
+                                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                    cursor: 'grab',
+                                    transition: 'all 0.2s ease',
+                                    '&.image-over': {
+                                        boxShadow: '0 0 0 2px #1976d2',
+                                        transform: 'scale(1.02)'
+                                    }
+                                }}
+                                draggable="true"
+                                onDragStart={(e) => handleDragStart(e, index)}
+                                onDragEnd={handleDragEnd}
+                                onDragOver={(e) => handleDragOver(e, index)}
+                                onDragEnter={(e) => handleDragEnter(e, index)}
+                                onDragLeave={handleDragLeave}
+                                onDrop={(e) => handleDrop(e, index)}
+                            >
+                                <img
+                                    src={imageUrl}
+                                    alt={`Item ${index}`}
+                                    loading="lazy"
+                                    draggable="false"
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        pointerEvents: 'none'
+                                    }}
+                                />
+                                <ImageListItemBar
+                                    title={imageUrl.substring(imageUrl.lastIndexOf('/') + 1, imageUrl.indexOf('?') !== -1 ? imageUrl.indexOf('?') : undefined).substring(0, 20)}
+                                    position="bottom"
+                                    actionIcon={
+                                        <IconButton
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                onImageDelete(imageUrl);
+                                            }}
+                                            sx={{ color: 'rgba(255, 255, 255, 0.9)' }}
+                                            aria-label={`delete image ${index}`}
+                                        >
+                                            <i className="fa-solid fa-times"></i>
+                                        </IconButton>
+                                    }
+                                    sx={{
+                                        background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+                                    }}
+                                />
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '5px',
+                                    left: '5px',
+                                    backgroundColor: 'rgba(0,0,0,0.5)',
+                                    color: 'white',
+                                    borderRadius: '50%',
+                                    width: '24px',
+                                    height: '24px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}>
+                                    {index + 1}
+                                </div>
+                            </ImageListItem>
+                        ))}
+                    </ImageList>
+                </div>
+            )}
+            {existingItem && (
+                <ImageUploader
+                    folder={folder}
+                    onImageUploaded={onImageUpload}
+                />
+            )}
+
+            <style jsx>{`
+                .image-over {
+                    box-shadow: 0 0 0 2px #1976d2 !important;
+                    transform: scale(1.02);
+                }
+            `}</style>
+        </>
+    );
+}
+
 const tableProps = {
-    positionActionsColumn: 'last',
     enableColumnFilterModes: true,
     enableColumnOrdering: true,
     enableGrouping: true,
@@ -2754,4 +3187,16 @@ const tableProps = {
         shape: 'rounded',
         variant: 'outlined',
     },
+};
+
+const dialogTitleStyle = {
+    padding: '10px 24px',
+    position: 'relative',
+    zIndex: 1,
+    backgroundColor: '#f5f5f5',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+};
+
+const dialogContentStyle = {
+    marginTop: '24px'
 };
