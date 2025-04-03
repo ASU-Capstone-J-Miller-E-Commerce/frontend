@@ -61,16 +61,12 @@ export default function SettingsPage() {
             <AccountSection title="Password">
                 <p>password</p>
             </AccountSection>
-            <AccountSection title="Two factor authentication">
+            <AccountSection title="Two factor authentication" onEdit={!userData.TFAEnabled && onGenerate}>
                 {userData.TFAEnabled ? (
                     <p>Two Factor Authentication is Setup!</p>
                 ) : (
                
-                <DefaultButton
-                    text="Setup Two Factor Authentication"
-                    onClick={onGenerate}
-                    disabled={loading}
-                />
+                    <p>No 2FA</p>
                 )}
             </AccountSection>
             <AccountSection title="Notifications">
@@ -88,7 +84,6 @@ export default function SettingsPage() {
             >
                 <DialogTitle>
                     Setup Two-Factor Authentication
-
                 </DialogTitle>
                 <DialogContent>
                     <form onSubmit={handleSubmit(onSubmit)}>

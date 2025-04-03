@@ -16,7 +16,7 @@ export default function LoginPage () {
             password: "",
         }
     });
-    const { register: verRegister, handleSubmit: verHandleSubmit, watch: verWatch, formState: { errors: verErrors } } = useForm({
+    const { register: verRegister, handleSubmit: verHandleSubmit, watch: verWatch, formState: { errors: verErrors }, reset: verReset } = useForm({
         defaultValues: {
             verCode: "",
         }
@@ -28,7 +28,10 @@ export default function LoginPage () {
     const [tempToken, setTempToken] = useState(null);
     const [iv, setIV] = useState(null);
 
-
+    const handleCloseDialog = () => {
+        setIsModalOpen(false);
+        verReset({ verCode: "" });
+    };
 
     const onSubmit = data => {
         login(data.email, data.password)
@@ -120,7 +123,7 @@ export default function LoginPage () {
                  {/* Modal */}
                 <Dialog 
                     open={isModalOpen} 
-                    onClose={() => setIsModalOpen(false)} 
+                    onClose={handleCloseDialog} 
                     fullWidth 
                     maxWidth="sm" 
                     className="miller-dialog-typography"
@@ -162,7 +165,7 @@ export default function LoginPage () {
 
                                 <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '1rem' }}>
                                     <span 
-                                        onClick={() => setIsModalOpen(false)} 
+                                        onClick={handleCloseDialog} 
                                         style={{ 
                                             textDecoration: 'underline', 
                                             cursor: 'pointer',
