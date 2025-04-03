@@ -74,6 +74,18 @@ export function checkAuth() {
     });
 }
 
+
+export function updateName(email, firstName, lastName) {
+    return _ajax({
+        url: "/user/update-name/" + email,
+        method: "PUT",
+        data: { 
+            newFirstName: firstName, 
+            newLastName: lastName 
+        }
+    });
+}
+
 export function generate2FA(){
     return _ajax({
         url: "/account/generate2FA",
