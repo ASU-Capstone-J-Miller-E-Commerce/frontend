@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import { receiveResponse} from './notifications';
+import { isValidElement } from 'react';
 
 
 export function _ajax(settings = {}) {
@@ -85,6 +86,14 @@ export function verify2FA(code){
         url: "/account/verify2FA",
         method: "PUT",
         data: {code}
+    })
+}
+
+export function verify2FALogin(email, token_data, code, iv){
+    return _ajax({
+        url: "/account/verify2FALogin",
+        method: "POST",
+        data: {email, token_data, code, iv}
     })
 }
 

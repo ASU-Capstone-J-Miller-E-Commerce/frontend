@@ -42,9 +42,7 @@ export default function SettingsPage() {
 
     const onSubmit = (data) => {
         if (loading) return;
-        
         setLoading(true);
-
         verify2FA(data.verCode)
             .then((res) => {
                 receiveResponse(res);
@@ -64,11 +62,16 @@ export default function SettingsPage() {
                 <p>password</p>
             </AccountSection>
             <AccountSection title="Two factor authentication">
-            <DefaultButton
-                text="Setup Two Factor Authentication"
-                onClick={onGenerate}
-                disabled={loading}
-            />
+                {userData.TFAEnabled ? (
+                    <p>Two Factor Authentication is Setup!</p>
+                ) : (
+               
+                <DefaultButton
+                    text="Setup Two Factor Authentication"
+                    onClick={onGenerate}
+                    disabled={loading}
+                />
+                )}
             </AccountSection>
             <AccountSection title="Notifications">
                 <p>notifications</p>
