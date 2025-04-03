@@ -6,10 +6,14 @@ export function checkUserAuth() {
         .then((response) => {
             updateUser({
                 ...response.data,
+                initialAuthChecked: true,
             });
         })
         .catch(error => {
             console.error("Authentication check failed:", error);
-            updateUser({ authenticated: false });
+            updateUser({ 
+                authenticated: false, 
+                initialAuthChecked: true, 
+            });
         });
 };

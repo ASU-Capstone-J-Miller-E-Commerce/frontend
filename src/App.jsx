@@ -40,8 +40,12 @@ const GuestRoute = () => {
 
 
 const AuthRoute = () => {
-    const isAuthenticated = useSelector(state => !!state.user?.authenticated);
+    const user = useSelector(state => state.user);
+    const isAuthenticated = !!user?.authenticated;
+    const initialAuthChecked = user?.initialAuthChecked;
     const location = useLocation();
+
+    if (!initialAuthChecked) return null;
     
     if (!isAuthenticated) {
         return <Navigate to="/" replace state={{ from: location }} />;
@@ -53,8 +57,11 @@ const AuthRoute = () => {
 const AdminRoute = () => {
     const user = useSelector(state => state.user);
     const isAuthenticated = !!user?.authenticated;
+    const initialAuthChecked = user?.initialAuthChecked;
     const isAdmin = user?.role === "Admin";
     const location = useLocation();
+
+    if (!initialAuthChecked) return null;
 
     if (!isAuthenticated || !isAdmin) {
         return <Navigate to="/" replace state={{ from: location }} />;
