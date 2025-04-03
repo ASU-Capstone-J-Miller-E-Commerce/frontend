@@ -109,19 +109,6 @@ export function verify2FALogin(email, token_data, code, iv){
     })
 }
 
-export function updateName(email, firstName, lastName) {
-    return _ajax({
-        url: "/user/update-name/" + email,
-        method: "PUT",
-        data: { 
-            newFirstName: firstName, 
-            newLastName: lastName 
-        }
-    });
-}
-
-
-
 /*==============================================================
 # Products
 ==============================================================*/
