@@ -101,11 +101,11 @@ export function verify2FA(code){
     })
 }
 
-export function verify2FALogin(email, token_data, code, iv){
+export function verify2FALogin(token_data, code, iv){
     return _ajax({
         url: "/account/verify2FALogin",
         method: "POST",
-        data: {email, token_data, code, iv}
+        data: {token_data, code, iv}
     })
 }
 

@@ -114,12 +114,22 @@ export default function SettingsPage() {
                                 <div className="flex-1">
                                     <FormField
                                         title="Code"
+                                        type="verCode"
                                         value={verCode}
-                                        error={errors.code}
+                                        error={errors.verCode && errors.verCode?.message}
                                         {...register("verCode", { 
+                                            required: "Verification code is required.",
+                                            minLength: {
+                                                value: 6,
+                                                message: "Code must be exactly 6 digits."
+                                            },
                                             maxLength: {
                                                 value: 6,
-                                                message: "6 digits maximum"
+                                                message: "Code must be exactly 6 digits."
+                                            },
+                                            pattern: {
+                                                value: /^\d{6}$/,
+                                                message: "Code must be digits."
                                             }
                                         })}
                                     />

@@ -6,7 +6,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { login, test, verify2FALogin } from "../../../util/requests";
 import { receiveResponse } from "../../../util/notifications";
 import { checkUserAuth } from "../../../util/functions";
-import { Dialog, DialogTitle, DialogContent } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, useForkRef } from "@mui/material";
 
 export default function LoginPage () {
     const navigate = useNavigate();
@@ -14,6 +14,10 @@ export default function LoginPage () {
         defaultValues: {
             email: "",
             password: "",
+        }
+    });
+    const { register: verRegister, handleSubmit: verHandleSubmit, watch: verWatch, formState: { errors: verErrors } } = useForm({
+        defaultValues: {
             verCode: "",
         }
     });
@@ -46,7 +50,7 @@ export default function LoginPage () {
 
     const handle2FAVerify = data => {
         setLoading(true);
-        verify2FALogin(data.email, tempToken, data.verCode, iv)
+        verify2FALogin(tempToken, data.verCode, iv)
             .then((res) => {
                 receiveResponse(res);
                 setIsModalOpen(false);
@@ -55,12 +59,16 @@ export default function LoginPage () {
                 checkUserAuth();
                 navigate("/");
             })
-            .catch((err) => receiveResponse(err))
-    };
+            .catch((err) => 
+            {
+                receiveResponse(err);
+                setLoading(false);
+            });
+};
 
     const email = watch("email");
     const password = watch("password");
-    const verCode = watch("verCode");
+    const verCode = verWatch("verCode");
 
     return (
         <section className="form-content">
@@ -123,18 +131,28 @@ export default function LoginPage () {
 
                     </DialogTitle>
                     <DialogContent>
-                        <form onSubmit={handleSubmit(handle2FAVerify)}>
+                        <form onSubmit={verHandleSubmit(handle2FAVerify)}>
                             <div className="form-column" style={{ width: '100%' }}>
                                 <div className="form-row" style={{ width: '100%' }}>
                                     <div className="flex-1">
                                         <FormField
                                             title="Code"
+                                            type="verCode"
                                             value={verCode}
-                                            error={errors.code}
-                                            {...register("verCode", { 
+                                            error={verErrors.verCode && verErrors.verCode?.message}
+                                            {...verRegister("verCode", { 
+                                                required: "Verification code is required.",
+                                                minLength: {
+                                                    value: 6,
+                                                    message: "Code must be exactly 6 digits."
+                                                },
                                                 maxLength: {
                                                     value: 6,
-                                                    message: "6 digits maximum"
+                                                    message: "Code must be exactly 6 digits."
+                                                },
+                                                pattern: {
+                                                    value: /^\d{6}$/,
+                                                    message: "Code must be digits."
                                                 }
                                             })}
                                         />
