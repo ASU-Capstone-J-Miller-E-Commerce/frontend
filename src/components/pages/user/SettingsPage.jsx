@@ -30,7 +30,6 @@ export default function SettingsPage() {
         generate2FA()
             .then((res) => {
                 receiveResponse(res);
-                console.log(res.data.qrcodeUrl);
                 setQrCodeUrl(res.data.qrcodeUrl);
                 setIsModalOpen(true);
                 checkUserAuth();

@@ -37,7 +37,7 @@ export default function LoginPage () {
         login(data.email, data.password)
             .then((res) => {
                 receiveResponse(res);
-                console.log(res);
+
                 if(res.data[0] == true)
                 {
                     setTempToken(res.data[1]);
@@ -87,7 +87,6 @@ export default function LoginPage () {
                         title="Email"
                         type="text"
                         value={email}
-                        onChange={(e) => console.log(e.target.value)}
                         error={errors.email && errors.email.message}
                         {...register("email", {
                             required: "Email is required",
