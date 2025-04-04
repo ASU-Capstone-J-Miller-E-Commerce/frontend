@@ -460,6 +460,10 @@ export default function AdminPage() {
         setDialogOpen(true);
     };
 
+    const setDialogPropsHandler = (newProps) => {
+        setDialogProps(prev => ({ ...prev, ...newProps }));
+    };
+
     const handlePasswordDialogOpen = (props) => {
         setPasswordDialogProps({ ...props, title: 'Change Password' });
         setPasswordDialogOpen(true);
@@ -491,10 +495,10 @@ export default function AdminPage() {
             <div className='user-content'>
                 <AdminContent adminPage={adminPage} loading={loading} onEditClick={handleDialogOpen} onPasswordEditClick={handlePasswordDialogOpen} onDeleteClick={handleDeleteDialogOpen} cueData={cueData || []} accessoryData={accessoryData || []} materialData={materialData || []} userData={userData || []} />
             </div>
-            {adminPage === 'Cues' && <CueDialog open={dialogOpen} onClose={handleDialogClose} getData={getData} cueData={cueData} materialData={materialData} {...dialogProps} />}
-            {adminPage === 'Accessories' && <AccessoryDialog open={dialogOpen} onClose={handleDialogClose} getData={getData} {...dialogProps} />}
-            {adminPage === 'Materials' && <MaterialDialog open={dialogOpen} onClose={handleDialogClose} getData={getData} {...dialogProps} />}
-            {adminPage === 'Users' && <UserDialog open={dialogOpen} onClose={handleDialogClose} getData={getData} {...dialogProps} />}
+            {adminPage === 'Cues' && <CueDialog open={dialogOpen} onClose={handleDialogClose} setDialogProps={setDialogPropsHandler} getData={getData} cueData={cueData} materialData={materialData} {...dialogProps} />}
+            {adminPage === 'Accessories' && <AccessoryDialog open={dialogOpen} onClose={handleDialogClose} setDialogProps={setDialogPropsHandler} getData={getData} {...dialogProps} />}
+            {adminPage === 'Materials' && <MaterialDialog open={dialogOpen} onClose={handleDialogClose} setDialogProps={setDialogPropsHandler} getData={getData} {...dialogProps} />}
+            {adminPage === 'Users' && <UserDialog open={dialogOpen} onClose={handleDialogClose} setDialogProps={setDialogPropsHandler} getData={getData} {...dialogProps} />}
             {passwordDialogOpen && <PasswordDialog open={passwordDialogOpen} onClose={handlePasswordDialogClose} getData={getData} {...passwordDialogProps} />}
             {deleteDialogOpen && <DeleteDialog open={deleteDialogOpen} onClose={handleDeleteDialogClose} getData={getData} adminPage={adminPage} {...deleteDialogProps} />}
         </div>
@@ -793,7 +797,7 @@ function UsersTable({ data, onEditClick, onPasswordEditClick, onDeleteClick }) {
 }
 
 // Add handleWrapColor to the CueDialog default element properties
-function CueDialog({ open, onClose, title, getData, cueData, materialData, element = {
+function CueDialog({ open, onClose, title, getData, cueData, materialData, setDialogProps, element = {
     cueNumber: new Date().getFullYear() + '-',
     name: '',
     description: '',
@@ -851,6 +855,13 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, eleme
     const [isCustomJointPinSize, setIsCustomJointPinSize] = useState(false);
     const [isCustomTipSize, setIsCustomTipSize] = useState(false);
     const [deletedUrls, setDeletedUrls] = useState([]);
+    const [savedCue, setSavedCue] = useState(false);
+    const [localTitle, setLocalTitle] = useState(title);
+
+    useEffect(() => {
+        setLocalTitle(title);
+    }, [title]);
+
     const woods = materialData?.filter(item => item.commonName && item.status === "Available") || [];
     const crystals = materialData?.filter(item => item.crystalName && item.status === "Available") || [];
     
@@ -903,6 +914,7 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, eleme
                 setValue('cueNumber', nextCueNumber);
             }
             setDeletedUrls([]);
+            setSavedCue(!!element._id);
         }
     }, [open, reset]);
 
@@ -933,18 +945,17 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, eleme
         }
     }, [materialData, open, element._id]);
 
-    const existingCue = !!element._id;
+    const existingCue = savedCue || !!element._id;
 
     const onSubmit = (data) => {
         data.isFullSplice = buttType;
         data.includeWrap = includeWrap;
         console.log(data)
         if (existingCue) {
-            editCue(element._id, data)
+            editCue(data._id, data)
                 .then((res) => {
                     receiveResponse(res);
                     getData();
-                    onClose();
                 })
             if (deletedUrls.length > 0) {
                 deleteImages(deletedUrls)
@@ -958,7 +969,16 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, eleme
                 .then((res) => {
                     receiveResponse(res);
                     getData();
-                    onClose();
+                    setDialogProps(prev => ({
+                        ...prev,
+                        element: res.data,
+                        title: `Edit Cue '${res.data.name}'`
+                    }));
+
+                    setLocalTitle(`Edit Cue '${res.data.name}'`);
+                    
+                    reset(res.data);
+                    setSavedCue(true);
                 })
         }
     };
@@ -1217,7 +1237,7 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, eleme
     return (
         <Dialog open={open} onClose={onClose} fullScreen>
             <DialogTitle style={dialogTitleStyle}>
-                {title}
+                {localTitle}
                 <div style={{ float: 'right', display: 'flex' }}>
                     <button
                         type="button"
@@ -1895,14 +1915,21 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, eleme
     );
 }
 
-function AccessoryDialog({ open, onClose, title, getData, element = { name: '', description: '', price: '', accessoryNumber: '', status: '', imageUrls: [] } }) {
+function AccessoryDialog({ open, onClose, title: initialTitle, getData, setDialogProps, element = { name: '', description: '', price: '', accessoryNumber: '', status: '', imageUrls: [] } }) {
     const [deletedUrls, setDeletedUrls] = useState([]);
+    const [savedAccessory, setSavedAccessory] = useState(false);
+    const [localTitle, setLocalTitle] = useState(initialTitle);
     
     const { register, handleSubmit, watch, formState: { errors }, reset, setValue, getValues } = useForm({
         defaultValues: element
     });
 
-    const existingAccessory = !!element._id;
+    // Update local title when prop changes
+    useEffect(() => {
+        setLocalTitle(initialTitle);
+    }, [initialTitle]);
+
+    const existingAccessory = savedAccessory || !!element._id;
     
     const formRef = useRef(null);
 
@@ -1910,6 +1937,7 @@ function AccessoryDialog({ open, onClose, title, getData, element = { name: '', 
         if (open) {
             reset(element);
             setDeletedUrls([]);
+            setSavedAccessory(!!element._id);
         }
     }, [open, reset]);
 
@@ -1919,7 +1947,6 @@ function AccessoryDialog({ open, onClose, title, getData, element = { name: '', 
                 .then((res) => {
                     receiveResponse(res);
                     getData();
-                    onClose();
                 })
             if (deletedUrls.length > 0) {
                 deleteImages(deletedUrls)
@@ -1932,7 +1959,17 @@ function AccessoryDialog({ open, onClose, title, getData, element = { name: '', 
                 .then((res) => {
                     receiveResponse(res);
                     getData();
-                    onClose();
+
+                    setDialogProps(prev => ({
+                        ...prev,
+                        element: res.data,
+                        title: `Edit Accessory '${res.data.name}'`
+                    }));
+                    
+                    setLocalTitle(`Edit Accessory '${res.data.name}'`);
+
+                    reset(res.data);
+                    setSavedAccessory(true);
                 })
         }
     };
@@ -1952,7 +1989,7 @@ function AccessoryDialog({ open, onClose, title, getData, element = { name: '', 
     return (
         <Dialog open={open} onClose={onClose} fullScreen>
             <DialogTitle style={dialogTitleStyle}>
-                {title}
+                {localTitle} {/* Use local title here */}
                 <div style={{ float: 'right', display: 'flex' }}>
                     <button
                         type="button"
@@ -2069,9 +2106,11 @@ function AccessoryDialog({ open, onClose, title, getData, element = { name: '', 
     );
 }
 
-function MaterialDialog({ open, onClose, title, getData, element = false }) {
+function MaterialDialog({ open, onClose, title: initialTitle, getData, setDialogProps, element = false }) {
     const [materialType, setMaterialType] = useState('');
     const [deletedUrls, setDeletedUrls] = useState([]);
+    const [savedMaterial, setSavedMaterial] = useState(false);
+    const [localTitle, setLocalTitle] = useState(initialTitle);
 
     const getDefaultValues = (type) => {
         const commonDefaults = {
@@ -2115,7 +2154,12 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
         defaultValues: element || getDefaultValues('')
     });
 
-    const existingMaterial = !!element._id;
+    // Update local title when prop changes
+    useEffect(() => {
+        setLocalTitle(initialTitle);
+    }, [initialTitle]);
+    
+    const existingMaterial = savedMaterial || !!element._id;
     
     useEffect(() => {
         if (open) {
@@ -2127,18 +2171,20 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                     setMaterialType('crystal');
                 }
                 reset(element);
+                setSavedMaterial(true);
             } else {
                 // New material
                 setMaterialType('');
                 reset(getDefaultValues());
+                setSavedMaterial(false);
             }
             setDeletedUrls([]);
         }
     }, [open, reset]);
 
     useEffect(() => {
-        if (materialType && !element._id) {
-            reset({ ...getDefaultValues() });
+        if (materialType && !existingMaterial) {
+            reset({ ...getDefaultValues(materialType) });
         }
     }, [materialType]);
 
@@ -2169,13 +2215,12 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                     .then(res => {
                         receiveResponse(res);
                         getData();
-                        onClose();
-                    })
+                    });
                 if (deletedUrls.length > 0) {
                     deleteImages(deletedUrls)
                         .then((res) => {
                             setDeletedUrls([]);
-                        })
+                        });
                 }
             } else {
                 createWood(
@@ -2201,8 +2246,22 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                     .then(res => {
                         receiveResponse(res);
                         getData();
-                        onClose();
-                    })
+                        
+                        // Update dialog props in parent
+                        const displayName = res.data.commonName || 'Wood';
+                        setDialogProps(prev => ({
+                            ...prev,
+                            element: res.data,
+                            title: `Edit Wood '${displayName}'`
+                        }));
+                        
+                        // Update local title
+                        setLocalTitle(`Edit Wood '${displayName}'`);
+                        
+                        // Update form with new data that includes ID
+                        reset(res.data);
+                        setSavedMaterial(true);
+                    });
             }
         } else if (materialType === 'crystal') {
             if (existingMaterial) {
@@ -2219,13 +2278,12 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                     .then(res => {
                         receiveResponse(res);
                         getData();
-                        onClose();
-                    })
+                    });
                 if (deletedUrls.length > 0) {
                     deleteImages(deletedUrls)
                         .then((res) => {
                             setDeletedUrls([]);
-                        })
+                        });
                 }
             } else {
                 createCrystal(
@@ -2240,8 +2298,22 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
                     .then(res => {
                         receiveResponse(res);
                         getData();
-                        onClose();
-                    })
+                        
+                        // Update dialog props in parent
+                        const displayName = res.data.crystalName || 'Crystal';
+                        setDialogProps(prev => ({
+                            ...prev,
+                            element: res.data,
+                            title: `Edit Stone/Crystal '${displayName}'`
+                        }));
+                        
+                        // Update local title
+                        setLocalTitle(`Edit Stone/Crystal '${displayName}'`);
+                        
+                        // Update form with new data that includes ID
+                        reset(res.data);
+                        setSavedMaterial(true);
+                    });
             }
         }
     };
@@ -2594,7 +2666,7 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
     return (
         <Dialog open={open} onClose={onClose} fullScreen>
             <DialogTitle style={dialogTitleStyle}>
-                {title}
+                {localTitle}
                 <div style={{ float: 'right', display: 'flex' }}>
                     {materialType && <button
                         type="button"
@@ -2652,21 +2724,31 @@ function MaterialDialog({ open, onClose, title, getData, element = false }) {
     );
 }
 
-function UserDialog({ open, onClose, title, getData, element = { email: '', password: '', firstName: '', lastName: '' } }) {
+function UserDialog({ open, onClose, title: initialTitle, getData, setDialogProps, element = { email: '', password: '', firstName: '', lastName: '' } }) {
+    const [savedUser, setSavedUser] = useState(false);
+    const [localTitle, setLocalTitle] = useState(initialTitle);
+    
     const { register, handleSubmit, watch, formState: { errors }, reset } = useForm({
         defaultValues: element
     });
 
-    const existingUser = !!element._id;
+    // Update local title when prop changes
+    useEffect(() => {
+        setLocalTitle(initialTitle);
+    }, [initialTitle]);
+
+    const existingUser = savedUser || !!element._id;
 
     useEffect(() => {
         if (open) {
             reset(element);
+            setSavedUser(!!element._id);
         }
     }, [open, reset]);
 
     const onSubmit = (data) => {
         const userData = {
+            _id: data._id,
             email: data.email,
             firstName: data.firstName,
             lastName: data.lastName,
@@ -2680,14 +2762,26 @@ function UserDialog({ open, onClose, title, getData, element = { email: '', pass
                 .then((res) => {
                     receiveResponse(res);
                     getData();
-                    onClose();
+                    
+                    // Update dialog props in parent
+                    setDialogProps(prev => ({
+                        ...prev,
+                        element: res.data,
+                        title: `Edit User '${res.data.firstName || res.data.email}'`
+                    }));
+                    
+                    // Update local title
+                    setLocalTitle(`Edit User '${res.data.firstName || res.data.email}'`);
+                    
+                    // Update form with new data that includes ID
+                    reset(res.data);
+                    setSavedUser(true);
                 });
         } else {
-            editUser(element._id, userData.email, userData.firstName, userData.lastName)
+            editUser(userData._id, userData.email, userData.firstName, userData.lastName)
                 .then((res) => {
                     receiveResponse(res);
                     getData();
-                    onClose();
                 });
         }
     };
@@ -2708,7 +2802,7 @@ function UserDialog({ open, onClose, title, getData, element = { email: '', pass
     return (
         <Dialog open={open} onClose={onClose} fullScreen>
             <DialogTitle style={dialogTitleStyle}>
-                {title}
+                {localTitle}
                 <div style={{ float: 'right', display: 'flex' }}>
                     <button
                         type="button"
