@@ -144,17 +144,9 @@ export default function LoginPage () {
                                             error={verErrors.verCode && verErrors.verCode?.message}
                                             {...verRegister("verCode", { 
                                                 required: "Verification code is required.",
-                                                minLength: {
-                                                    value: 6,
-                                                    message: "Code must be exactly 6 digits."
-                                                },
-                                                maxLength: {
-                                                    value: 6,
-                                                    message: "Code must be exactly 6 digits."
-                                                },
                                                 pattern: {
-                                                    value: /^\d{6}$/,
-                                                    message: "Code must be digits."
+                                                    value: /^\d+$/,
+                                                    message: "Code must contain only digits."
                                                 }
                                             })}
                                         />

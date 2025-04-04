@@ -113,17 +113,9 @@ export default function SettingsPage() {
                                         error={errors.verCode && errors.verCode?.message}
                                         {...register("verCode", { 
                                             required: "Verification code is required.",
-                                            minLength: {
-                                                value: 6,
-                                                message: "Code must be exactly 6 digits."
-                                            },
-                                            maxLength: {
-                                                value: 6,
-                                                message: "Code must be exactly 6 digits."
-                                            },
                                             pattern: {
-                                                value: /^\d{6}$/,
-                                                message: "Code must be digits."
+                                                value: /^\d+$/,
+                                                message: "Code must contain only digits."
                                             }
                                         })}
                                     />
