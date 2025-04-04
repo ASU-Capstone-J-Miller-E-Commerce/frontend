@@ -92,13 +92,13 @@ export default function SettingsPage() {
                                 <img 
                                     src={qrCodeUrl} 
                                     alt="2FA QR Code"
-                                    style={{
-                                        maxWidth: '90%',
-                                        maxHeight: '90%',
-                                        width: 'min(800px, 90%)',
-                                        height: 'auto',
-                                        display: 'block',
-                                        margin: '0 auto 0.5rem auto',
+                                    style={{ 
+                                        width: "100%", 
+                                        height: "100%", 
+                                        maxHeight: "300px",
+                                        maxWidth: "300px",
+                                        display: "block", 
+                                        margin: "0 auto 20px" 
                                     }}
                                 />
                                 </div>
