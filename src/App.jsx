@@ -53,7 +53,7 @@ const AuthRoute = () => {
 const AdminRoute = () => {
     const user = useSelector(state => state.user);
     const isAuthenticated = !!user?.authenticated;
-    const isAdmin = user?.role === "Admin";
+    const isAdmin = user.isAdmin;
     const location = useLocation();
 
     if (!isAuthenticated || !isAdmin) {
