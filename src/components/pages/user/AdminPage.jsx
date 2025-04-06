@@ -967,9 +967,12 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
             setIsCustomJointPinSize(JOINT_PIN_SIZE_OPTIONS.every(option => option.label !== element.jointPinSize));
             setIsCustomTipSize(TIP_SIZE_OPTIONS.every(option => option.label !== element.tipSize));
             setIsCustomWrapType(WRAP_TYPE_OPTIONS.every(option => option.label !== element.handleWrapType));
-            setIsCustomFerruleMaterial(materialOptions.every(option => option.label !== element.ferruleMaterial));
-            setIsCustomJointCollarMaterial(materialOptions.every(option => option.label !== element.jointCollarMaterial));
-            setIsCustomButtCapMaterial(materialOptions.every(option => option.label !== element.buttCapMaterial));
+            setIsCustomFerruleMaterial(materialOptions.every(option => option.commonName !== element.ferruleMaterial));
+            setIsCustomJointCollarMaterial(
+                materialOptions.every(option => option.commonName !== element.jointCollarMaterial) &&
+                woods.every(wood => wood._id !== element.jointCollarMaterial)
+            );
+            setIsCustomButtCapMaterial(typeof element.buttCapMaterial !== 'object' && materialOptions.every(option => option.commonName !== element.buttCapMaterial));
             if (!existingCue && cueData) {
                 const nextCueNumber = getNextCueNumber(cueData);
                 setValue('cueNumber', nextCueNumber);
@@ -1135,9 +1138,9 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
     const buttSleevePointInlayMaterial = watch("buttSleevePointInlayMaterial");
 
     const materialOptions = [
-        { value: 'juma', label: 'Juma' },
-        { value: 'black_juma', label: 'Black Juma' },
-        { value: 'other', label: 'Other' },
+        { _id: 'Juma', commonName: 'Juma' },
+        { _id: 'Black Juma', commonName: 'Black Juma' },
+        { _id: 'Other', commonName: 'Other' },
     ];
 
     // Set default colors when wrap type changes
@@ -1534,8 +1537,8 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
                                                 title="Ferrule Material"
                                                 value={ferruleMaterial}
                                                 options={materialOptions}
-                                                displayKey="label"
-                                                valueKey="label"
+                                                displayKey="commonName"
+                                                valueKey="_id"
                                                 {...register("ferruleMaterial")}
                                             />
                                         )}
@@ -1619,9 +1622,9 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
                                                     <FormSelect
                                                         title="Joint Collar Material"
                                                         value={jointCollarMaterial}
-                                                        options={materialOptions}
-                                                        displayKey="label"
-                                                        valueKey="label"
+                                                        options={[...materialOptions, ...woods]}
+                                                        displayKey="commonName"
+                                                        valueKey="_id"
                                                         {...register("jointCollarMaterial")}
                                                     />
                                                 )}
@@ -1643,8 +1646,8 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
                                                         title="Butt Cap Material"
                                                         value={buttCapMaterial}
                                                         options={materialOptions}
-                                                        displayKey="label"
-                                                        valueKey="label"
+                                                        displayKey="commonName"
+                                                        valueKey="_id"
                                                         {...register("buttCapMaterial")}
                                                     />
                                                 )}
