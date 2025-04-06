@@ -1656,7 +1656,12 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
                                                         options={crystals}
                                                         displayKey="crystalName"
                                                         valueKey="_id"
-                                                        {...register("forearmInlayMaterial")}
+                                                        {...register("forearmInlayMaterial", {
+                                                            setValueAs: value => {
+                                                                return typeof value === 'object' && value?._id ? value._id : value;
+                                                            },
+                                                            value: forearmInlayMaterial
+                                                        })}
                                                     />
                                                 </div>
                                             </div>
@@ -1721,7 +1726,12 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
                                                             options={crystals}
                                                             displayKey="crystalName"
                                                             valueKey="_id"
-                                                            {...register("forearmPointInlayMaterial")}
+                                                            {...register("forearmPointInlayMaterial", {
+                                                                setValueAs: value => {
+                                                                    return typeof value === 'object' && value?._id ? value._id : value;
+                                                                },
+                                                                value: forearmPointInlayMaterial
+                                                            })}
                                                         />
                                                     </div>
                                                 </div>
@@ -1868,7 +1878,12 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
                                                     options={crystals}
                                                     displayKey="crystalName"
                                                     valueKey="_id"
-                                                    {...register("handleInlayMaterial")}
+                                                    {...register("handleInlayMaterial", {
+                                                        setValueAs: value => {
+                                                            return typeof value === 'object' && value?._id ? value._id : value;
+                                                        },
+                                                        value: handleInlayMaterial
+                                                    })}
                                                 />
                                             </div>
                                         </div>
@@ -1940,7 +1955,12 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
                                                         options={crystals}
                                                         displayKey="crystalName"
                                                         valueKey="_id"
-                                                        {...register("buttSleeveInlayMaterial")}
+                                                        {...register("buttSleeveInlayMaterial", {
+                                                            setValueAs: value => {
+                                                                return typeof value === 'object' && value?._id ? value._id : value;
+                                                            },
+                                                            value: buttSleeveInlayMaterial
+                                                        })}
                                                     />
                                                 </div>
                                             </div>
@@ -2006,7 +2026,12 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
                                                             options={crystals}
                                                             displayKey="crystalName"
                                                             valueKey="_id"
-                                                            {...register("buttSleevePointInlayMaterial")}
+                                                            {...register("buttSleevePointInlayMaterial", {
+                                                                setValueAs: value => {
+                                                                    return typeof value === 'object' && value?._id ? value._id : value;
+                                                                },
+                                                                value: buttSleevePointInlayMaterial
+                                                            })}
                                                         />
                                                     </div>
                                                 </div>
