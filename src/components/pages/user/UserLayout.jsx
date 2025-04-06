@@ -8,7 +8,7 @@ import { receiveResponse } from "../../../util/notifications";
 export default function UserLayout() {
     const navigate = useNavigate();
     const user = useSelector(state => state.user);
-    const isAdmin = user?.role === "Admin";
+    const isAdmin = user.isAdmin;
 
     const handleLogout = () => {
         logout()

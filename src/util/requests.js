@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import { receiveResponse} from './notifications';
+import { isValidElement } from 'react';
 
 
 export function _ajax(settings = {}) {
@@ -94,6 +95,29 @@ export function updateName(email, firstName, lastName) {
             newLastName: lastName 
         }
     });
+}
+
+export function generate2FA(){
+    return _ajax({
+        url: "/account/generate2FA",
+        method: "PUT",
+    })
+}
+
+export function verify2FA(code){
+    return _ajax({
+        url: "/account/verify2FA",
+        method: "PUT",
+        data: {code}
+    })
+}
+
+export function verify2FALogin(token_data, code, iv){
+    return _ajax({
+        url: "/account/verify2FALogin",
+        method: "POST",
+        data: {token_data, code, iv}
+    })
 }
 
 /*==============================================================
