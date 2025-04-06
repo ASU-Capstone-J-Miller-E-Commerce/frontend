@@ -901,16 +901,66 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
             getData('Materials');
             reset(element);
             setButtType(element.isFullSplice || false);
-            setIncludeWrap(!!element.handleWrapType);
-            setIncludeForearmInlay(!!element.forearmInlayQuantity);
-            setIncludeHandleInlay(!!element.handleInlayQuantity);
-            setIncludeButtSleeveInlay(!!element.buttsleeveInlayQuantity);
-            setIncludeForearmPoint(!!element.forearmPointQuantity);
-            setIncludeButtSleevePoint(!!element.buttSleevePointQuantity);
+            setIncludeWrap(!!element.handleWrapType || !!element.handleWrapColor);
+
+            // Check all forearm inlay related fields
+            setIncludeForearmInlay(
+                !!element.forearmInlayQuantity ||
+                !!element.forearmInlaySize ||
+                !!element.forearmInlayMaterial ||
+                !!element.forearmInlayDescription
+            );
+
+            // Check all handle inlay related fields
+            setIncludeHandleInlay(
+                !!element.handleInlayQuantity ||
+                !!element.handleInlaySize ||
+                !!element.handleInlayMaterial ||
+                !!element.handleInlayDescription
+            );
+
+            // Check all butt sleeve inlay related fields
+            setIncludeButtSleeveInlay(
+                !!element.buttsleeveInlayQuantity ||
+                !!element.buttsleeveInlaySize ||
+                !!element.buttSleeveInlayMaterial ||
+                !!element.buttsleeveInlayDescription
+            );
+
+            // Check all forearm point related fields
+            setIncludeForearmPoint(
+                !!element.forearmPointQuantity ||
+                !!element.forearmPointSize ||
+                !!element.forearmPointVeneerDescription ||
+                !!element.forearmPointInlayDescription ||
+                !!element.forearmPointInlayMaterial
+            );
+
+            // Check all butt sleeve point related fields
+            setIncludeButtSleevePoint(
+                !!element.buttSleevePointQuantity ||
+                !!element.buttSleevePointSize ||
+                !!element.buttSleevePointVeneerDescription ||
+                !!element.buttSleevePointInlayDescription ||
+                !!element.buttSleevePointInlayMaterial
+            );
+
+            // Set veneer and inlay specific toggles
             setIncludeForearmPointVeneers(!!element.forearmPointVeneerDescription);
             setIncludeButtSleevePointVeneers(!!element.buttSleevePointVeneerDescription);
-            setIncludeForearmPointInlay(!!element.forearmPointInlayDescription);
-            setIncludeButtSleevePointInlay(!!element.buttSleevePointInlayDescription);
+
+            // Check all forearm point inlay related fields
+            setIncludeForearmPointInlay(
+                !!element.forearmPointInlayDescription ||
+                !!element.forearmPointInlayMaterial
+            );
+
+            // Check all butt sleeve point inlay related fields
+            setIncludeButtSleevePointInlay(
+                !!element.buttSleevePointInlayDescription ||
+                !!element.buttSleevePointInlayMaterial
+            );
+
             setIsCustomJointPinSize(JOINT_PIN_SIZE_OPTIONS.every(option => option.label !== element.jointPinSize));
             setIsCustomTipSize(TIP_SIZE_OPTIONS.every(option => option.label !== element.tipSize));
             setIsCustomWrapType(WRAP_TYPE_OPTIONS.every(option => option.label !== element.handleWrapType));
@@ -945,6 +995,41 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
                 const buttSleeveWood = woods.find(wood => wood._id === element.buttSleeveMaterial);
                 if (buttSleeveWood) {
                     setValue('buttSleeveMaterial', buttSleeveWood);
+                }
+            }
+
+            if (element.forearmInlayMaterial) {
+                const forearmInlayCrystal = crystals.find(crystal => crystal._id === element.forearmInlayMaterial);
+                if (forearmInlayCrystal) {
+                    setValue('forearmInlayMaterial', forearmInlayCrystal);
+                }
+            }
+
+            if (element.forearmPointInlayMaterial) {
+                const forearmPointInlayCrystal = crystals.find(crystal => crystal._id === element.forearmPointInlayMaterial);
+                if (forearmPointInlayCrystal) {
+                    setValue('forearmPointInlayMaterial', forearmPointInlayCrystal);
+                }
+            }
+
+            if (element.handleInlayMaterial) {
+                const handleInlayCrystal = crystals.find(crystal => crystal._id === element.handleInlayMaterial);
+                if (handleInlayCrystal) {
+                    setValue('handleInlayMaterial', handleInlayCrystal);
+                }
+            }
+
+            if (element.buttSleeveInlayMaterial) {
+                const buttSleeveInlayCrystal = crystals.find(crystal => crystal._id === element.buttSleeveInlayMaterial);
+                if (buttSleeveInlayCrystal) {
+                    setValue('buttSleeveInlayMaterial', buttSleeveInlayCrystal);
+                }
+            }
+
+            if (element.buttSleevePointInlayMaterial) {
+                const buttSleevePointInlayCrystal = crystals.find(crystal => crystal._id === element.buttSleevePointInlayMaterial);
+                if (buttSleevePointInlayCrystal) {
+                    setValue('buttSleevePointInlayMaterial', buttSleevePointInlayCrystal);
                 }
             }
         }
