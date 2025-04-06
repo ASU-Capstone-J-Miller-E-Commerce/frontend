@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { MaterialReactTable } from 'material-react-table';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, IconButton, ImageList, ImageListItem, ImageListItemBar } from '@mui/material';
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
 import { FormField, FormTextArea, FormSelect, DefaultToggle, FormMultiSelect } from '../../util/Inputs';
 import { DefaultButton } from '../../util/Buttons';
 import { getAdminUsers, createUser, editUser, changePassword, deleteUser, getAdminAccessories, createAccessory, editAccessory, deleteAccessory, getAdminMaterials, createWood, editWood, createCrystal, editCrystal, deleteCrystal, deleteWood, getAdminCues, createCue, editCue, deleteCue, deleteImages } from '../../../util/requests';
@@ -825,8 +825,10 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
     status: '',
     forearmInlayQuantity: '',
     forearmInlaySize: '',
+    forearmInlayMaterial: '',
     buttsleeveInlayQuantity: '',
     buttsleeveInlaySize: '',
+    buttSleeveInlayMaterial: '',
     forearmPointQuantity: '',
     forearmPointSize: '',
     forearmPointVeneerDescription: '',
@@ -835,8 +837,11 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
     buttSleevePointVeneerDescription: '',
     handleInlayQuantity: '',
     handleInlaySize: '',
+    handleInlayMaterial: '',
     forearmPointInlayDescription: '',
+    forearmPointInlayMaterial: '',
     buttSleevePointInlayDescription: '',
+    buttSleevePointInlayMaterial: '',
     forearmInlayDescription: '',
     handleInlayDescription: '',
     buttsleeveInlayDescription: '',
@@ -1032,6 +1037,11 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
     // Add these new watches
     const ringType = watch("ringType");
     const ringsDescription = watch("ringsDescription");
+    const forearmInlayMaterial = watch("forearmInlayMaterial");
+    const forearmPointInlayMaterial = watch("forearmPointInlayMaterial");
+    const handleInlayMaterial = watch("handleInlayMaterial");
+    const buttSleeveInlayMaterial = watch("buttSleeveInlayMaterial");
+    const buttSleevePointInlayMaterial = watch("buttSleevePointInlayMaterial");
 
     const materialOptions = [
         { value: 'juma', label: 'Juma' },
@@ -1108,11 +1118,13 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
             setValue("buttSleeveMaterial", "");
             setValue("buttsleeveInlayQuantity", "");
             setValue("buttsleeveInlaySize", "");
+            setValue("buttSleeveInlayMaterial", "");
             setValue("buttsleeveInlayDescription", "");
             setValue("buttSleevePointQuantity", "");
             setValue("buttSleevePointSize", "");
             setValue("buttSleevePointVeneerDescription", "");
             setValue("buttSleevePointInlayDescription", "");
+            setValue("buttSleevePointInlayMaterial", "");
             setValue("forearmPointQuantity", "4"); // Set forearm points to fixed value of 4
             
             // Reset related toggle states
@@ -1125,11 +1137,13 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
             setValue("buttSleeveMaterial", "");
             setValue("buttsleeveInlayQuantity", "");
             setValue("buttsleeveInlaySize", "");
+            setValue("buttSleeveInlayMaterial", "");
             setValue("buttsleeveInlayDescription", "");
             setValue("buttSleevePointQuantity", "");
             setValue("buttSleevePointSize", "");
             setValue("buttSleevePointVeneerDescription", "");
             setValue("buttSleevePointInlayDescription", "");
+            setValue("buttSleevePointInlayMaterial", "");
             setValue("forearmPointQuantity", ""); // Set forearm points to fixed value of 4
 
             // Reset related toggle states
@@ -1149,6 +1163,7 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
             setValue("forearmPointSize", "");
             setValue("forearmPointVeneerDescription", "");
             setValue("forearmPointInlayDescription", "");
+            setValue("forearmPointInlayMaterial", "");
             setIncludeForearmPointVeneers(false);
             setIncludeForearmPointInlay(false);
         }
@@ -1161,6 +1176,7 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
             setValue("buttSleevePointSize", "");
             setValue("buttSleevePointVeneerDescription", "");
             setValue("buttSleevePointInlayDescription", "");
+            setValue("buttSleevePointInlayMaterial", "");
             setIncludeButtSleevePointVeneers(false);
             setIncludeButtSleevePointInlay(false);
         }
@@ -1171,6 +1187,7 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
         if (!includeForearmInlay) {
             setValue("forearmInlayQuantity", "");
             setValue("forearmInlaySize", "");
+            setValue("forearmInlayMaterial", "");
             setValue("forearmInlayDescription", "");
         }
     }, [includeForearmInlay, setValue]);
@@ -1180,6 +1197,7 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
         if (!includeHandleInlay) {
             setValue("handleInlayQuantity", "");
             setValue("handleInlaySize", "");
+            setValue("handleInlayMaterial", "");
             setValue("handleInlayDescription", "");
         }
     }, [includeHandleInlay, setValue]);
@@ -1189,6 +1207,7 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
         if (!includeButtSleeveInlay) {
             setValue("buttsleeveInlayQuantity", "");
             setValue("buttsleeveInlaySize", "");
+            setValue("buttSleeveInlayMaterial", "");
             setValue("buttsleeveInlayDescription", "");
         }
     }, [includeButtSleeveInlay, setValue]);
@@ -1203,6 +1222,7 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
     useEffect(() => {
         if (!includeForearmPointInlay) {
             setValue("forearmPointInlayDescription", "");
+            setValue("forearmPointInlayMaterial", "");
         }
     }, [includeForearmPointInlay, setValue]);
 
@@ -1215,6 +1235,7 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
     useEffect(() => {
         if (!includeButtSleevePointInlay) {
             setValue("buttSleevePointInlayDescription", "");
+            setValue("buttSleevePointInlayMaterial", "");
         }
     }, [includeButtSleevePointInlay, setValue]);
 
@@ -1543,6 +1564,16 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
                                                         {...register("forearmInlaySize")}
                                                     />
                                                 </div>
+                                                <div className='flex-1'>
+                                                    <FormSelect
+                                                        title="Forearm Inlay Material"
+                                                        value={forearmInlayMaterial}
+                                                        options={crystals}
+                                                        displayKey="crystalName"
+                                                        valueKey="_id"
+                                                        {...register("forearmInlayMaterial")}
+                                                    />
+                                                </div>
                                             </div>
                                         )}
                                         {includeForearmInlay && (
@@ -1596,6 +1627,20 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
                                                     />
                                                 </div>
                                             </div>}
+                                            {includeForearmPointInlay && (
+                                                <div className='form-row'>
+                                                    <div className='flex-1'>
+                                                        <FormSelect
+                                                            title="Forearm Point Inlay Material"
+                                                            value={forearmPointInlayMaterial}
+                                                            options={crystals}
+                                                            displayKey="crystalName"
+                                                            valueKey="_id"
+                                                            {...register("forearmPointInlayMaterial")}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            )}
                                             {includeForearmPointInlay && (
                                                 <div className='form-row'>
                                                     <div className='flex-1'>
@@ -1731,6 +1776,16 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
                                                     {...register("handleInlaySize")}
                                                 />
                                             </div>
+                                            <div className='flex-1'>
+                                                <FormSelect
+                                                    title="Handle Inlay Material"
+                                                    value={handleInlayMaterial}
+                                                    options={crystals}
+                                                    displayKey="crystalName"
+                                                    valueKey="_id"
+                                                    {...register("handleInlayMaterial")}
+                                                />
+                                            </div>
                                         </div>
                                     )}
                                     {includeHandleInlay && (
@@ -1793,6 +1848,16 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
                                                         {...register("buttsleeveInlaySize")}
                                                     />
                                                 </div>
+                                                <div className='flex-1'>
+                                                    <FormSelect
+                                                        title="Butt Sleeve Inlay Material"
+                                                        value={buttSleeveInlayMaterial}
+                                                        options={crystals}
+                                                        displayKey="crystalName"
+                                                        valueKey="_id"
+                                                        {...register("buttSleeveInlayMaterial")}
+                                                    />
+                                                </div>
                                             </div>
                                         )}
                                         {includeButtSleeveInlay && (
@@ -1847,6 +1912,20 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
                                                     />
                                                 </div>
                                             </div>}
+                                            {includeButtSleevePointInlay && (
+                                                <div className='form-row'>
+                                                    <div className='flex-1'>
+                                                        <FormSelect
+                                                            title="Butt Sleeve Point Inlay Material"
+                                                            value={buttSleevePointInlayMaterial}
+                                                            options={crystals}
+                                                            displayKey="crystalName"
+                                                            valueKey="_id"
+                                                            {...register("buttSleevePointInlayMaterial")}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            )}
                                             {includeButtSleevePointInlay && (
                                                 <div className='form-row'>
                                                     <div className='flex-1'>
