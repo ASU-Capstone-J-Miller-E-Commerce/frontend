@@ -862,6 +862,9 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
     const [deletedUrls, setDeletedUrls] = useState([]);
     const [savedCue, setSavedCue] = useState(false);
     const [localTitle, setLocalTitle] = useState(title);
+    const [isCustomFerruleMaterial, setIsCustomFerruleMaterial] = useState(false);
+    const [isCustomJointCollarMaterial, setIsCustomJointCollarMaterial] = useState(false);
+    const [isCustomButtCapMaterial, setIsCustomButtCapMaterial] = useState(false);
 
     useEffect(() => {
         setLocalTitle(title);
@@ -964,6 +967,9 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
             setIsCustomJointPinSize(JOINT_PIN_SIZE_OPTIONS.every(option => option.label !== element.jointPinSize));
             setIsCustomTipSize(TIP_SIZE_OPTIONS.every(option => option.label !== element.tipSize));
             setIsCustomWrapType(WRAP_TYPE_OPTIONS.every(option => option.label !== element.handleWrapType));
+            setIsCustomFerruleMaterial(materialOptions.every(option => option.label !== element.ferruleMaterial));
+            setIsCustomJointCollarMaterial(materialOptions.every(option => option.label !== element.jointCollarMaterial));
+            setIsCustomButtCapMaterial(materialOptions.every(option => option.label !== element.buttCapMaterial));
             if (!existingCue && cueData) {
                 const nextCueNumber = getNextCueNumber(cueData);
                 setValue('cueNumber', nextCueNumber);
@@ -1131,8 +1137,7 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
     const materialOptions = [
         { value: 'juma', label: 'Juma' },
         { value: 'black_juma', label: 'Black Juma' },
-        { value: 'rubber', label: 'Rubber' },
-        { value: 'wood', label: 'Wood' }
+        { value: 'other', label: 'Other' },
     ];
 
     // Set default colors when wrap type changes
@@ -1157,6 +1162,28 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
         // Update the state
         setIncludeWrap(newValue);
     };
+
+    useEffect(() => {
+        if (ferruleMaterial === 'Other') {
+            setValue("ferruleMaterial", "");
+            setIsCustomFerruleMaterial(true);
+        }
+    }, [ferruleMaterial, setValue]);
+
+    useEffect(() => {
+        if (jointCollarMaterial === 'Other') {
+            setValue("jointCollarMaterial", "");
+            setIsCustomJointCollarMaterial(true);
+        }
+    }, [jointCollarMaterial, setValue]);
+
+    useEffect(() => {
+        if (buttCapMaterial === 'Other') {
+            setValue("buttCapMaterial", "");
+            setIsCustomButtCapMaterial(true);
+        }
+    }, [buttCapMaterial, setValue]);
+
 
     // Watch these values for conditional rendering
     const [isCustomColor, setIsCustomColor] = useState(false);
@@ -1496,14 +1523,22 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
                                 <h3 className="dialog-header3">Ferrule</h3>
                                 <div className='form-row'>
                                     <div className='flex-1'>
-                                        <FormSelect
-                                            title="Ferrule Material"
-                                            value={ferruleMaterial}
-                                            options={materialOptions}
-                                            displayKey="label"
-                                            valueKey="label"
-                                            {...register("ferruleMaterial")}
-                                        />
+                                        {isCustomFerruleMaterial ? (
+                                            <FormTextArea
+                                                title="Custom Ferrule Material"
+                                                value={ferruleMaterial}
+                                                {...register("ferruleMaterial")}
+                                            />
+                                        ) : (
+                                            <FormSelect
+                                                title="Ferrule Material"
+                                                value={ferruleMaterial}
+                                                options={materialOptions}
+                                                displayKey="label"
+                                                valueKey="label"
+                                                {...register("ferruleMaterial")}
+                                            />
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -1574,14 +1609,22 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
                                         <h3 className="dialog-header3">Joint Collar</h3>
                                         <div className='form-row'>
                                             <div className='flex-1'>
-                                                <FormSelect
-                                                    title="Joint Collar Material"
-                                                    value={jointCollarMaterial}
-                                                    options={materialOptions}
-                                                    displayKey="label"
-                                                    valueKey="label"
-                                                    {...register("jointCollarMaterial")}
-                                                />
+                                                {isCustomJointCollarMaterial ? (
+                                                    <FormTextArea
+                                                        title="Custom Joint Collar Material"
+                                                        value={jointCollarMaterial}
+                                                        {...register("jointCollarMaterial")}
+                                                    />
+                                                ) : (
+                                                    <FormSelect
+                                                        title="Joint Collar Material"
+                                                        value={jointCollarMaterial}
+                                                        options={materialOptions}
+                                                        displayKey="label"
+                                                        valueKey="label"
+                                                        {...register("jointCollarMaterial")}
+                                                    />
+                                                )}
                                             </div>
                                         </div>
                                     </div>
@@ -1589,14 +1632,22 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
                                         <h3 className="dialog-header3">Butt Cap</h3>
                                         <div className='form-row'>
                                             <div className='flex-1'>
-                                                <FormSelect
-                                                    title="Butt Cap Material"
-                                                    value={buttCapMaterial}
-                                                    options={materialOptions}
-                                                    displayKey="label"
-                                                    valueKey="label"
-                                                    {...register("buttCapMaterial")}
-                                                />
+                                                {isCustomButtCapMaterial ? (
+                                                    <FormTextArea
+                                                        title="Custom Butt Cap Material"
+                                                        value={buttCapMaterial}
+                                                        {...register("buttCapMaterial")}
+                                                    />
+                                                ) : (
+                                                    <FormSelect
+                                                        title="Butt Cap Material"
+                                                        value={buttCapMaterial}
+                                                        options={materialOptions}
+                                                        displayKey="label"
+                                                        valueKey="label"
+                                                        {...register("buttCapMaterial")}
+                                                    />
+                                                )}
                                             </div>
                                         </div>
                                     </div>
