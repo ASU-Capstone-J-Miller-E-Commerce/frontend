@@ -973,7 +973,7 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
                 woods.every(wood => wood._id !== element.jointCollarMaterial)
             );
             setIsCustomButtCapMaterial(typeof element.buttCapMaterial !== 'object' && materialOptions.every(option => option.commonName !== element.buttCapMaterial));
-            if (!existingCue && cueData) {
+            if (!element._id && cueData) {
                 const nextCueNumber = getNextCueNumber(cueData);
                 setValue('cueNumber', nextCueNumber);
             }

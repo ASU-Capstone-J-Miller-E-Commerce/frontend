@@ -1,6 +1,6 @@
 import React from "react";
 
-export function Card({title, image, price}) {
+export function Card({title, image, price=""}) {
     return (
         <div className="card-wrapper">
             {/* Card image */}
@@ -15,7 +15,7 @@ export function Card({title, image, price}) {
                 </h3>
                 {/* Price */}
                 <span>
-                    ${price.toFixed(2)}
+                    ${Number(price).toFixed(2)}
                 </span>
             </div>
         </div>
