@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { getCueCollection } from "../../util/requests";
-import { Card } from "../util/Card";
+import Collection from "../util/Collection";
 
 export default function CollectionsPage () {
     const location = useLocation();
@@ -31,17 +31,17 @@ export default function CollectionsPage () {
     }, [collection]);
     
     return (
-        <div>
-            {collection}
-            <div className="featured-listing">
-                <ul>
-                    {data.map((item, index) => {
-                        console.log(item)
-                        return <li key={index}>
-                            <Card image={item.imageUrls[0]} title={item.name} price={item.price}/>
-                        </li>})}
-                </ul>
-            </div>
+        <div className="collection-page">
+            <CollectionBanner collection={collection} />
+            <Collection data={data}/>
+        </div>
+    );
+}
+
+function CollectionBanner({ collection }) {
+    return (
+        <div className="collection-banner">
+            <h1>{collection}</h1>
         </div>
     );
 }

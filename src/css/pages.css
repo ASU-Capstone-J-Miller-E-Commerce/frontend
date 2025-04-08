@@ -403,3 +403,57 @@
     font-weight: bold;
     margin-bottom: 5px;
 }
+
+/*==============================================================
+# Collections pages
+==============================================================*/
+.collection-banner {
+    display: flex;
+    align-items: center;
+    padding-left: 50px;
+    text-align: left;
+    height: 90px;
+    background-color: var(--miller-dark-grey);
+    color: var(--miller-white);
+  }
+
+.collection-page {
+    /* margin: 0px 20px; */
+}
+
+.collection-wrapper {
+    padding: 36px 50px;
+}
+
+.collection-listing ul{
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    column-gap: 4px;
+    row-gap: 4px;
+}
+
+/* @media (min-width: 990px) {
+    .collection-listing {
+        padding: 0 50px;
+    }
+} */
+@media (min-width: 750px) {
+    .collection-listing ul {
+        column-gap: 8px;
+        row-gap: 8px;
+    }
+}
+
+.collection-listing ul li {
+    width: calc(50% - 8px * 3 / 4);
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+@media (min-width: 990px) {
+    .collection-listing ul li {
+        width: calc(25% - 8px * 3 / 4);
+    }
+}
