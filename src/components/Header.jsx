@@ -12,15 +12,15 @@ const options = {
         { text: "View All Materials", link: "/collections/materials" }
     ],
     "Cues": [
-        { text: "Available Cues", link: "/collections/available" },
-        { text: "Upcoming Cues", link: "/collections/coming-soon" },
-        { text: "View All Cues", link: "/collections/available" },
+        { text: "Available Cues", link: "/collections/cues" },
+        { text: "Upcoming Cues", link: "/collections/cues" },
+        { text: "View All Cues", link: "/collections/cues" },
     ]
 };
 
 const navItems = [
     { text: "Cues", options: options["Cues"] },
-    { text: "Accessories", link: "/collections/available" },
+    { text: "Accessories", link: "/collections/accessories" },
     { text: "Build-A-Cue", link: "/build-a-cue" },
     { text: "Materials", options: options["Materials"] }
 ];
