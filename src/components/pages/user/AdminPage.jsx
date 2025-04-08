@@ -3138,11 +3138,18 @@ function UserDialog({ open, onClose, title: initialTitle, getData, setDialogProp
 }
 
 function DeleteDialog({ open, onClose, title, adminPage, getData, element }) {
+    const handleDeleteImages = (imageUrls) => {
+        if (imageUrls && imageUrls.length > 0) {
+            deleteImages(imageUrls);
+        }
+    };
+
     const handleDelete = () => {
         switch (adminPage) {
             case 'Cues':
                 deleteCue(element._id)
                     .then((res) => {
+                        handleDeleteImages(element?.imageUrls);
                         receiveResponse(res);
                         getData();
                         onClose();
@@ -3151,6 +3158,7 @@ function DeleteDialog({ open, onClose, title, adminPage, getData, element }) {
             case 'Accessories':
                 deleteAccessory(element._id)
                     .then((res) => {
+                        handleDeleteImages(element?.imageUrls);
                         receiveResponse(res);
                         getData();
                         onClose();
@@ -3161,6 +3169,7 @@ function DeleteDialog({ open, onClose, title, adminPage, getData, element }) {
                     // It's a wood material
                     deleteWood(element._id)
                         .then((res) => {
+                            handleDeleteImages(element?.imageUrls);
                             receiveResponse(res);
                             getData();
                             onClose();
@@ -3169,6 +3178,7 @@ function DeleteDialog({ open, onClose, title, adminPage, getData, element }) {
                     // It's a crystal material
                     deleteCrystal(element._id)
                         .then((res) => {
+                            handleDeleteImages(element?.imageUrls);
                             receiveResponse(res);
                             getData();
                             onClose();
