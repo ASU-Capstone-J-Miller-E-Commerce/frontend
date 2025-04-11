@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Card } from "./Card";
 
 // Filter Dropdown Component that can accept either options or custom content
@@ -44,9 +44,15 @@ const PriceRangeFilter = () => {
     const [isDraggingMax, setIsDraggingMax] = useState(false);
     const sliderRef = useRef(null);
     
-    // Calculate percentage for slider positioning
+    // Adjust the getPercentage function in PriceRangeFilter
     const getPercentage = (value) => {
-        return Math.max(0, Math.min(100, (value / 3500) * 100));
+        // Create a buffer zone of 8px on each side (based on half the handle width)
+        const buffer = 12;
+        const bufferPercentage = (buffer / sliderRef.current?.clientWidth) * 100 || 0;
+        
+        // Scale the percentage to fit within the buffer zone
+        const rawPercentage = (value / 3500) * 100;
+        return bufferPercentage + rawPercentage * (100 - 2 * bufferPercentage) / 100;
     };
     
     const handleMinChange = (e) => {
@@ -59,20 +65,45 @@ const PriceRangeFilter = () => {
         setMaxValue(Math.max(value, minValue + 50));
     };
     
-    const handleSliderClick = (e) => {
-        if (!sliderRef.current) return;
-        
-        const rect = sliderRef.current.getBoundingClientRect();
-        const percentage = (e.clientX - rect.left) / rect.width;
-        const value = Math.round(percentage * 3500);
-        
-        // Determine which handle to move based on proximity
-        if (Math.abs(value - minValue) < Math.abs(value - maxValue)) {
-            setMinValue(Math.min(value, maxValue - 50));
+    const handleMouseDown = (e, isMin) => {
+        e.preventDefault();
+        if (isMin) {
+            setIsDraggingMin(true);
         } else {
-            setMaxValue(Math.max(value, minValue + 50));
+            setIsDraggingMax(true);
         }
     };
+    
+    const handleMouseMove = useCallback((e) => {
+        if (!sliderRef.current || (!isDraggingMin && !isDraggingMax)) return;
+        
+        const rect = sliderRef.current.getBoundingClientRect();
+        const percentage = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        const value = Math.round(percentage * 3500);
+        
+        if (isDraggingMin) {
+            setMinValue(Math.min(value, maxValue - 50));
+        } else if (isDraggingMax) {
+            setMaxValue(Math.max(value, minValue + 50));
+        }
+    }, [isDraggingMin, isDraggingMax, minValue, maxValue]);
+    
+    const handleMouseUp = useCallback(() => {
+        setIsDraggingMin(false);
+        setIsDraggingMax(false);
+    }, []);
+    
+    useEffect(() => {
+        if (isDraggingMin || isDraggingMax) {
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+        }
+        
+        return () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        };
+    }, [isDraggingMin, isDraggingMax, handleMouseMove, handleMouseUp]);
     
     return (
         <div className="price-range-filter">
@@ -97,7 +128,12 @@ const PriceRangeFilter = () => {
             <div 
                 className="price-slider"
                 ref={sliderRef}
-                onClick={handleSliderClick}
+                onClick={(e) => {
+                    // Only handle clicks on the track, not on the handles
+                    if (e.target === e.currentTarget || e.target.className === 'price-slider-track') {
+                        handleSliderClick(e);
+                    }
+                }}
             >
                 <div className="price-slider-track"></div>
                 <div 
@@ -110,10 +146,12 @@ const PriceRangeFilter = () => {
                 <div 
                     className="price-slider-handle min-handle"
                     style={{ left: `${getPercentage(minValue)}%` }}
+                    onMouseDown={(e) => handleMouseDown(e, true)}
                 ></div>
                 <div 
                     className="price-slider-handle max-handle"
                     style={{ left: `${getPercentage(maxValue)}%` }}
+                    onMouseDown={(e) => handleMouseDown(e, false)}
                 ></div>
             </div>
         </div>
