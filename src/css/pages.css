@@ -519,13 +519,13 @@
 
 .filter-dropdown {
   margin-bottom: 15px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 3px solid #eee;
   padding-bottom: 15px;
 }
 
 .filter-dropdown-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   cursor: pointer;
 }
@@ -535,6 +535,13 @@
   font-size: 16px;
   font-weight: 500;
 }
+
+.filter-dropdown-header i {
+    height: 10px;
+    width: 22px;
+    font-size: 12px;
+    font-weight: 500;
+  }
 
 .dropdown-arrow {
   font-size: 12px;

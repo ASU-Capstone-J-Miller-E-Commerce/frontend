@@ -11,10 +11,8 @@ const FilterDropdown = ({ title, options }) => {
                 className="filter-dropdown-header" 
                 onClick={() => setIsOpen(!isOpen)}
             >
+                <i className={`fa-solid ${isOpen ? "fa-chevron-up" : "fa-chevron-down"}`} />
                 <h4>{title}</h4>
-                <span className={`dropdown-arrow ${isOpen ? 'open' : ''}`}>
-                    {isOpen ? '▼' : '►'}
-                </span>
             </div>
             
             {isOpen && (
