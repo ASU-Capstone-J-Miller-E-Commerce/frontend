@@ -348,11 +348,25 @@ export default function Collection({
         onItemsPerPageChange(parseInt(e.target.value));
     };
 
+    // When a page button is clicked
+    const handlePageButtonClick = (page) => {
+        console.log("Changing to page:", page);
+        onPageChange(page);
+        // Scroll to top of the product list for better UX
+        window.scrollTo({
+            top: document.querySelector('.collection-listing').offsetTop - 100,
+            behavior: 'smooth'
+        });
+    };
+
     // Calculate pagination values
     const totalPages = Math.ceil(data.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const currentItems = data.slice(startIndex, endIndex);
+
+    // Add validation for itemsPerPage values
+    const validItemsPerPageValues = [12, 24, 48];
 
     return (
         <div className="collection-wrapper">
@@ -385,13 +399,16 @@ export default function Collection({
                         <div className="display-options">
                             <div className="items-per-page">
                                 <select 
-                                    value={itemsPerPage} 
+                                    value={validItemsPerPageValues.includes(itemsPerPage) ? itemsPerPage : 12}
                                     onChange={handleItemsPerPageChange}
                                     className="show-select"
                                 >
                                     <option value="12">Show 12</option>
                                     <option value="24">Show 24</option>
                                     <option value="48">Show 48</option>
+                                    {!validItemsPerPageValues.includes(itemsPerPage) && (
+                                        <option value={itemsPerPage}>Show {itemsPerPage}</option>
+                                    )}
                                 </select>
                             </div>
                             <div className="sorting-options">
@@ -425,7 +442,7 @@ export default function Collection({
                     <Pagination 
                         currentPage={currentPage}
                         totalPages={totalPages}
-                        onPageChange={onPageChange}
+                        onPageChange={handlePageButtonClick}
                     />
                 </div>
             </div>

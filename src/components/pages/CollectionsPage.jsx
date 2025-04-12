@@ -22,8 +22,24 @@ export default function CollectionsPage() {
         const searchParams = new URLSearchParams(location.search);
         setSearchQuery(searchParams.get('search') || '');
         setActiveSort(searchParams.get('sort') || '');
-        setItemsPerPage(parseInt(searchParams.get('limit') || '12')); // Parse limit
-        setCurrentPage(parseInt(searchParams.get('page') || '1')); // Parse page parameter
+
+        // Get limit from URL with validation
+        const limitParam = searchParams.get('limit');
+        if (limitParam) {
+            const parsedLimit = parseInt(limitParam);
+            if (!isNaN(parsedLimit) && parsedLimit > 0) {
+                setItemsPerPage(parsedLimit);
+            }
+        }
+        
+        // Get page number from URL
+        const pageParam = searchParams.get('page');
+        if (pageParam) {
+            const parsedPage = parseInt(pageParam);
+            if (!isNaN(parsedPage) && parsedPage > 0) {
+                setCurrentPage(parsedPage);
+            }
+        }
         
         // Parse filter params
         const params = {};
@@ -60,13 +76,17 @@ export default function CollectionsPage() {
 
     // Reset to page 1 when filters change
     useEffect(() => {
-        setCurrentPage(1);
-    }, [activeFilters, searchQuery, itemsPerPage]);
+        // Only reset page when filters or search changes, not when page is explicitly changed
+        if (!location.search.includes('page=')) {
+            setCurrentPage(1);
+        }
+    }, [activeFilters, searchQuery, itemsPerPage, location.search]);
 
     // Update URL when filters or pagination changes
     useEffect(() => {
         if (!collection) return;
         
+        // Keep track of the last URL we set to avoid loops
         const searchParams = new URLSearchParams();
         
         // Add search query
@@ -93,9 +113,13 @@ export default function CollectionsPage() {
             }
         });
         
-        // Update URL without reloading page
+        // Only update URL if it actually changed
         const newUrl = `${location.pathname}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
-        navigate(newUrl, { replace: true });
+        const currentUrl = `${location.pathname}${location.search}`;
+        
+        if (newUrl !== currentUrl) {
+            navigate(newUrl, { replace: true });
+        }
     }, [searchQuery, activeSort, activeFilters, itemsPerPage, currentPage, collection, navigate, location.pathname]);
 
     // update data when changing to another collection
@@ -104,6 +128,14 @@ export default function CollectionsPage() {
         setCollection(path);
     }, [location.pathname]);
 
+    // Add this near the top of your component
+    useEffect(() => {
+        // Reset both current page and filtered data when the collection changes
+        setCurrentPage(1);
+        setFilteredData([]);
+    }, [collection]);
+
+    // Make sure data is being loaded properly for each collection
     useEffect(() => {
         // Define collection-specific filters and sort options
         switch (collection) {
@@ -134,7 +166,9 @@ export default function CollectionsPage() {
                 ]);
                 getCueCollection()
                     .then((res) => {
-                        setData([...res.data, ...res.data, ...res.data, ...res.data, ...res.data]);
+                        const data = [...res.data, ...res.data, ...res.data, ...res.data, ...res.data];
+                        setData(data);
+                        setFilteredData(data); // Initialize filtered data as well
                     });
                 break;
                 
@@ -165,6 +199,15 @@ export default function CollectionsPage() {
                     { value: "price-desc", label: "Price: High to Low" },
                     { value: "alphabet", label: "Alphabetical" }
                 ]);
+                // Add dummy data for testing pagination
+                const accessoriesData = Array(50).fill().map((_, i) => ({
+                    id: `acc-${i}`,
+                    name: `Accessory ${i+1}`,
+                    price: Math.floor(Math.random() * 200) + 20,
+                    imageUrls: ['https://placehold.co/300x300']
+                }));
+                setData(accessoriesData);
+                setFilteredData(accessoriesData);
                 break;
                 
             case "materials":
@@ -193,6 +236,15 @@ export default function CollectionsPage() {
                     { value: "price-asc", label: "Price: Low to High" },
                     { value: "price-desc", label: "Price: High to Low" }
                 ]);
+                // Add dummy data for testing pagination
+                const materialsData = Array(40).fill().map((_, i) => ({
+                    id: `mat-${i}`,
+                    name: `Material ${i+1}`,
+                    price: Math.floor(Math.random() * 500) + 50,
+                    imageUrls: ['https://placehold.co/300x300']
+                }));
+                setData(materialsData);
+                setFilteredData(materialsData);
                 break;
         }
     }, [collection]);
