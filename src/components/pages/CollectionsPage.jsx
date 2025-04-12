@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getCueCollection } from "../../util/requests";
 import Collection from "../util/Collection";
@@ -8,6 +8,7 @@ export default function CollectionsPage() {
     const navigate = useNavigate();
     const [collection, setCollection] = useState(location.pathname.split("/").pop());
     const [data, setData] = useState([]);
+    const [filteredData, setFilteredData] = useState([]); // New state for filtered data
     const [filterOptions, setFilterOptions] = useState([]);
     const [sortOptions, setSortOptions] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -33,6 +34,25 @@ export default function CollectionsPage() {
         }
         setActiveFilters(params);
     }, [location.pathname]);
+
+    // Filter function to apply filters to data
+    const filterData = useCallback(() => {
+        // For now, just return all data
+        // This will be expanded later with actual filtering logic
+        setFilteredData(data);
+        
+        // Log that the filter function was called
+        console.log("Filter function called with:", {
+            filters: activeFilters,
+            search: searchQuery,
+            sort: activeSort
+        });
+    }, [data, activeFilters, searchQuery, activeSort]);
+
+    // Apply filters whenever filter parameters or data changes
+    useEffect(() => {
+        filterData();
+    }, [filterData, data, activeFilters, searchQuery, activeSort]);
 
     // Update URL when filters change
     useEffect(() => {
@@ -189,7 +209,7 @@ export default function CollectionsPage() {
         <div className="collection-page">
             <CollectionBanner collection={collection} />
             <Collection 
-                data={data} 
+                data={filteredData} // Use filteredData instead of raw data
                 filterOptions={filterOptions} 
                 sortOptions={sortOptions}
                 activeFilters={activeFilters}
