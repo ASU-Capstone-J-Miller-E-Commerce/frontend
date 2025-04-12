@@ -120,6 +120,14 @@ export function verify2FALogin(token_data, code, iv){
     })
 }
 
+export function userChangePassword(currPw, newPw){
+    return _ajax({
+        url: "/user/userChangePassword",
+        method: "PUT",
+        data: {currPw, newPw}
+    })
+}
+
 /*==============================================================
 # Products
 ==============================================================*/
