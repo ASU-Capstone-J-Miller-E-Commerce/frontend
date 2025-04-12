@@ -37,9 +37,9 @@ const FilterDropdown = ({ title, options, customContent }) => {
 };
 
 // Price Range Filter Component
-const PriceRangeFilter = () => {
-    const [minValue, setMinValue] = useState(0);
-    const [maxValue, setMaxValue] = useState(3500);
+const PriceRangeFilter = ({ min = 0, max = 3500 }) => {
+    const [minValue, setMinValue] = useState(min);
+    const [maxValue, setMaxValue] = useState(max);
     const [isDraggingMin, setIsDraggingMin] = useState(false);
     const [isDraggingMax, setIsDraggingMax] = useState(false);
     const sliderRef = useRef(null);
@@ -54,7 +54,7 @@ const PriceRangeFilter = () => {
         const bufferPercentage = (buffer / sliderRef.current?.clientWidth) * 100 || 0;
         
         // Scale the percentage to fit within the buffer zone
-        const rawPercentage = (value / 3500) * 100;
+        const rawPercentage = (value / max) * 100;
         return bufferPercentage + rawPercentage * (100 - 2 * bufferPercentage) / 100;
     };
     
@@ -76,7 +76,7 @@ const PriceRangeFilter = () => {
         if (isNaN(inputValue)) return;
         
         // Enforce min/max constraints - never exceed 3500
-        const constrainedValue = Math.max(minValue + 50, Math.min(inputValue, 3500));
+        const constrainedValue = Math.max(minValue + 50, Math.min(inputValue, max));
         setMaxValue(constrainedValue);
     };
     
@@ -94,14 +94,14 @@ const PriceRangeFilter = () => {
         
         const rect = sliderRef.current.getBoundingClientRect();
         const percentage = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-        const value = Math.round(percentage * 3500);
+        const value = Math.round(percentage * max);
         
         if (isDraggingMin) {
             setMinValue(Math.min(value, maxValue - 50));
         } else if (isDraggingMax) {
             setMaxValue(Math.max(value, minValue + 50));
         }
-    }, [isDraggingMin, isDraggingMax, minValue, maxValue]);
+    }, [isDraggingMin, isDraggingMax, minValue, maxValue, max]);
     
     const handleMouseUp = useCallback(() => {
         setIsDraggingMin(false);
@@ -137,7 +137,7 @@ const PriceRangeFilter = () => {
                     value={maxValue} 
                     onChange={handleMaxChange}
                     min={minValue + 50}
-                    max="3500"
+                    max={max}
                 />
             </div>
             
@@ -171,15 +171,15 @@ const PriceRangeFilter = () => {
                 ></div>
             </div>
             <div className="price-range-labels">
-                <span>$0</span>
-                <span>$3500</span>
+                <span>${min}</span>
+                <span>${max}</span>
             </div>
         </div>
     );
 };
 
 // Filter Area Component
-const FilterArea = () => {
+const FilterArea = ({ filterOptions }) => {
     const typeOptions = [
         "Playing Cues", 
         "Break Cues", 
@@ -188,24 +188,28 @@ const FilterArea = () => {
     
     return (
         <div className="collection-filters">
-            <FilterDropdown 
-                title="Price" 
-                customContent={<PriceRangeFilter />} 
-            />
-            <FilterDropdown 
-                title="Type" 
-                options={typeOptions} 
-            />
+            {filterOptions.map((filter, index) => (
+                <FilterDropdown 
+                    key={index}
+                    title={filter.title} 
+                    customContent={
+                        filter.type === "priceRange" 
+                            ? <PriceRangeFilter min={filter.min} max={filter.max} /> 
+                            : null
+                    }
+                    options={filter.type === "checkbox" ? filter.options : null}
+                />
+            ))}
         </div>
     );
 };
 
-export default function Collection({ data=[] }) {
+export default function Collection({ data = [], filterOptions = [], sortOptions = [] }) {
     return (
         <div className="collection-wrapper">
             <div className="collection-container">
                 {/* Filters Column */}
-                <FilterArea />
+                <FilterArea filterOptions={filterOptions} />
 
                 {/* Main content area */}
                 <div className="collection-content">
@@ -222,10 +226,11 @@ export default function Collection({ data=[] }) {
                         </div>
                         <div className="sorting-options">
                             <select>
-                                <option value="featured">Featured</option>
-                                <option value="price-asc">Price: Low to High</option>
-                                <option value="price-desc">Price: High to Low</option>
-                                <option value="name-asc">Name: A-Z</option>
+                                {sortOptions.map((option, index) => (
+                                    <option key={index} value={option.value}>
+                                        {option.label}
+                                    </option>
+                                ))}
                             </select>
                         </div>
                     </div>
