@@ -361,7 +361,7 @@ select.form-field-input::-ms-expand {
 @media (min-width: 990px) {
   .main-header {
     grid-template-areas: "heading navigation icons";
-    padding: 0px 50px;
+    padding: 6px 50px;
   }
 
   .header-drawer {

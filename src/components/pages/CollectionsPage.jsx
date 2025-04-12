@@ -19,7 +19,7 @@ export default function CollectionsPage () {
             case "cues":
                 getCueCollection()
                     .then((res) => {
-                        setData(res.data);
+                        setData([...res.data, ...res.data, ...res.data, ...res.data, ...res.data]);
                     });
                 break;
             case "accessories":

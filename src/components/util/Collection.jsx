@@ -44,6 +44,9 @@ const PriceRangeFilter = () => {
     const [isDraggingMax, setIsDraggingMax] = useState(false);
     const sliderRef = useRef(null);
     
+    // Display empty string instead of 0 for better UX
+    const displayMinValue = minValue === 0 ? '' : minValue;
+    
     // Adjust the getPercentage function in PriceRangeFilter
     const getPercentage = (value) => {
         // Create a buffer zone of 8px on each side (based on half the handle width)
@@ -56,13 +59,25 @@ const PriceRangeFilter = () => {
     };
     
     const handleMinChange = (e) => {
-        const value = parseInt(e.target.value) || 0;
-        setMinValue(Math.min(value, maxValue - 50));
+        // Get value from input, using empty string if input is empty
+        const inputValue = e.target.value === '' ? 0 : parseInt(e.target.value);
+        
+        if (isNaN(inputValue)) return;
+        
+        // Enforce min/max constraints
+        const constrainedValue = Math.max(0, Math.min(inputValue, maxValue - 50));
+        setMinValue(constrainedValue);
     };
     
     const handleMaxChange = (e) => {
-        const value = parseInt(e.target.value) || 0;
-        setMaxValue(Math.max(value, minValue + 50));
+        // Get value from input
+        const inputValue = e.target.value === '' ? 0 : parseInt(e.target.value);
+        
+        if (isNaN(inputValue)) return;
+        
+        // Enforce min/max constraints - never exceed 3500
+        const constrainedValue = Math.max(minValue + 50, Math.min(inputValue, 3500));
+        setMaxValue(constrainedValue);
     };
     
     const handleMouseDown = (e, isMin) => {
@@ -109,18 +124,19 @@ const PriceRangeFilter = () => {
         <div className="price-range-filter">
             <div className="price-inputs">
                 <input 
-                    type="number" 
-                    value={minValue} 
+                    type="text" /* Changed from number to text */
+                    value={displayMinValue} /* Using displayMinValue */
                     onChange={handleMinChange}
-                    min="0"
-                    max="3450"
+                    placeholder="0"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                 />
                 <span className="price-separator">-</span>
                 <input 
                     type="number" 
                     value={maxValue} 
                     onChange={handleMaxChange}
-                    min="50"
+                    min={minValue + 50}
                     max="3500"
                 />
             </div>
@@ -153,6 +169,10 @@ const PriceRangeFilter = () => {
                     style={{ left: `${getPercentage(maxValue)}%` }}
                     onMouseDown={(e) => handleMouseDown(e, false)}
                 ></div>
+            </div>
+            <div className="price-range-labels">
+                <span>$0</span>
+                <span>$3500</span>
             </div>
         </div>
     );
@@ -191,7 +211,8 @@ export default function Collection({ data=[] }) {
                 <div className="collection-content">
                     {/* Search bar */}
                     <div className="collection-search">
-                        <input type="text" placeholder="Search products..." />
+                        <i className="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" placeholder="Search products" />
                     </div>
                     
                     {/* Product count and sorting */}

@@ -412,7 +412,7 @@
     align-items: center;
     padding-left: 50px;
     text-align: left;
-    height: 90px;
+    height: 102px;
     background-color: var(--miller-dark-grey);
     color: var(--miller-white);
   }
@@ -431,7 +431,7 @@
 }
 
 .collection-filters {
-    width: 250px;
+    flex: 5;
     flex-shrink: 0;
 }
 
@@ -453,35 +453,52 @@
 }
 
 .collection-content {
-    flex-grow: 1;
+    flex: 19;
 }
 
 .collection-search {
-    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    background-color: white;
 }
 
 .collection-search input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    flex: 1;
+    padding: 10px 10px 10px 40px;
+    border: none;
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    color: #666;
+    font-size: 14px;
 }
 
 .collection-controls {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
 }
 
 .sorting-options select {
     padding: 8px;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 3px;
+    font-size: 14px;
 }
 
 .collection-wrapper {
     padding: 36px 50px;
+    margin: 0 auto;
+    max-width: 83rem;
 }
 
 .collection-listing ul{
@@ -520,7 +537,7 @@
 .filter-dropdown {
   margin-bottom: 15px;
   border-bottom: 3px solid #eee;
-  padding-bottom: 15px;
+  padding-bottom: 10px;
 }
 
 .filter-dropdown-header {
@@ -567,6 +584,33 @@
   align-items: center;
   gap: 8px;
   cursor: pointer;
+  font-size: 12px; /* Making the text smaller */
+}
+
+.filter-dropdown-content input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  background-color: white; /* Ensuring background is white, not black */
+  cursor: pointer;
+  position: relative;
+}
+
+.filter-dropdown-content input[type="checkbox"]:checked {
+  background-color: #666; /* Use a gray color when checked */
+}
+
+.filter-dropdown-content input[type="checkbox"]:checked::after {
+  content: "✓";
+  position: absolute;
+  color: white;
+  font-size: 12px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .price-inputs {
@@ -580,20 +624,23 @@
 
 .price-inputs input {
   width: 100%;
-  padding: 8px 12px;
+  padding: 8px 6px;
   border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
+  border-radius: 3px;
+  font-size: 14px;
   box-sizing: border-box; /* Include padding in width calculation */
   min-width: 0; /* Prevent input from exceeding container width */
+  text-align: left; /* Make all inputs left-aligned */
 }
 
+/* Remove this rule since we're making all inputs left-aligned */
 .price-inputs input:first-child {
-  text-align: left;
+  /* text-align: left; */
 }
 
+/* Remove this rule since we're making all inputs left-aligned */
 .price-inputs input:last-child {
-  text-align: right;
+  /* text-align: right; */
 }
 
 .price-separator {
@@ -607,7 +654,7 @@
   height: 7px; /* Increased from 4px to 8px */
   background-color: #ddd;
   border-radius: 4px; /* Increased to match thicker bar */
-  margin: 20px 0;
+  margin: 20px 0 15px 0;
   cursor: pointer;
 }
 
@@ -645,4 +692,16 @@
 
 .price-slider-handle:active {
   cursor: grabbing;
+}
+
+.price-range-labels {
+  display: flex;
+  justify-content: space-between;
+  color: #999; /* Light grey color */
+  font-size: 12px;
+}
+
+.product-count {
+    font-size: 14px;
+    font-weight: 500;
 }
