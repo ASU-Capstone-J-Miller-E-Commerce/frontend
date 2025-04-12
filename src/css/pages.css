@@ -705,3 +705,105 @@
     font-size: 14px;
     font-weight: 500;
 }
+
+.display-options {
+    display: flex;
+    align-items: center; /* Ensures vertical alignment */
+    gap: 15px;
+}
+
+.items-per-page {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.items-per-page span {
+    font-size: 14px;
+}
+
+.items-per-page select,
+.sorting-options select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 14px;
+    min-width: 65px;
+    height: 36px; /* Ensure consistent height */
+    vertical-align: middle; /* Further ensures alignment */
+}
+
+/* Style for dropdown options */
+.items-per-page select option,
+.sorting-options select option {
+    font-size: 15px; /* Smaller text */
+    padding: 4px 8px; /* Consistent padding */
+    text-align: left; /* Left align text */
+}
+
+/* Remove any potential extra styles that might be causing misalignment */
+.items-per-page,
+.sorting-options {
+    display: flex;
+    align-items: center;
+}
+
+/* Pagination styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+    gap: 15px;
+}
+
+.pagination-numbers {
+    display: flex;
+    align-items: center;
+}
+
+.pagination-number, 
+.pagination-arrow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 30px;
+    height: 30px;
+    border: none;
+    background-color: transparent;
+    color: #555; /* Dark grey */
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0px;
+}
+
+.pagination-number:hover, 
+.pagination-arrow:hover {
+    color: #333;
+}
+
+.pagination-number.active {
+    font-size: 19px; /* Slightly larger */
+    font-weight: 500;
+    color: #333; /* Darker grey for active page */
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.pagination-arrow {
+    color: #555;
+}
+
+.pagination-arrow:disabled {
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+.pagination-ellipsis {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #555;
+    font-size: 16px;
+}

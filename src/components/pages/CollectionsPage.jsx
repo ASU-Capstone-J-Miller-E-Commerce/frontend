@@ -14,17 +14,21 @@ export default function CollectionsPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [activeFilters, setActiveFilters] = useState({});
     const [activeSort, setActiveSort] = useState('');
+    const [itemsPerPage, setItemsPerPage] = useState(12); // Default is 12
+    const [currentPage, setCurrentPage] = useState(1);
 
     // Parse URL parameters on initial load
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
         setSearchQuery(searchParams.get('search') || '');
         setActiveSort(searchParams.get('sort') || '');
+        setItemsPerPage(parseInt(searchParams.get('limit') || '12')); // Parse limit
+        setCurrentPage(parseInt(searchParams.get('page') || '1')); // Parse page parameter
         
         // Parse filter params
         const params = {};
         for (const [key, value] of searchParams.entries()) {
-            if (key !== 'search' && key !== 'sort') {
+            if (key !== 'search' && key !== 'sort' && key !== 'limit' && key !== 'page') {
                 if (key.startsWith('price_')) {
                     params[key] = parseInt(value);
                 } else {
@@ -33,7 +37,7 @@ export default function CollectionsPage() {
             }
         }
         setActiveFilters(params);
-    }, [location.pathname]);
+    }, [location.pathname, location.search]);
 
     // Filter function to apply filters to data
     const filterData = useCallback(() => {
@@ -54,7 +58,12 @@ export default function CollectionsPage() {
         filterData();
     }, [filterData, data, activeFilters, searchQuery, activeSort]);
 
-    // Update URL when filters change
+    // Reset to page 1 when filters change
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [activeFilters, searchQuery, itemsPerPage]);
+
+    // Update URL when filters or pagination changes
     useEffect(() => {
         if (!collection) return;
         
@@ -65,6 +74,16 @@ export default function CollectionsPage() {
         
         // Add sort option
         if (activeSort) searchParams.set('sort', activeSort);
+        
+        // Add items per page if not default
+        if (itemsPerPage !== 12) {
+            searchParams.set('limit', itemsPerPage.toString());
+        }
+        
+        // Add current page if not on first page
+        if (currentPage > 1) {
+            searchParams.set('page', currentPage.toString());
+        }
         
         // Add filter values
         Object.entries(activeFilters).forEach(([key, value]) => {
@@ -77,7 +96,7 @@ export default function CollectionsPage() {
         // Update URL without reloading page
         const newUrl = `${location.pathname}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
         navigate(newUrl, { replace: true });
-    }, [searchQuery, activeSort, activeFilters, collection, navigate, location.pathname]);
+    }, [searchQuery, activeSort, activeFilters, itemsPerPage, currentPage, collection, navigate, location.pathname]);
 
     // update data when changing to another collection
     useEffect(() => {
@@ -205,6 +224,16 @@ export default function CollectionsPage() {
         setActiveSort(sortValue);
     };
     
+    // Handle items per page changes
+    const handleItemsPerPageChange = (count) => {
+        setItemsPerPage(count);
+    };
+
+    // Handle page changes
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+    
     return (
         <div className="collection-page">
             <CollectionBanner collection={collection} />
@@ -215,9 +244,13 @@ export default function CollectionsPage() {
                 activeFilters={activeFilters}
                 activeSort={activeSort}
                 searchQuery={searchQuery}
+                itemsPerPage={itemsPerPage}
+                currentPage={currentPage}
                 onFilterChange={handleFilterChange}
                 onSortChange={handleSortChange}
                 onSearchChange={handleSearchChange}
+                onItemsPerPageChange={handleItemsPerPageChange}
+                onPageChange={handlePageChange}
             />
         </div>
     );

@@ -218,6 +218,81 @@ const PriceRangeFilter = ({ min = 0, max = 3500, paramPrefix, onFilterChange, ac
     );
 };
 
+// Add this component before the main Collection component
+
+const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+    // Calculate which page numbers to show
+    const getPageNumbers = () => {
+        const pages = [];
+        
+        // Always show first page
+        pages.push(1);
+        
+        // Show ellipsis after first page if needed
+        if (currentPage > 4) {
+            pages.push('...');
+        }
+        
+        // Show pages around current page
+        const startPage = Math.max(2, currentPage - 1);
+        const endPage = Math.min(totalPages - 1, currentPage + 1);
+        
+        for (let i = startPage; i <= endPage; i++) {
+            pages.push(i);
+        }
+        
+        // Show ellipsis before last page if needed
+        if (currentPage < totalPages - 3) {
+            pages.push('...');
+        }
+        
+        // Always show last page if there is more than one page
+        if (totalPages > 1) {
+            pages.push(totalPages);
+        }
+        
+        return pages;
+    };
+    
+    if (totalPages <= 1) return null;
+    
+    return (
+        <div className="pagination">
+            <button 
+                className="pagination-arrow"
+                onClick={() => onPageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+            >
+                <i className="fa-solid fa-chevron-left"></i>
+            </button>
+            
+            <div className="pagination-numbers">
+                {getPageNumbers().map((page, index) => (
+                    page === '...' ? (
+                        <span key={`ellipsis-${index}`} className="pagination-ellipsis">...</span>
+                    ) : (
+                        <button
+                            key={page}
+                            className={`pagination-number ${currentPage === page ? 'active' : ''}`}
+                            onClick={() => onPageChange(page)}
+                        >
+                            {page}
+                        </button>
+                    )
+                ))}
+            </div>
+            
+            <button 
+                className="pagination-arrow"
+                onClick={() => onPageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+            >
+                <i className="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+    );
+};
+
 // Filter Area Component
 const FilterArea = ({ filterOptions, activeFilters, onFilterChange }) => {
     return (
@@ -253,9 +328,13 @@ export default function Collection({
     activeFilters = {},
     activeSort = '',
     searchQuery = '',
+    itemsPerPage = 12,
+    currentPage = 1,
     onFilterChange,
     onSortChange,
-    onSearchChange
+    onSearchChange,
+    onItemsPerPageChange,
+    onPageChange
 }) {
     const handleSearchInputChange = (e) => {
         onSearchChange(e.target.value);
@@ -264,6 +343,16 @@ export default function Collection({
     const handleSortChange = (e) => {
         onSortChange(e.target.value);
     };
+
+    const handleItemsPerPageChange = (e) => {
+        onItemsPerPageChange(parseInt(e.target.value));
+    };
+
+    // Calculate pagination values
+    const totalPages = Math.ceil(data.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentItems = data.slice(startIndex, endIndex);
 
     return (
         <div className="collection-wrapper">
@@ -293,21 +382,34 @@ export default function Collection({
                         <div className="product-count">
                             {data.length} products
                         </div>
-                        <div className="sorting-options">
-                            <select value={activeSort} onChange={handleSortChange}>
-                                {sortOptions.map((option, index) => (
-                                    <option key={index} value={option.value}>
-                                        {option.label}
-                                    </option>
-                                ))}
-                            </select>
+                        <div className="display-options">
+                            <div className="items-per-page">
+                                <select 
+                                    value={itemsPerPage} 
+                                    onChange={handleItemsPerPageChange}
+                                    className="show-select"
+                                >
+                                    <option value="12">Show 12</option>
+                                    <option value="24">Show 24</option>
+                                    <option value="48">Show 48</option>
+                                </select>
+                            </div>
+                            <div className="sorting-options">
+                                <select value={activeSort} onChange={handleSortChange}>
+                                    {sortOptions.map((option, index) => (
+                                        <option key={index} value={option.value}>
+                                            {option.label}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
                         </div>
                     </div>
 
                     {/* Product listing */}
                     <div className="collection-listing">
                         <ul>
-                            {data.map((item, index) => (
+                            {currentItems.map((item, index) => (
                                 <li key={index}>
                                     <Card 
                                         image={item.imageUrls[0]} 
@@ -318,6 +420,13 @@ export default function Collection({
                             ))}
                         </ul>
                     </div>
+                    
+                    {/* Pagination */}
+                    <Pagination 
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={onPageChange}
+                    />
                 </div>
             </div>
         </div>
