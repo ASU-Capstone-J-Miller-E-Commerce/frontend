@@ -2,8 +2,12 @@ import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Card } from "./Card";
 
 // Filter Dropdown Component that can accept either options or custom content
-const FilterDropdown = ({ title, options, customContent }) => {
+const FilterDropdown = ({ title, options, customContent, onFilterChange, activeValues }) => {
     const [isOpen, setIsOpen] = useState(true); // Default to open
+
+    const handleCheckboxChange = (value) => {
+        onFilterChange(value, !activeValues[value]);
+    };
 
     return (
         <div className="filter-dropdown">
@@ -24,7 +28,12 @@ const FilterDropdown = ({ title, options, customContent }) => {
                             {options.map((option, index) => (
                                 <li key={index}>
                                     <label>
-                                        <input type="checkbox" /> {option}
+                                        <input 
+                                            type="checkbox" 
+                                            checked={activeValues[option.value] || false}
+                                            onChange={() => handleCheckboxChange(option.value)}
+                                        /> 
+                                        {option.label}
                                     </label>
                                 </li>
                             ))}
@@ -37,47 +46,83 @@ const FilterDropdown = ({ title, options, customContent }) => {
 };
 
 // Price Range Filter Component
-const PriceRangeFilter = ({ min = 0, max = 3500 }) => {
-    const [minValue, setMinValue] = useState(min);
-    const [maxValue, setMaxValue] = useState(max);
+const PriceRangeFilter = ({ min = 0, max = 3500, paramPrefix, onFilterChange, activeValues }) => {
+    const minParam = `${paramPrefix}_min`;
+    const maxParam = `${paramPrefix}_max`;
+    
+    // Initialize from URL params if available
+    const [minValue, setMinValue] = useState(activeValues[minParam] !== undefined ? activeValues[minParam] : min);
+    const [maxValue, setMaxValue] = useState(activeValues[maxParam] !== undefined ? activeValues[maxParam] : max);
     const [isDraggingMin, setIsDraggingMin] = useState(false);
     const [isDraggingMax, setIsDraggingMax] = useState(false);
     const sliderRef = useRef(null);
     
+    // Reset values when collection changes (different min/max)
+    useEffect(() => {
+        if (activeValues[minParam] === undefined && activeValues[maxParam] === undefined) {
+            setMinValue(min);
+            setMaxValue(max);
+        }
+    }, [min, max, paramPrefix]);
+    
     // Display empty string instead of 0 for better UX
     const displayMinValue = minValue === 0 ? '' : minValue;
     
-    // Adjust the getPercentage function in PriceRangeFilter
+    // Update URL params when slider values change
+    useEffect(() => {
+        if (!isDraggingMin && !isDraggingMax) {
+            // For min value, treat 0 as a valid filter value
+            if (minValue !== min) {
+                onFilterChange(minParam, minValue);
+            } else if (activeValues[minParam] !== undefined) {
+                onFilterChange(minParam, undefined);
+            }
+            
+            if (maxValue !== max) {
+                onFilterChange(maxParam, maxValue);
+            } else if (activeValues[maxParam] !== undefined) {
+                onFilterChange(maxParam, undefined);
+            }
+        }
+    }, [minValue, maxValue, isDraggingMin, isDraggingMax]);
+    
     const getPercentage = (value) => {
-        // Create a buffer zone of 8px on each side (based on half the handle width)
         const buffer = 12;
         const bufferPercentage = (buffer / sliderRef.current?.clientWidth) * 100 || 0;
-        
-        // Scale the percentage to fit within the buffer zone
         const rawPercentage = (value / max) * 100;
         return bufferPercentage + rawPercentage * (100 - 2 * bufferPercentage) / 100;
     };
     
     const handleMinChange = (e) => {
-        // Get value from input, using empty string if input is empty
         const inputValue = e.target.value === '' ? 0 : parseInt(e.target.value);
-        
         if (isNaN(inputValue)) return;
-        
-        // Enforce min/max constraints
         const constrainedValue = Math.max(0, Math.min(inputValue, maxValue - 50));
         setMinValue(constrainedValue);
     };
     
     const handleMaxChange = (e) => {
-        // Get value from input
         const inputValue = e.target.value === '' ? 0 : parseInt(e.target.value);
-        
         if (isNaN(inputValue)) return;
-        
-        // Enforce min/max constraints - never exceed 3500
         const constrainedValue = Math.max(minValue + 50, Math.min(inputValue, max));
         setMaxValue(constrainedValue);
+    };
+    
+    const handleSliderClick = (e) => {
+        if (!sliderRef.current) return;
+        
+        const rect = sliderRef.current.getBoundingClientRect();
+        const percentage = (e.clientX - rect.left) / rect.width;
+        const value = Math.round(percentage * max);
+        
+        // Determine whether to move min or max handle
+        const minDistance = Math.abs(value - minValue);
+        const maxDistance = Math.abs(value - maxValue);
+        
+        if (minDistance <= maxDistance) {
+            setMinValue(Math.min(value, maxValue - 50));
+        } else {
+            setMaxValue(Math.max(value, minValue + 50));
+        }
     };
     
     const handleMouseDown = (e, isMin) => {
@@ -124,8 +169,8 @@ const PriceRangeFilter = ({ min = 0, max = 3500 }) => {
         <div className="price-range-filter">
             <div className="price-inputs">
                 <input 
-                    type="text" /* Changed from number to text */
-                    value={displayMinValue} /* Using displayMinValue */
+                    type="text"
+                    value={displayMinValue}
                     onChange={handleMinChange}
                     placeholder="0"
                     inputMode="numeric"
@@ -144,12 +189,7 @@ const PriceRangeFilter = ({ min = 0, max = 3500 }) => {
             <div 
                 className="price-slider"
                 ref={sliderRef}
-                onClick={(e) => {
-                    // Only handle clicks on the track, not on the handles
-                    if (e.target === e.currentTarget || e.target.className === 'price-slider-track') {
-                        handleSliderClick(e);
-                    }
-                }}
+                onClick={handleSliderClick}
             >
                 <div className="price-slider-track"></div>
                 <div 
@@ -179,13 +219,7 @@ const PriceRangeFilter = ({ min = 0, max = 3500 }) => {
 };
 
 // Filter Area Component
-const FilterArea = ({ filterOptions }) => {
-    const typeOptions = [
-        "Playing Cues", 
-        "Break Cues", 
-        "Jump Cues"
-    ];
-    
+const FilterArea = ({ filterOptions, activeFilters, onFilterChange }) => {
     return (
         <div className="collection-filters">
             {filterOptions.map((filter, index) => (
@@ -194,29 +228,64 @@ const FilterArea = ({ filterOptions }) => {
                     title={filter.title} 
                     customContent={
                         filter.type === "priceRange" 
-                            ? <PriceRangeFilter min={filter.min} max={filter.max} /> 
+                            ? <PriceRangeFilter 
+                                min={filter.min} 
+                                max={filter.max}
+                                paramPrefix={filter.paramPrefix}
+                                onFilterChange={onFilterChange}
+                                activeValues={activeFilters}
+                              /> 
                             : null
                     }
                     options={filter.type === "checkbox" ? filter.options : null}
+                    onFilterChange={(value, isChecked) => onFilterChange(value, isChecked)}
+                    activeValues={activeFilters}
                 />
             ))}
         </div>
     );
 };
 
-export default function Collection({ data = [], filterOptions = [], sortOptions = [] }) {
+export default function Collection({ 
+    data = [], 
+    filterOptions = [], 
+    sortOptions = [],
+    activeFilters = {},
+    activeSort = '',
+    searchQuery = '',
+    onFilterChange,
+    onSortChange,
+    onSearchChange
+}) {
+    const handleSearchInputChange = (e) => {
+        onSearchChange(e.target.value);
+    };
+
+    const handleSortChange = (e) => {
+        onSortChange(e.target.value);
+    };
+
     return (
         <div className="collection-wrapper">
             <div className="collection-container">
                 {/* Filters Column */}
-                <FilterArea filterOptions={filterOptions} />
+                <FilterArea 
+                    filterOptions={filterOptions} 
+                    activeFilters={activeFilters}
+                    onFilterChange={onFilterChange}
+                />
 
                 {/* Main content area */}
                 <div className="collection-content">
                     {/* Search bar */}
                     <div className="collection-search">
                         <i className="fa-solid fa-magnifying-glass search-icon"></i>
-                        <input type="text" placeholder="Search products" />
+                        <input 
+                            type="text" 
+                            placeholder="Search products" 
+                            value={searchQuery}
+                            onChange={handleSearchInputChange}
+                        />
                     </div>
                     
                     {/* Product count and sorting */}
@@ -225,7 +294,7 @@ export default function Collection({ data = [], filterOptions = [], sortOptions 
                             {data.length} products
                         </div>
                         <div className="sorting-options">
-                            <select>
+                            <select value={activeSort} onChange={handleSortChange}>
                                 {sortOptions.map((option, index) => (
                                     <option key={index} value={option.value}>
                                         {option.label}

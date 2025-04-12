@@ -1,14 +1,63 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getCueCollection } from "../../util/requests";
 import Collection from "../util/Collection";
 
 export default function CollectionsPage() {
     const location = useLocation();
+    const navigate = useNavigate();
     const [collection, setCollection] = useState(location.pathname.split("/").pop());
     const [data, setData] = useState([]);
     const [filterOptions, setFilterOptions] = useState([]);
     const [sortOptions, setSortOptions] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [activeFilters, setActiveFilters] = useState({});
+    const [activeSort, setActiveSort] = useState('');
+
+    // Parse URL parameters on initial load
+    useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        setSearchQuery(searchParams.get('search') || '');
+        setActiveSort(searchParams.get('sort') || '');
+        
+        // Parse filter params
+        const params = {};
+        for (const [key, value] of searchParams.entries()) {
+            if (key !== 'search' && key !== 'sort') {
+                if (key.startsWith('price_')) {
+                    params[key] = parseInt(value);
+                } else {
+                    params[key] = value === 'true';
+                }
+            }
+        }
+        setActiveFilters(params);
+    }, [location.pathname]);
+
+    // Update URL when filters change
+    useEffect(() => {
+        if (!collection) return;
+        
+        const searchParams = new URLSearchParams();
+        
+        // Add search query
+        if (searchQuery) searchParams.set('search', searchQuery);
+        
+        // Add sort option
+        if (activeSort) searchParams.set('sort', activeSort);
+        
+        // Add filter values
+        Object.entries(activeFilters).forEach(([key, value]) => {
+            // Only add the parameter if value is not undefined or null
+            if (value !== undefined && value !== null) {
+                searchParams.set(key, value.toString());
+            }
+        });
+        
+        // Update URL without reloading page
+        const newUrl = `${location.pathname}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
+        navigate(newUrl, { replace: true });
+    }, [searchQuery, activeSort, activeFilters, collection, navigate, location.pathname]);
 
     // update data when changing to another collection
     useEffect(() => {
@@ -25,12 +74,17 @@ export default function CollectionsPage() {
                         title: "Price",
                         type: "priceRange",
                         min: 0,
-                        max: 3500
+                        max: 3500,
+                        paramPrefix: "price"
                     },
                     {
                         title: "Features",
                         type: "checkbox",
-                        options: ["Inlays", "Points", "Wrap"]
+                        options: [
+                            { label: "Inlays", value: "inlays" },
+                            { label: "Points", value: "points" },
+                            { label: "Wrap", value: "wrap" }
+                        ]
                     },
                 ]);
                 setSortOptions([
@@ -51,12 +105,19 @@ export default function CollectionsPage() {
                         title: "Price",
                         type: "priceRange",
                         min: 0,
-                        max: 500
+                        max: 500,
+                        paramPrefix: "price"
                     },
                     {
                         title: "Category",
                         type: "checkbox",
-                        options: ["Cases", "Tips", "Chalk", "Gloves", "Towels"]
+                        options: [
+                            { label: "Cases", value: "cases" },
+                            { label: "Tips", value: "tips" },
+                            { label: "Chalk", value: "chalk" },
+                            { label: "Gloves", value: "gloves" },
+                            { label: "Towels", value: "towels" }
+                        ]
                     }
                 ]);
                 setSortOptions([
@@ -73,12 +134,19 @@ export default function CollectionsPage() {
                         title: "Price",
                         type: "priceRange",
                         min: 0,
-                        max: 1000
+                        max: 1000,
+                        paramPrefix: "price"
                     },
                     {
                         title: "Category",
                         type: "checkbox",
-                        options: ["Wood", "Wraps", "Inlays", "Joint Parts", "Miscellaneous"]
+                        options: [
+                            { label: "Wood", value: "wood" },
+                            { label: "Wraps", value: "wraps" },
+                            { label: "Inlays", value: "inlays" },
+                            { label: "Joint Parts", value: "joints" },
+                            { label: "Miscellaneous", value: "misc" }
+                        ]
                     }
                 ]);
                 setSortOptions([
@@ -86,10 +154,36 @@ export default function CollectionsPage() {
                     { value: "price-asc", label: "Price: Low to High" },
                     { value: "price-desc", label: "Price: High to Low" }
                 ]);
-                // Add your materials fetching logic here
                 break;
         }
     }, [collection]);
+    
+    // Handle filter changes
+    const handleFilterChange = (filterKey, value) => {
+        setActiveFilters(prev => {
+            const newFilters = { ...prev };
+            
+            if (value === false) {
+                // Remove the filter entirely when unchecking
+                delete newFilters[filterKey];
+            } else {
+                // Otherwise set the value
+                newFilters[filterKey] = value;
+            }
+            
+            return newFilters;
+        });
+    };
+    
+    // Handle search changes
+    const handleSearchChange = (query) => {
+        setSearchQuery(query);
+    };
+    
+    // Handle sort changes
+    const handleSortChange = (sortValue) => {
+        setActiveSort(sortValue);
+    };
     
     return (
         <div className="collection-page">
@@ -97,7 +191,13 @@ export default function CollectionsPage() {
             <Collection 
                 data={data} 
                 filterOptions={filterOptions} 
-                sortOptions={sortOptions} 
+                sortOptions={sortOptions}
+                activeFilters={activeFilters}
+                activeSort={activeSort}
+                searchQuery={searchQuery}
+                onFilterChange={handleFilterChange}
+                onSortChange={handleSortChange}
+                onSearchChange={handleSearchChange}
             />
         </div>
     );
