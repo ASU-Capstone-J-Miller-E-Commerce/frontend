@@ -409,6 +409,7 @@ export default function Collection({
     searchQuery = '',
     itemsPerPage = 12,
     currentPage = 1,
+    collection = '', // Add this new prop
     onFilterChange,
     onSortChange,
     onSearchChange,
@@ -525,15 +526,27 @@ export default function Collection({
                     {/* Product listing */}
                     <div className="collection-listing">
                         <ul>
-                            {currentItems.map((item, index) => (
-                                <li key={index}>
-                                    <Card 
-                                        image={item.imageUrls[0]} 
-                                        title={item.name} 
-                                        price={item.price}
-                                    />
-                                </li>
-                            ))}
+                            {currentItems.map((item, index) => {
+                                // Fix the collection comparison and handle material title fields
+                                let title;
+                                if (collection === 'cues' || collection === 'accessories') {
+                                    title = item.name;
+                                } else {
+                                    // For materials, handle both wood and crystal types
+                                    title = item.commonName || item.crystalName || item.name || 'Unknown';
+                                }
+                                
+                                return (
+                                    <li key={index}>
+                                        <Card 
+                                            image={item.imageUrls && item.imageUrls.length > 0 ? item.imageUrls[0] : '/placeholder.png'}
+                                            title={title} 
+                                            price={item.price}
+                                            linkTo={`/${collection}/${item._id}`} // Generate link using collection name
+                                        />
+                                    </li>
+                                );
+                            })}
                         </ul>
                     </div>
                     

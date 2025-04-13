@@ -1,7 +1,9 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-export function Card({title, image, price="", linkTo="#"}) {
+export function Card({title, image, price, linkTo="#"}) {
+    const hasPrice = price !== undefined && price !== null && price !== "";
+    
     return (
         <NavLink to={linkTo} className="card-link">
             <div className="card-wrapper">
@@ -16,9 +18,11 @@ export function Card({title, image, price="", linkTo="#"}) {
                         {title}
                     </p>
                     {/* Price */}
-                    {price.length > 0 && <p className="card-price">
-                        ${Number(price).toFixed(2)}
-                    </p>}
+                    {hasPrice && (
+                        <p className="card-price">
+                            ${Number(price).toFixed(2)}
+                        </p>
+                    )}
                 </div>
             </div>
         </NavLink>

@@ -62,11 +62,11 @@ export default function CollectionsPage() {
         setFilteredData(data);
         
         // Log that the filter function was called
-        console.log("Filter function called with:", {
-            filters: activeFilters,
-            search: searchQuery,
-            sort: activeSort
-        });
+        // console.log("Filter function called with:", {
+        //     filters: activeFilters,
+        //     search: searchQuery,
+        //     sort: activeSort
+        // });
     }, [data, activeFilters, searchQuery, activeSort]);
 
     // Apply filters whenever filter parameters or data changes
@@ -166,6 +166,7 @@ export default function CollectionsPage() {
                 ]);
                 getCueCollection()
                     .then((res) => {
+                        console.log(res.data);
                         const data = [...res.data];
                         setData(data);
                         setFilteredData(data); // Initialize filtered data as well
@@ -202,6 +203,7 @@ export default function CollectionsPage() {
                 // Add dummy data for testing pagination
                 getAccessoryCollection()
                     .then((res) => {
+                        console.log(res.data);
                         const data = [...res.data];
                         setData(data);
                         setFilteredData(data);
@@ -293,6 +295,7 @@ export default function CollectionsPage() {
                 searchQuery={searchQuery}
                 itemsPerPage={itemsPerPage}
                 currentPage={currentPage}
+                collection={collection}
                 onFilterChange={handleFilterChange}
                 onSortChange={handleSortChange}
                 onSearchChange={handleSearchChange}
