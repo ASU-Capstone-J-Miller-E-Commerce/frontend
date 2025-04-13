@@ -457,8 +457,8 @@ export default function CollectionsPage() {
         setActiveFilters(prev => {
             const newFilters = { ...prev };
             
-            if (value === false) {
-                // Remove the filter entirely when unchecking
+            if (value === false || value === undefined) {
+                // Remove the filter entirely when unchecking or clearing
                 delete newFilters[filterKey];
             } else {
                 // Otherwise set the value
