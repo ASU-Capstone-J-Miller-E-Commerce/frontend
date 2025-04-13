@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getAccessoryCollection, getCueCollection, getMaterialCollection } from "../../util/requests";
 import Collection from "../util/Collection";
@@ -9,22 +9,166 @@ export default function CollectionsPage() {
     const navigate = useNavigate();
     const [collection, setCollection] = useState(location.pathname.split("/").pop());
     const [data, setData] = useState([]);
-    const [filteredData, setFilteredData] = useState([]); // New state for filtered data
+    const [filteredData, setFilteredData] = useState([]);
     const [filterOptions, setFilterOptions] = useState([]);
     const [sortOptions, setSortOptions] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [activeFilters, setActiveFilters] = useState({});
     const [activeSort, setActiveSort] = useState('');
-    const [itemsPerPage, setItemsPerPage] = useState(12); // Default is 12
+    const [itemsPerPage, setItemsPerPage] = useState(12);
     const [currentPage, setCurrentPage] = useState(1);
+    
+    // Track if this is an initial load or direct navigation with filters
+    const isInitialMount = useRef(true);
+    const lastNavigatedUrl = useRef('');
+    const isFilterReset = useRef(false);
+    const isDirectNavigation = useRef(true);
 
-    // Parse URL parameters on initial load
+    // Special effect that only runs once on initial mount to handle direct navigation with filters
     useEffect(() => {
+      // Only run on initial mount
+      if (isInitialMount.current) {
+        isInitialMount.current = false;
+        
+        // If there are URL parameters on initial load, parse and apply them
+        if (location.search) {
+          const searchParams = new URLSearchParams(location.search);
+          
+          // Set search query from URL
+          const searchParam = searchParams.get('search');
+          if (searchParam) {
+            setSearchQuery(searchParam);
+          }
+          
+          // Set sort option from URL
+          const sortParam = searchParams.get('sort');
+          if (sortParam) {
+            setActiveSort(sortParam);
+          }
+          
+          // Set page limit from URL
+          const limitParam = searchParams.get('limit');
+          if (limitParam) {
+            const parsedLimit = parseInt(limitParam);
+            if (!isNaN(parsedLimit) && parsedLimit > 0) {
+              setItemsPerPage(parsedLimit);
+            }
+          }
+          
+          // Set current page from URL
+          const pageParam = searchParams.get('page');
+          if (pageParam) {
+            const parsedPage = parseInt(pageParam);
+            if (!isNaN(parsedPage) && parsedPage > 0) {
+              setCurrentPage(parsedPage);
+            }
+          }
+          
+          // Parse filter parameters
+          const filterParams = {};
+          for (const [key, value] of searchParams.entries()) {
+            if (key !== 'search' && key !== 'sort' && key !== 'limit' && key !== 'page') {
+              if (key.startsWith('price_')) {
+                filterParams[key] = parseInt(value);
+              } else {
+                filterParams[key] = value === 'true';
+              }
+            }
+          }
+          
+          // Set active filters from URL
+          if (Object.keys(filterParams).length > 0) {
+            setActiveFilters(filterParams);
+          }
+        }
+      }
+    }, []); // Empty dependency array ensures this runs only once
+
+    // SINGLE effect to handle collection changes
+    useEffect(() => {
+        const path = location.pathname.split("/").pop();
+        
+        // Don't do anything if we're already on this collection
+        if (path === collection) return;
+        
+        // When collection changes, temporarily suspend URL syncing
+        isFilterReset.current = true;
+        
+        // Update collection first - this is our source of truth
+        setCollection(path);
+        
+        // Only reset data, keep the filters from URL if they exist
+        setFilteredData([]);
+        setCurrentPage(1);
+        
+        // Apply any URL parameters that came with the new collection
+        if (location.search) {
+            const searchParams = new URLSearchParams(location.search);
+            
+            // Parse filters
+            const newFilters = {};
+            for (const [key, value] of searchParams.entries()) {
+                if (key !== 'search' && key !== 'sort' && key !== 'limit' && key !== 'page') {
+                    if (key.startsWith('price_')) {
+                        newFilters[key] = parseInt(value);
+                    } else {
+                        newFilters[key] = value === 'true';
+                    }
+                }
+            }
+            
+            // Set all filter states in one go
+            setActiveFilters(newFilters);
+            setSearchQuery(searchParams.get('search') || '');
+            setActiveSort(searchParams.get('sort') || '');
+            
+            const limitParam = searchParams.get('limit');
+            if (limitParam) {
+                const parsedLimit = parseInt(limitParam);
+                if (!isNaN(parsedLimit) && parsedLimit > 0) {
+                    setItemsPerPage(parsedLimit);
+                }
+            }
+            
+            const pageParam = searchParams.get('page');
+            if (pageParam) {
+                const parsedPage = parseInt(pageParam);
+                if (!isNaN(parsedPage) && parsedPage > 0) {
+                    setCurrentPage(parsedPage);
+                }
+            }
+        } else {
+            // Reset filters if no URL params
+            setActiveFilters({});
+            setSearchQuery('');
+            setActiveSort('');
+        }
+        
+        // Re-enable URL syncing after all state updates are complete
+        setTimeout(() => {
+            isFilterReset.current = false;
+        }, 300);
+        
+    }, [location.pathname]);
+
+    // Handle URL parameter changes (only when not switching collections)
+    useEffect(() => {
+        // Skip during initial mount or collection change
+        if (isFilterReset.current) {
+            return;
+        }
+        
+        // Skip if this change was caused by our own URL update
+        if (window.location.pathname + window.location.search === lastNavigatedUrl.current) {
+            return;
+        }
+        
         const searchParams = new URLSearchParams(location.search);
+        
+        // Apply URL parameters to state
         setSearchQuery(searchParams.get('search') || '');
         setActiveSort(searchParams.get('sort') || '');
-
-        // Get limit from URL with validation
+        
         const limitParam = searchParams.get('limit');
         if (limitParam) {
             const parsedLimit = parseInt(limitParam);
@@ -33,7 +177,6 @@ export default function CollectionsPage() {
             }
         }
         
-        // Get page number from URL
         const pageParam = searchParams.get('page');
         if (pageParam) {
             const parsedPage = parseInt(pageParam);
@@ -54,7 +197,52 @@ export default function CollectionsPage() {
             }
         }
         setActiveFilters(params);
-    }, [location.pathname, location.search]);
+        
+    }, [location.search]);
+
+    // Update URL when filters or pagination changes
+    useEffect(() => {
+        // Skip during initial mount, collection change, or if collection is empty
+        if (isInitialMount.current || isFilterReset.current || !collection) {
+            return;
+        }
+        
+        const searchParams = new URLSearchParams();
+        
+        // Add search query
+        if (searchQuery) searchParams.set('search', searchQuery);
+        
+        // Add sort option
+        if (activeSort) searchParams.set('sort', activeSort);
+        
+        // Add items per page if not default
+        if (itemsPerPage !== 12) {
+            searchParams.set('limit', itemsPerPage.toString());
+        }
+        
+        // Add current page if not on first page
+        if (currentPage > 1) {
+            searchParams.set('page', currentPage.toString());
+        }
+        
+        // Add filter values
+        Object.entries(activeFilters).forEach(([key, value]) => {
+            if (value !== undefined && value !== null) {
+                searchParams.set(key, value.toString());
+            }
+        });
+        
+        // Build new URL
+        const newUrl = `${location.pathname}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
+        const currentUrl = `${location.pathname}${location.search}`;
+        
+        // Only update URL if it actually changed
+        if (newUrl !== currentUrl) {
+            // Keep track of the URL we're navigating to
+            lastNavigatedUrl.current = newUrl;
+            navigate(newUrl, { replace: true });
+        }
+    }, [searchQuery, activeSort, activeFilters, itemsPerPage, currentPage, collection, navigate, location.pathname]);
 
     // Filter function to apply filters to data
     const filterData = useCallback(() => {
@@ -82,60 +270,6 @@ export default function CollectionsPage() {
             setCurrentPage(1);
         }
     }, [activeFilters, searchQuery, itemsPerPage, location.search]);
-
-    // Update URL when filters or pagination changes
-    useEffect(() => {
-        if (!collection) return;
-        
-        // Keep track of the last URL we set to avoid loops
-        const searchParams = new URLSearchParams();
-        
-        // Add search query
-        if (searchQuery) searchParams.set('search', searchQuery);
-        
-        // Add sort option
-        if (activeSort) searchParams.set('sort', activeSort);
-        
-        // Add items per page if not default
-        if (itemsPerPage !== 12) {
-            searchParams.set('limit', itemsPerPage.toString());
-        }
-        
-        // Add current page if not on first page
-        if (currentPage > 1) {
-            searchParams.set('page', currentPage.toString());
-        }
-        
-        // Add filter values
-        Object.entries(activeFilters).forEach(([key, value]) => {
-            // Only add the parameter if value is not undefined or null
-            if (value !== undefined && value !== null) {
-                searchParams.set(key, value.toString());
-            }
-        });
-        
-        // Only update URL if it actually changed
-        const newUrl = `${location.pathname}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
-        const currentUrl = `${location.pathname}${location.search}`;
-        
-        if (newUrl !== currentUrl) {
-            navigate(newUrl, { replace: true });
-        }
-    }, [searchQuery, activeSort, activeFilters, itemsPerPage, currentPage, collection, navigate, location.pathname]);
-
-    // update data when changing to another collection
-    useEffect(() => {
-        const path = location.pathname.split("/").pop();
-        setCollection(path);
-    }, [location.pathname]);
-
-    // Add this near the top of your component
-    useEffect(() => {
-        // Reset both current page and filtered data when the collection changes
-        setCurrentPage(1);
-        setFilteredData([]);
-        setActiveFilters({}); // Add this line to clear active filters
-    }, [collection]);
 
     // Make sure data is being loaded properly for each collection
     useEffect(() => {
