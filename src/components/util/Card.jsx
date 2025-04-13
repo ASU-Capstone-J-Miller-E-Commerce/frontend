@@ -1,8 +1,9 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-export function Card({title, image, price, linkTo="#"}) {
+export function Card({title, image, price, tag, linkTo="#"}) {
     const hasPrice = price !== undefined && price !== null && price !== "";
+    const hasTag = tag !== undefined && tag !== null && tag !== "";
     
     return (
         <NavLink to={linkTo} className="card-link">
@@ -15,7 +16,7 @@ export function Card({title, image, price, linkTo="#"}) {
                 <div className="card-content">
                     {/* Header  */}
                     <p className="card-title">
-                        {title}
+                       {hasPrice && `[${tag}]` } {title}
                     </p>
                     {/* Price */}
                     {hasPrice && (

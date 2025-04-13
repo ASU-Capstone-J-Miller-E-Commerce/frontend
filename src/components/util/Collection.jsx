@@ -529,8 +529,11 @@ export default function Collection({
                             {currentItems.map((item, index) => {
                                 // Fix the collection comparison and handle material title fields
                                 let title;
+                                let tag;
+                                console.log(item)
                                 if (collection === 'cues' || collection === 'accessories') {
                                     title = item.name;
+                                    tag = item.cueNumber || item.accessoryNumber;
                                 } else {
                                     // For materials, handle both wood and crystal types
                                     title = item.commonName || item.crystalName || item.name || 'Unknown';
@@ -540,7 +543,8 @@ export default function Collection({
                                     <li key={index}>
                                         <Card 
                                             image={item.imageUrls && item.imageUrls.length > 0 ? item.imageUrls[0] : '/placeholder.png'}
-                                            title={title} 
+                                            title={title}
+                                            tag={tag}
                                             price={item.price}
                                             linkTo={`/${collection}/${item._id}`} // Generate link using collection name
                                         />
