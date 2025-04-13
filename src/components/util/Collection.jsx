@@ -242,11 +242,18 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
             pages.push('...');
         }
         
-        // Show pages around current page
-        const startPage = Math.max(2, currentPage - 1);
-        const endPage = Math.min(totalPages - 1, currentPage + 1);
+        // Show up to 2 pages before current page
+        for (let i = Math.max(2, currentPage - 2); i < currentPage; i++) {
+            pages.push(i);
+        }
         
-        for (let i = startPage; i <= endPage; i++) {
+        // Current page (if not first or last)
+        if (currentPage !== 1 && currentPage !== totalPages) {
+            pages.push(currentPage);
+        }
+        
+        // Show up to 2 pages after current page
+        for (let i = currentPage + 1; i <= Math.min(totalPages - 1, currentPage + 2); i++) {
             pages.push(i);
         }
         
