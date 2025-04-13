@@ -247,6 +247,24 @@ export default function CollectionsPage() {
     const filterData = useCallback(() => {
         let result = [...data];
 
+        if (searchQuery && searchQuery.trim() !== '') {
+            const query = searchQuery.toLowerCase().trim();
+
+            if (collection === "materials") {
+                // For materials, search in both commonName and crystalName
+                result = result.filter(item => {
+                    const commonName = (item.commonName || '').toLowerCase();
+                    const crystalName = (item.crystalName || '').toLowerCase();
+                    return commonName.includes(query) || crystalName.includes(query);
+                });
+            } else {
+                // For other collections, search in the name property
+                result = result.filter(item =>
+                    item.name.toLowerCase().includes(query)
+                );
+            }
+        }
+
         if (activeSort) {
             switch (activeSort) {
                 case "newest":
