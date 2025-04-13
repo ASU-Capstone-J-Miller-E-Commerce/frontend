@@ -312,6 +312,9 @@ const ActiveFilters = ({ filters, options, onFilterRemove, onClearAll }) => {
     
     // Find label for a filter option with its category
     const getFilterLabel = (key, value) => {
+        // Skip undefined values
+        if (value === undefined) return null;
+        
         // Handle price filters differently
         if (key.endsWith('_min')) {
             return `Price: Min $${value}`;
@@ -346,16 +349,18 @@ const ActiveFilters = ({ filters, options, onFilterRemove, onClearAll }) => {
                 </button>
             )}
             
-            {Object.entries(filters).map(([key, value]) => (
-                <button 
-                    key={key} 
-                    className="filter-bubble"
-                    onClick={() => onFilterRemove(key)}
-                >
-                    {getFilterLabel(key, value)}
-                    <i className="fa-solid fa-xmark"></i>
-                </button>
-            ))}
+            {Object.entries(filters)
+                .filter(([_, value]) => value !== undefined) // Filter out undefined values
+                .map(([key, value]) => (
+                    <button 
+                        key={key} 
+                        className="filter-bubble"
+                        onClick={() => onFilterRemove(key)}
+                    >
+                        {getFilterLabel(key, value)}
+                        <i className="fa-solid fa-xmark"></i>
+                    </button>
+                ))}
         </div>
     );
 };
