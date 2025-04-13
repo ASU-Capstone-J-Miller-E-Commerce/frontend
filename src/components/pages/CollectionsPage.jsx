@@ -179,7 +179,6 @@ export default function CollectionsPage() {
                 ]);
                 getCueCollection()
                     .then((res) => {
-                        console.log(res.data);
                         const data = [...res.data];
                         setData(data);
                         setFilteredData(data); // Initialize filtered data as well
@@ -207,7 +206,6 @@ export default function CollectionsPage() {
                 // Add dummy data for testing pagination
                 getAccessoryCollection()
                     .then((res) => {
-                        console.log(res.data);
                         const data = [...res.data];
                         setData(data);
                         setFilteredData(data);

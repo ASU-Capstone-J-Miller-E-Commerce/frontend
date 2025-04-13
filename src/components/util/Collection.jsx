@@ -431,7 +431,6 @@ export default function Collection({
 
     // When a page button is clicked
     const handlePageButtonClick = (page) => {
-        console.log("Changing to page:", page);
         onPageChange(page);
         // Scroll to top of the product list for better UX
         window.scrollTo({
@@ -531,7 +530,7 @@ export default function Collection({
                                 // Fix the collection comparison and handle material title fields
                                 let title;
                                 let tag;
-                                console.log(item)
+
                                 if (collection === 'cues' || collection === 'accessories') {
                                     title = item.name;
                                     tag = item.cueNumber || item.accessoryNumber;
