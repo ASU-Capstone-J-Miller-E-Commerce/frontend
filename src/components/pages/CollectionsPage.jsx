@@ -166,7 +166,7 @@ export default function CollectionsPage() {
                 ]);
                 getCueCollection()
                     .then((res) => {
-                        const data = [...res.data, ...res.data, ...res.data, ...res.data, ...res.data];
+                        const data = [...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data];
                         setData(data);
                         setFilteredData(data); // Initialize filtered data as well
                     });

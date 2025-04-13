@@ -354,7 +354,7 @@ export default function Collection({
         onPageChange(page);
         // Scroll to top of the product list for better UX
         window.scrollTo({
-            top: document.querySelector('.collection-listing').offsetTop - 100,
+            top: document.querySelector('.collection-listing').offsetTop - 200,
             behavior: 'smooth'
         });
     };
