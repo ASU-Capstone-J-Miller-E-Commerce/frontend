@@ -22,7 +22,6 @@ export default function CollectionsPage() {
     const isInitialMount = useRef(true);
     const lastNavigatedUrl = useRef('');
     const isFilterReset = useRef(false);
-    const isDirectNavigation = useRef(true);
 
     // Special effect that only runs once on initial mount to handle direct navigation with filters
     useEffect(() => {
@@ -246,17 +245,63 @@ export default function CollectionsPage() {
 
     // Filter function to apply filters to data
     const filterData = useCallback(() => {
-        // For now, just return all data
-        // This will be expanded later with actual filtering logic
-        setFilteredData(data);
+        let result = [...data];
+
+        if (activeSort) {
+            switch (activeSort) {
+                case "newest":
+                    result.sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn));
+                    break;
+                case "oldest":
+                    result.sort((a, b) => new Date(a.createdOn) - new Date(a.createdOn));
+                    break;
+                case "price-asc":
+                    result.sort((a, b) => a.price - b.price);
+                    break;
+                case "price-desc":
+                    result.sort((a, b) => b.price - a.price);
+                    break;
+                case "alphabet-a-z":
+                    if (collection === "materials") {
+                        // For materials, use either commonName or crystalName
+                        result.sort((a, b) => {
+                            const nameA = a.commonName || a.crystalName || '';
+                            const nameB = b.commonName || b.crystalName || '';
+                            return nameA.localeCompare(nameB);
+                        });
+                    } else {
+                        // For other collections, use the regular name property
+                        result.sort((a, b) => a.name.localeCompare(b.name));
+                    }
+                    break;
+                case "alphabet-z-a":
+                    if (collection === "materials") {
+                        // For materials, use either commonName or crystalName (reverse order)
+                        result.sort((a, b) => {
+                            const nameA = a.commonName || a.crystalName || '';
+                            const nameB = b.commonName || b.crystalName || '';
+                            return nameB.localeCompare(nameA);
+                        });
+                    } else {
+                        // For other collections, use the regular name property
+                        result.sort((a, b) => b.name.localeCompare(a.name));
+                    }
+                    break;
+                default:
+                    // No sorting
+                    break;
+            }
+        }
+
+        setFilteredData(result);
         
         // Log that the filter function was called
-        // console.log("Filter function called with:", {
-        //     filters: activeFilters,
-        //     search: searchQuery,
-        //     sort: activeSort
-        // });
-    }, [data, activeFilters, searchQuery, activeSort]);
+        console.log("Filter function called with:", {
+            filters: activeFilters,
+            search: searchQuery,
+            sort: activeSort
+        });
+    }, [data, activeFilters, searchQuery, activeSort, collection]);
 
     // Apply filters whenever filter parameters or data changes
     useEffect(() => {
