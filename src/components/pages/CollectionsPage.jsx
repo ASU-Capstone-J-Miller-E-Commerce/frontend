@@ -134,6 +134,7 @@ export default function CollectionsPage() {
         // Reset both current page and filtered data when the collection changes
         setCurrentPage(1);
         setFilteredData([]);
+        setActiveFilters({}); // Add this line to clear active filters
     }, [collection]);
 
     // Make sure data is being loaded properly for each collection
