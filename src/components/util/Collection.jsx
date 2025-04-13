@@ -301,22 +301,29 @@ const ActiveFilters = ({ filters, options, onFilterRemove, onClearAll }) => {
     
     if (filterCount === 0) return null;
     
-    // Find label for a filter option
+    // Find label for a filter option with its category
     const getFilterLabel = (key, value) => {
         // Handle price filters differently
         if (key.endsWith('_min')) {
-            return `Min $${value}`;
+            return `Price: Min $${value}`;
         }
         if (key.endsWith('_max')) {
-            return `Max $${value}`;
+            return `Price: Max $${value}`;
         }
         
-        // Try to find the option in filter options
-        const filterOption = options.flatMap(group => 
-            group.type === 'checkbox' ? group.options : []
-        ).find(option => option.value === key);
+        // Find which filter group this option belongs to and the option itself
+        for (const group of options) {
+            if (group.type === 'checkbox') {
+                const option = group.options.find(opt => opt.value === key);
+                if (option) {
+                    // Return with category: label format
+                    const categoryName = group.title.replace(/:$/, ''); // Remove any trailing colon
+                    return `${categoryName}: ${option.label}`;
+                }
+            }
+        }
         
-        return filterOption ? filterOption.label : key;
+        return key; // Fallback
     };
 
     return (
