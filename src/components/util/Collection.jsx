@@ -57,13 +57,22 @@ const PriceRangeFilter = ({ min = 0, max = 3500, paramPrefix, onFilterChange, ac
     const [isDraggingMax, setIsDraggingMax] = useState(false);
     const sliderRef = useRef(null);
     
-    // Reset values when collection changes (different min/max)
+    // Reset values when activeValues change (like when filter bubbles are removed)
     useEffect(() => {
-        if (activeValues[minParam] === undefined && activeValues[maxParam] === undefined) {
+        // Handle min value reset
+        if (activeValues[minParam] === undefined) {
             setMinValue(min);
-            setMaxValue(max);
+        } else {
+            setMinValue(activeValues[minParam]);
         }
-    }, [min, max, paramPrefix]);
+        
+        // Handle max value reset
+        if (activeValues[maxParam] === undefined) {
+            setMaxValue(max);
+        } else {
+            setMaxValue(activeValues[maxParam]);
+        }
+    }, [activeValues, minParam, maxParam, min, max]);
     
     // Display empty string instead of 0 for better UX
     const displayMinValue = minValue === 0 ? '' : minValue;
