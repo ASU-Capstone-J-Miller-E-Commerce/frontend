@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getCueCollection } from "../../util/requests";
+import { getAccessoryCollection, getCueCollection, getMaterialCollection } from "../../util/requests";
 import Collection from "../util/Collection";
 
 export default function CollectionsPage() {
@@ -166,7 +166,7 @@ export default function CollectionsPage() {
                 ]);
                 getCueCollection()
                     .then((res) => {
-                        const data = [...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data, ...res.data];
+                        const data = [...res.data];
                         setData(data);
                         setFilteredData(data); // Initialize filtered data as well
                     });
@@ -200,14 +200,12 @@ export default function CollectionsPage() {
                     { value: "alphabet", label: "Alphabetical" }
                 ]);
                 // Add dummy data for testing pagination
-                const accessoriesData = Array(50).fill().map((_, i) => ({
-                    id: `acc-${i}`,
-                    name: `Accessory ${i+1}`,
-                    price: Math.floor(Math.random() * 200) + 20,
-                    imageUrls: ['https://placehold.co/300x300']
-                }));
-                setData(accessoriesData);
-                setFilteredData(accessoriesData);
+                getAccessoryCollection()
+                    .then((res) => {
+                        const data = [...res.data];
+                        setData(data);
+                        setFilteredData(data);
+                    });
                 break;
                 
             case "materials":
@@ -236,15 +234,12 @@ export default function CollectionsPage() {
                     { value: "price-asc", label: "Price: Low to High" },
                     { value: "price-desc", label: "Price: High to Low" }
                 ]);
-                // Add dummy data for testing pagination
-                const materialsData = Array(40).fill().map((_, i) => ({
-                    id: `mat-${i}`,
-                    name: `Material ${i+1}`,
-                    price: Math.floor(Math.random() * 500) + 50,
-                    imageUrls: ['https://placehold.co/300x300']
-                }));
-                setData(materialsData);
-                setFilteredData(materialsData);
+                getMaterialCollection()
+                    .then((res) => {
+                        const data = [...res.data];
+                        setData(data);
+                        setFilteredData(data);
+                    });
                 break;
         }
     }, [collection]);

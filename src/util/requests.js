@@ -61,6 +61,20 @@ export function getCueCollection() {
     });
 }
 
+export function getAccessoryCollection() {
+    return _ajax({
+        url: "/accessories",
+        method: "GET",
+    });
+}
+
+export function getMaterialCollection() {
+    return _ajax({
+        url: "/materials",
+        method: "GET",
+    });
+}
+
 
 /*==============================================================
 # Users
