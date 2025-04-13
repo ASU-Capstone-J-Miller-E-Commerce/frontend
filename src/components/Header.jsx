@@ -12,8 +12,9 @@ const options = {
         { text: "View All Materials", link: "/collections/materials" }
     ],
     "Cues": [
-        { text: "Available Cues", link: "/collections/cues" },
-        { text: "Upcoming Cues", link: "/collections/cues" },
+        { text: "Available Cues", link: "/collections/cues?available=true" },
+        { text: "Upcoming Cues", link: "/collections/cues?upcoming=true" },
+        { text: "Sold Cues", link: "/collections/cues?sold=true" },
         { text: "View All Cues", link: "/collections/cues" },
     ]
 };

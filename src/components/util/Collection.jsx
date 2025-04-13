@@ -2,8 +2,8 @@ import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Card } from "./Card";
 
 // Filter Dropdown Component that can accept either options or custom content
-const FilterDropdown = ({ title, options, customContent, onFilterChange, activeValues }) => {
-    const [isOpen, setIsOpen] = useState(true); // Default to open
+const FilterDropdown = ({ title, options, customContent, onFilterChange, activeValues, isFirstFilter = false }) => {
+    const [isOpen, setIsOpen] = useState(isFirstFilter); // Only open if it's the first filter
 
     const handleCheckboxChange = (value) => {
         onFilterChange(value, !activeValues[value]);
@@ -380,6 +380,7 @@ const FilterArea = ({ filterOptions, activeFilters, onFilterChange }) => {
                 <FilterDropdown 
                     key={index}
                     title={filter.title} 
+                    isFirstFilter={index === 0} // Only the first filter (index 0) gets true
                     customContent={
                         filter.type === "priceRange" 
                             ? <PriceRangeFilter 

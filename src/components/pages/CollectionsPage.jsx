@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getAccessoryCollection, getCueCollection, getMaterialCollection } from "../../util/requests";
 import Collection from "../util/Collection";
+import { COLOR_OPTIONS } from "../../util/globalConstants";
 
 export default function CollectionsPage() {
     const location = useLocation();
@@ -149,6 +150,15 @@ export default function CollectionsPage() {
                         paramPrefix: "price"
                     },
                     {
+                        title: "Availability",
+                        type: "checkbox",
+                        options: [
+                            { label: "Available", value: "available" },
+                            { label: "Upcoming", value: "upcoming" },
+                            { label: "Sold", value: "sold" }
+                        ]
+                    },
+                    {
                         title: "Features",
                         type: "checkbox",
                         options: [
@@ -159,10 +169,12 @@ export default function CollectionsPage() {
                     },
                 ]);
                 setSortOptions([
-                    { value: "newest", label: "Newest First" },
-                    { value: "oldest", label: "Oldest First" },
+                    { value: "newest", label: "Date: Newest First" },
+                    { value: "oldest", label: "Date: Oldest First" },
                     { value: "price-asc", label: "Price: Low to High" },
                     { value: "price-desc", label: "Price: High to Low" },
+                    { value: "alphabet-a-z", label: "Alphabetical: A-Z" },
+                    { value: "alphabet-z-a", label: "Alphabetical: Z-A" },
                 ]);
                 getCueCollection()
                     .then((res) => {
@@ -182,23 +194,14 @@ export default function CollectionsPage() {
                         max: 500,
                         paramPrefix: "price"
                     },
-                    {
-                        title: "Category",
-                        type: "checkbox",
-                        options: [
-                            { label: "Cases", value: "cases" },
-                            { label: "Tips", value: "tips" },
-                            { label: "Chalk", value: "chalk" },
-                            { label: "Gloves", value: "gloves" },
-                            { label: "Towels", value: "towels" }
-                        ]
-                    }
                 ]);
                 setSortOptions([
-                    { value: "featured", label: "Featured" },
+                    { value: "newest", label: "Date: Newest First" },
+                    { value: "oldest", label: "Date: Oldest First" },
                     { value: "price-asc", label: "Price: Low to High" },
                     { value: "price-desc", label: "Price: High to Low" },
-                    { value: "alphabet", label: "Alphabetical" }
+                    { value: "alphabet-a-z", label: "Alphabetical: A-Z" },
+                    { value: "alphabet-z-a", label: "Alphabetical: Z-A" },
                 ]);
                 // Add dummy data for testing pagination
                 getAccessoryCollection()
@@ -213,28 +216,35 @@ export default function CollectionsPage() {
             case "materials":
                 setFilterOptions([
                     {
-                        title: "Price",
-                        type: "priceRange",
-                        min: 0,
-                        max: 1000,
-                        paramPrefix: "price"
-                    },
-                    {
-                        title: "Category",
+                        title: "Material Type",
                         type: "checkbox",
                         options: [
                             { label: "Wood", value: "wood" },
-                            { label: "Wraps", value: "wraps" },
-                            { label: "Inlays", value: "inlays" },
-                            { label: "Joint Parts", value: "joints" },
-                            { label: "Miscellaneous", value: "misc" }
+                            { label: "Stones/Crystals", value: "crystal" },
                         ]
-                    }
+                    },
+                    {
+                        title: "Tier",
+                        type: "checkbox",
+                        options: [
+                            { label: "Tier 1", value: "tier1" },
+                            { label: "Tier 2", value: "tier2" },
+                            { label: "Tier 3", value: "tier3" },
+                            { label: "Tier 4", value: "tier4" },
+                        ]
+                    },
+                    {
+                        title: "Color",
+                        type: "checkbox",
+                        options: COLOR_OPTIONS
+                    },
+
                 ]);
                 setSortOptions([
-                    { value: "featured", label: "Featured" },
-                    { value: "price-asc", label: "Price: Low to High" },
-                    { value: "price-desc", label: "Price: High to Low" }
+                    { value: "newest", label: "Date: Newest First" },
+                    { value: "oldest", label: "Date: Oldest First" },
+                    { value: "alphabet-a-z", label: "Alphabetical: A-Z" },
+                    { value: "alphabet-z-a", label: "Alphabetical: Z-A" },
                 ]);
                 getMaterialCollection()
                     .then((res) => {
