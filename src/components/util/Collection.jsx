@@ -293,6 +293,57 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     );
 };
 
+// Add this component before the main Collection component
+
+const ActiveFilters = ({ filters, options, onFilterRemove, onClearAll }) => {
+    // Count active filters (excluding price range filters that are at their default values)
+    const filterCount = Object.keys(filters).length;
+    
+    if (filterCount === 0) return null;
+    
+    // Find label for a filter option
+    const getFilterLabel = (key, value) => {
+        // Handle price filters differently
+        if (key.endsWith('_min')) {
+            return `Min $${value}`;
+        }
+        if (key.endsWith('_max')) {
+            return `Max $${value}`;
+        }
+        
+        // Try to find the option in filter options
+        const filterOption = options.flatMap(group => 
+            group.type === 'checkbox' ? group.options : []
+        ).find(option => option.value === key);
+        
+        return filterOption ? filterOption.label : key;
+    };
+
+    return (
+        <div className="active-filters">
+            {filterCount > 1 && (
+                <button 
+                    className="filter-bubble clear-all"
+                    onClick={onClearAll}
+                >
+                    Clear All
+                </button>
+            )}
+            
+            {Object.entries(filters).map(([key, value]) => (
+                <button 
+                    key={key} 
+                    className="filter-bubble"
+                    onClick={() => onFilterRemove(key)}
+                >
+                    {getFilterLabel(key, value)}
+                    <i className="fa-solid fa-xmark"></i>
+                </button>
+            ))}
+        </div>
+    );
+};
+
 // Filter Area Component
 const FilterArea = ({ filterOptions, activeFilters, onFilterChange }) => {
     return (
@@ -368,6 +419,18 @@ export default function Collection({
     // Add validation for itemsPerPage values
     const validItemsPerPageValues = [12, 24, 48];
 
+    // Handle removing a single filter
+    const handleFilterRemove = (key) => {
+        onFilterChange(key, undefined);
+    };
+    
+    // Handle clearing all filters
+    const handleClearAllFilters = () => {
+        Object.keys(activeFilters).forEach(key => {
+            onFilterChange(key, undefined);
+        });
+    };
+
     return (
         <div className="collection-wrapper">
             <div className="collection-container">
@@ -422,6 +485,14 @@ export default function Collection({
                             </div>
                         </div>
                     </div>
+
+                    {/* Active Filters */}
+                    <ActiveFilters 
+                        filters={activeFilters}
+                        options={filterOptions}
+                        onFilterRemove={handleFilterRemove}
+                        onClearAll={handleClearAllFilters}
+                    />
 
                     {/* Product listing */}
                     <div className="collection-listing">
