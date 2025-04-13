@@ -268,11 +268,13 @@ select.form-field-input::-ms-expand {
   padding: 0px 0px 0px 7px;
   font-size: 12px;
   transform: translateY(-1px);
+  text-decoration: none !important;
 }
 .main-nav-text {
   padding: 12px 12px;
   cursor: pointer;
   color: var(--miller-white);
+  background: transparent;
 }
 .main-nav-text:hover,
 .main-nav-text.open,      
