@@ -193,12 +193,12 @@ export default function SettingsPage() {
                 </DialogTitle>
                 <DialogContent>
                     <form onSubmit={pwHandleSubmit(onChangePassword)}>
-                        <div className="form-column" style={{ width: '100%' }}>
-                            <div className="form-row" style={{ width: '100%' }}>
-                                <div className="flex-1">
+                        <div className="form-column">
+                            <div className="form-row">
+                                <div className="form-column flex-1">
                                     <FormField
                                         title="Current Password"
-                                        type="currPassword"
+                                        type="password"
                                         value={currPassword}
                                         error={pwErrors.currPassword && pwErrors.currPassword?.message}
                                         {...pwRegister("currPassword", { 
@@ -207,7 +207,7 @@ export default function SettingsPage() {
                                     />
                                     <FormField
                                         title="New Password"
-                                        type="newPassword"
+                                        type="password"
                                         value={newPassword}
                                         error={pwErrors.newPassword && pwErrors.newPassword?.message}
                                         {...pwRegister("newPassword", { 
