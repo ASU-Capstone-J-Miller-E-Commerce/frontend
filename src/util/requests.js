@@ -51,6 +51,30 @@ export function test() {
         method: "GET",
     });
 }
+/*==============================================================
+# Collections
+==============================================================*/
+export function getCueCollection() {
+    return _ajax({
+        url: "/cues",
+        method: "GET",
+    });
+}
+
+export function getAccessoryCollection() {
+    return _ajax({
+        url: "/accessories",
+        method: "GET",
+    });
+}
+
+export function getMaterialCollection() {
+    return _ajax({
+        url: "/materials",
+        method: "GET",
+    });
+}
+
 
 /*==============================================================
 # Users

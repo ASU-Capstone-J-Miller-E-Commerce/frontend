@@ -7,20 +7,21 @@ import { NavLink, useLocation } from "react-router-dom";
 
 const options = {
     "Materials": [
-        { text: "Woods", link: "/collections/materials" },
-        { text: "Stones and Crystals", link: "/collections/materials" },
+        { text: "Woods", link: "/collections/materials?wood=true" },
+        { text: "Stones and Crystals", link: "/collections/materials?crystal=true" },
         { text: "View All Materials", link: "/collections/materials" }
     ],
     "Cues": [
-        { text: "Available Cues", link: "/collections/available" },
-        { text: "Upcoming Cues", link: "/collections/coming-soon" },
-        { text: "View All Cues", link: "/collections/available" },
+        { text: "Available Cues", link: "/collections/cues?available=true" },
+        { text: "Upcoming Cues", link: "/collections/cues?upcoming=true" },
+        { text: "Sold Cues", link: "/collections/cues?sold=true" },
+        { text: "View All Cues", link: "/collections/cues" },
     ]
 };
 
 const navItems = [
     { text: "Cues", options: options["Cues"] },
-    { text: "Accessories", link: "/collections/available" },
+    { text: "Accessories", link: "/collections/accessories" },
     { text: "Build-A-Cue", link: "/build-a-cue" },
     { text: "Materials", options: options["Materials"] }
 ];
@@ -201,9 +202,8 @@ export default function Header() {
 }
 
 function HeaderNavItem({text, isDropdown, isOpen, onToggle, options=false, link=false, onLinkClick}) {
-    const ref = useRef(null); // Create a ref for the dropdown container
+    const ref = useRef(null);
 
-    // Use the custom hook to handle outside clicks
     useOutsideClick(ref, (e) => {
         if (!isOpen) return;
 
@@ -220,27 +220,40 @@ function HeaderNavItem({text, isDropdown, isOpen, onToggle, options=false, link=
 
     return (
         <div className="header-nav-item" ref={isDropdown ? ref : null}>
-            <NavLink 
-              onClick={isDropdown ? () => onToggle(text) : onLinkClick}
-              onKeyDown={isDropdown ? handleKeyDown : undefined}
-              tabIndex={0} 
-              to={link}
-              className={isOpen ? "main-nav-text open" : "main-nav-text"}
-              id={text}
-            >
-                {text}
-                {isDropdown && 
-                    <button 
-                      className={isOpen ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down"} 
-                      tabIndex={-1}
-                      id={text}
+            {isDropdown ? (
+                <div 
+                    onClick={() => onToggle(text)}
+                    onKeyDown={handleKeyDown}
+                    tabIndex={0}
+                    className={isOpen ? "main-nav-text open" : "main-nav-text"}
+                    id={text}
+                    role="button"
+                    aria-expanded={isOpen}
+                    aria-haspopup="true"
+                >
+                    {text}
+                    <span 
+                        className={isOpen ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down"} 
+                        aria-hidden="true"
+                        id={text}
                     />
-                }
-            </NavLink>
+                </div>
+            ) : (
+                <NavLink 
+                    onClick={onLinkClick}
+                    onKeyDown={handleKeyDown}
+                    tabIndex={0} 
+                    to={link}
+                    className="main-nav-text"
+                    id={text}
+                    style={{ display: 'flex', alignItems: 'center', height: '100%' }}
+                >
+                    {text}
+                </NavLink>
+            )}
             
             {/* DROPDOWN MENU */}
             <div className={isOpen ? "dropdown-menu open" : "dropdown-menu"}>
-                {/* Dropdown content goes here */}
                 <ul className="header-list-sub-menu">
                     {options?.length && options.map((option) => {
                         const {text, link} = option;
