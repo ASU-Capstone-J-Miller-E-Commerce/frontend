@@ -17,6 +17,7 @@ export default function CollectionsPage() {
     const [activeSort, setActiveSort] = useState('');
     const [itemsPerPage, setItemsPerPage] = useState(12);
     const [currentPage, setCurrentPage] = useState(1);
+    const [loading, setLoading] = useState(true);
     
     // Track if this is an initial load or direct navigation with filters
     const isInitialMount = useRef(true);
@@ -378,11 +379,13 @@ export default function CollectionsPage() {
 
     // Make sure data is being loaded properly for each collection
     useEffect(() => {
+        setLoading(true); // Start loading
+        
         switch (collection) {
             case "cues":
                 getCueCollection()
                     .then((res) => {
-                        const data = [...res.data];
+                        const data = [];
 
                         const lowestPrice = data.length ? 
                         Math.min(...data.map(item => (item.price !== undefined && item.price !== null) ? item.price : Infinity)) : 
@@ -431,7 +434,8 @@ export default function CollectionsPage() {
                         
                         setData(data);
                         setFilteredData(data);
-                    });
+                    })
+                    .always(() => setLoading(false)); // End loading when done
                 break;
                 
             case "accessories":
@@ -468,7 +472,8 @@ export default function CollectionsPage() {
                         
                         setData(data);
                         setFilteredData(data);
-                    });
+                    })
+                    .always(() => setLoading(false)); // End loading when done
                 break;
                 
             case "materials":
@@ -509,7 +514,8 @@ export default function CollectionsPage() {
                         const data = [...res.data];
                         setData(data);
                         setFilteredData(data);
-                    });
+                    })
+                    .always(() => setLoading(false)); // End loading when done
                 break;
         }
     }, [collection]);
@@ -564,6 +570,7 @@ export default function CollectionsPage() {
                 itemsPerPage={itemsPerPage}
                 currentPage={currentPage}
                 collection={collection}
+                loading={loading} // Pass loading state
                 onFilterChange={handleFilterChange}
                 onSortChange={handleSortChange}
                 onSearchChange={handleSearchChange}

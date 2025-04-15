@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Card } from "./Card";
+import { NavLink } from "react-router-dom";
 
 // Filter Dropdown Component that can accept either options or custom content
 const FilterDropdown = ({ title, options, customContent, onFilterChange, activeValues, isFirstFilter = false }) => {
@@ -421,7 +422,8 @@ export default function Collection({
     searchQuery = '',
     itemsPerPage = 12,
     currentPage = 1,
-    collection = '', // Add this new prop
+    collection = '',
+    loading = false, // New prop for loading state
     onFilterChange,
     onSortChange,
     onSearchChange,
@@ -536,41 +538,58 @@ export default function Collection({
 
                     {/* Product listing */}
                     <div className="collection-listing">
-                        <ul>
-                            {currentItems.map((item, index) => {
-                                // Fix the collection comparison and handle material title fields
-                                let title;
-                                let tag;
+                        {loading ? (
+                            <div className="collection-loading">
+                                <div className="loading-spinner"></div>
+                                <p>Loading items...</p>
+                            </div>
+                        ) : currentItems.length > 0 ? (
+                            <ul>
+                                {currentItems.map((item, index) => {
+                                    // Fix the collection comparison and handle material title fields
+                                    let title;
+                                    let tag;
 
-                                if (collection === 'cues' || collection === 'accessories') {
-                                    title = item.name;
-                                    tag = item.cueNumber || item.accessoryNumber;
-                                } else {
-                                    // For materials, handle both wood and crystal types
-                                    title = item.commonName || item.crystalName || item.name || 'Unknown';
-                                }
-                                
-                                return (
-                                    <li key={index}>
-                                        <Card 
-                                            image={item.imageUrls && item.imageUrls.length > 0 ? item.imageUrls[0] : '/placeholder.png'}
-                                            title={title}
-                                            tag={tag}
-                                            price={item.price}
-                                            linkTo={`/${collection}/${item._id}`} // Generate link using collection name
-                                        />
-                                    </li>
-                                );
-                            })}
-                        </ul>
+                                    if (collection === 'cues' || collection === 'accessories') {
+                                        title = item.name;
+                                        tag = item.cueNumber || item.accessoryNumber;
+                                    } else {
+                                        // For materials, handle both wood and crystal types
+                                        title = item.commonName || item.crystalName || item.name || 'Unknown';
+                                    }
+                                    
+                                    return (
+                                        <li key={index}>
+                                            <Card 
+                                                image={item.imageUrls && item.imageUrls.length > 0 ? item.imageUrls[0] : '/placeholder.png'}
+                                                title={title}
+                                                tag={tag}
+                                                price={item.price}
+                                                linkTo={`/${collection}/${item._id}`} // Generate link using collection name
+                                            />
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        ) : (
+                            <div className="empty-collection-message">
+                                <p>No items found that match your current filters.</p>
+                                <p>
+                                    <NavLink to={`/${collection}`} className="return-link">
+                                        <i className="fa-solid fa-arrow-left"></i> Return to all {collection}
+                                    </NavLink>
+                                </p>
+                            </div>
+                        )}
                     </div>
                     
-                    {/* Pagination */}
-                    <Pagination 
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={handlePageButtonClick}
-                    />
+                    {!loading && currentItems.length > 0 && (
+                        <Pagination 
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={handlePageButtonClick}
+                        />
+                    )}
                 </div>
             </div>
         </div>
