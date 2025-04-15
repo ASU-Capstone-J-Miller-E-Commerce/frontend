@@ -298,14 +298,70 @@ export default function CollectionsPage() {
     }
 
     function filterCues(items) {
+        // Skip filtering if no filters applied
+        if (Object.keys(activeFilters).length === 0) {
+            return items;
+        }
         
-        return items;
+        const minPrice = activeFilters.price_min;
+        const maxPrice = activeFilters.price_max;
+        
+        // If no price filters, return all items
+        if (minPrice === undefined && maxPrice === undefined) {
+            return items;
+        }
+        
+        return items.filter(item => {
+            // Skip items without price
+            if (item.price === undefined || item.price === null) {
+                return false;
+            }
+            
+            // Check if price is within range
+            if (minPrice !== undefined && item.price < minPrice) {
+                return false;
+            }
+            
+            if (maxPrice !== undefined && item.price > maxPrice) {
+                return false;
+            }
+            
+            return true;
+        });
     }
 
     // Filter function for accessories collection
     function filterAccessories(items) {
+        // Skip filtering if no filters applied
+        if (Object.keys(activeFilters).length === 0) {
+            return items;
+        }
         
-        return items;
+        const minPrice = activeFilters.price_min;
+        const maxPrice = activeFilters.price_max;
+        
+        // If no price filters, return all items
+        if (minPrice === undefined && maxPrice === undefined) {
+            return items;
+        }
+        
+        return items.filter(item => {
+            // Skip items without price
+            if (item.price === undefined || item.price === null) {
+                return false;
+            }
+            
+            // Check if price is within range
+            if (minPrice !== undefined && item.price < minPrice) {
+                return false;
+            }
+            
+            if (maxPrice !== undefined && item.price > maxPrice) {
+                return false;
+            }
+            
+            return true;
+        });
     }
 
     // Filter function for materials collection
