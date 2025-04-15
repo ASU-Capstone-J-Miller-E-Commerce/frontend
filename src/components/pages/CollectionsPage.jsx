@@ -284,8 +284,33 @@ export default function CollectionsPage() {
 
     // Function to apply active filters
     function filterData(result) {
+        switch (collection) {
+            case "cues":
+                return filterCues(result);
+            case "accessories":
+                return filterAccessories(result);
+            case "materials":
+                return filterMaterials(result);
+            default:
+                return result;
+        }
+    }
 
-        return result;
+    function filterCues(items) {
+        
+        return items;
+    }
+
+    // Filter function for accessories collection
+    function filterAccessories(items) {
+        
+        return items;
+    }
+
+    // Filter function for materials collection
+    function filterMaterials(items) {
+        
+        return items;
     }
 
     // Function to handle sorting
