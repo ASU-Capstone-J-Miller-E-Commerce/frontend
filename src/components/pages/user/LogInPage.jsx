@@ -139,7 +139,7 @@ export default function LoginPage () {
                                     <div className="flex-1">
                                         <FormField
                                             title="Code"
-                                            type="verCode"
+                                            type="password"
                                             value={verCode}
                                             error={verErrors.verCode && verErrors.verCode?.message}
                                             {...verRegister("verCode", { 
