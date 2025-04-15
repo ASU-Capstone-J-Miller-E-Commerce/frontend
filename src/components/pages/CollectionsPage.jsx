@@ -376,6 +376,15 @@ export default function CollectionsPage() {
                                 ]
                             },
                         ]);
+
+                        setSortOptions([
+                            { value: "newest", label: "Date: Newest First" },
+                            { value: "oldest", label: "Date: Oldest First" },
+                            { value: "price-asc", label: "Price: Low to High" },
+                            { value: "price-desc", label: "Price: High to Low" },
+                            { value: "alphabet-a-z", label: "Alphabetical: A-Z" },
+                            { value: "alphabet-z-a", label: "Alphabetical: Z-A" },
+                        ]);
                         
                         setData(data);
                         setFilteredData(data);
@@ -401,6 +410,15 @@ export default function CollectionsPage() {
                                 max: highestPrice,
                                 paramPrefix: "price"
                             },
+                        ]);
+
+                        setSortOptions([
+                            { value: "newest", label: "Date: Newest First" },
+                            { value: "oldest", label: "Date: Oldest First" },
+                            { value: "price-asc", label: "Price: Low to High" },
+                            { value: "price-desc", label: "Price: High to Low" },
+                            { value: "alphabet-a-z", label: "Alphabetical: A-Z" },
+                            { value: "alphabet-z-a", label: "Alphabetical: Z-A" },
                         ]);
                         
                         setData(data);
