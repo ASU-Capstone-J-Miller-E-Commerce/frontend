@@ -102,8 +102,8 @@ function App() {
 
                     <Route path="/collections">
                         <Route index element={<Navigate to="/" replace />} />
-                        <Route path="available" element={<CollectionsPage />} />
-                        <Route path="coming-soon" element={<CollectionsPage />} />
+                        <Route path="cues" element={<CollectionsPage />} />
+                        <Route path="accessories" element={<CollectionsPage />} />
                         <Route path="materials" element={<CollectionsPage />} />
                     </Route>
 

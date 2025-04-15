@@ -1,11 +1,11 @@
+/* Card structure */
 .card-wrapper {
     display: flex;
     flex-direction: column;
     height: 100%;
     width: 100%;
     background-color: white;
-    min-width: 0px;
-    
+    min-width: 0;
 }
 
 .card-image img{
@@ -18,18 +18,20 @@
     aspect-ratio: 2048 / 2048;
 }
 
-
+/* Card content spacing */
 .card-content {
     padding: 13px 0px;
     display: flex;
     flex-direction: column;
+    min-height: 40px; /* Increased to accommodate more text */
+    justify-content: space-between;
 }
+
 @media (min-width: 750px) {
     .card-content {
         padding: 17px 0px;
     }
 }
-
 
 .card-content h3 {
     margin: 0;
@@ -38,11 +40,81 @@
     word-break: break-word;
     font-weight: 400;
 }
+
+/* Override the generic span styles for card elements */
+.card-content span.card-tag {
+    display: inline;
+    width: auto !important;
+    margin-top: 0;
+    font-size: 0.9em;
+    vertical-align: top; /* Align with text */
+}
+
 .card-content span {
     display: inline-block;
     width: 100%;
-    line-height: 24px;
+    line-height: 1.4;
     font-weight: 400;
     font-size: 16px;
     margin-top: 7px;
+}
+
+.card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+/* Fix title layout */
+.card-title {
+    margin: 0 0 8px 0; /* Add bottom margin to separate from price */
+    font-size: 14px;
+    line-height: 1.3;
+    display: block; /* Changed from flex */
+    white-space: normal; /* Allow text to wrap */
+    overflow: visible; /* Allow content to be visible */
+    text-overflow: ellipsis;
+}
+
+/* Card price styling */
+.card-price {
+    font-size: 17px !important;
+    margin: 0 !important;
+    padding: 0;
+    font-weight: 500;
+    color: #555;
+    line-height: 1.2;
+}
+
+/* Card hover effects */
+.card-link:hover .card-title {
+    color: #555;
+    text-decoration: underline;
+    text-decoration-skip-ink: none;
+    text-underline-offset: 2px;
+}
+
+.card-link:hover .card-wrapper {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
+}
+
+.card-wrapper {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Card tag styling */
+.card-tag {
+    color: #666;
+    margin-right: 5px;
+    font-weight: normal;
+    display: inline; /* Keep inline with first line */
+    width: auto !important;
+}
+
+.card-link:hover .card-tag {
+    color: #555;
 }

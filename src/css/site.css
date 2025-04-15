@@ -48,7 +48,7 @@ body {
   height: 100vh;
 }
 
-h1, h2 {
+h1, h2, h3, h4 {
   font-family: 'bouwsma-uncial', system-ui, Helvetica, Arial, sans-serif;
 }
 
@@ -58,6 +58,9 @@ select,
 option {
   border-radius: 3px;
   background-color: var(--miller-white);
+  color: var(--miller-black);
+  font-size: 20px;
+  border: 1px solid #c9c9c9;
 }
 
 button {
@@ -265,11 +268,13 @@ select.form-field-input::-ms-expand {
   padding: 0px 0px 0px 7px;
   font-size: 12px;
   transform: translateY(-1px);
+  text-decoration: none !important;
 }
 .main-nav-text {
   padding: 12px 12px;
   cursor: pointer;
   color: var(--miller-white);
+  background: transparent;
 }
 .main-nav-text:hover,
 .main-nav-text.open,      
@@ -358,7 +363,7 @@ select.form-field-input::-ms-expand {
 @media (min-width: 990px) {
   .main-header {
     grid-template-areas: "heading navigation icons";
-    padding: 0px 50px;
+    padding: 6px 50px;
   }
 
   .header-drawer {

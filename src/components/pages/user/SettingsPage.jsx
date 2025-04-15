@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { set, useForm } from "react-hook-form";
 import { Dialog, DialogTitle, DialogContent } from "@mui/material";
 import AccountSection from "../../sections/AccountSection";
-import { updateName } from "../../../util/requests";
+import { userChangePassword } from "../../../util/requests";
 import { receiveResponse } from "../../../util/notifications";
 import { FormField } from "../../util/Inputs";
 import { useSelector } from "react-redux";
@@ -15,13 +15,21 @@ import {verify2FA} from "../../../util/requests"
 export default function SettingsPage() {
     const userData = useSelector(state => state.user);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isPWModalOpen, setIsPWModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [qrCodeUrl, setQrCodeUrl] = useState(null);
 
     const { register, handleSubmit, formState: { errors }, reset, watch } = useForm();
-    
+    const { register: pwRegister, handleSubmit: pwHandleSubmit, watch: pwWatch, formState: { errors: pwErrors }, reset: pwReset } = useForm({
+            defaultValues: {
+                currPassword: "",
+                newPassword: "",
+            }
+        });
 
     const verCode = watch("verCode");
+    const currPassword = pwWatch("currPassword");
+    const newPassword = pwWatch("newPassword");
 
     const onGenerate = (data) => {
         if (loading) return;
@@ -48,16 +56,39 @@ export default function SettingsPage() {
                 checkUserAuth();
                 setIsModalOpen(false);
                 setQrCodeUrl(null);
-                reset();
+                pwReset();
             })
             .always(() => {
                 setLoading(false);
             });
     }
 
+    const handleCloseDialog = () => {
+        setIsPWModalOpen(false);
+        pwReset({ currPassword: "", newPassword: "" });
+    };
+    
+    const onChangePassword = (data) => {
+        setIsPWModalOpen(true);
+        if(loading) return;
+        setLoading(true);
+        userChangePassword(data.currPassword, data.newPassword)
+            .then((res) => {
+                receiveResponse(res);
+                checkUserAuth();
+                setIsPWModalOpen(false);
+                pwReset({ currPassword: "", newPassword: "" });
+            })
+            .always(() => {
+                setLoading(false);
+                pwReset({ currPassword: "", newPassword: "" });
+            });
+        
+    }
+
     return (
         <div className="user-content">
-            <AccountSection title="Password">
+            <AccountSection title="Password" onEdit={() => setIsPWModalOpen(true)}>
                 <p>password</p>
             </AccountSection>
             <AccountSection title="Two factor authentication" onEdit={!userData.TFAEnabled && onGenerate}>
@@ -137,6 +168,70 @@ export default function SettingsPage() {
                                 </span>
                                 <DefaultButton
                                     text="Verify Code"
+                                    type="submit"
+                                    disabled={loading}
+                                />
+                            </div>
+                        </div>
+                    </form>
+                </DialogContent>
+
+
+            </Dialog>
+            {/*Password Change Modal */}
+            <Dialog 
+                open={isPWModalOpen} 
+                onClose={() => setIsPWModalOpen(false)} 
+                fullWidth 
+                maxWidth="sm" 
+                className="miller-dialog-typography"
+                PaperProps={{ className: "miller-dialog-typography" }}
+            >
+                <DialogTitle>
+                    Change your Password:
+
+                </DialogTitle>
+                <DialogContent>
+                    <form onSubmit={pwHandleSubmit(onChangePassword)}>
+                        <div className="form-column">
+                            <div className="form-row">
+                                <div className="form-column flex-1">
+                                    <FormField
+                                        title="Current Password"
+                                        type="password"
+                                        value={currPassword}
+                                        error={pwErrors.currPassword && pwErrors.currPassword?.message}
+                                        {...pwRegister("currPassword", { 
+                                            required: "Your current password is required.",
+                                        })}
+                                    />
+                                    <FormField
+                                        title="New Password"
+                                        type="password"
+                                        value={newPassword}
+                                        error={pwErrors.newPassword && pwErrors.newPassword?.message}
+                                        {...pwRegister("newPassword", { 
+                                            required: "New password is required.",
+                                        })}
+                                    />
+                                    
+                                </div>
+                            </div>
+
+                            <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '1rem' }}>
+                                <span 
+                                    onClick={handleCloseDialog} 
+                                    style={{ 
+                                        textDecoration: 'underline', 
+                                        cursor: 'pointer',
+                                        color: '#333',
+                                        fontSize: '1rem'
+                                    }}
+                                >
+                                    Cancel
+                                </span>
+                                <DefaultButton
+                                    text="Change Password"
                                     type="submit"
                                     disabled={loading}
                                 />
