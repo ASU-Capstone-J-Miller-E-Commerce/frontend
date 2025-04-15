@@ -81,7 +81,7 @@ export default function CollectionsPage() {
           }
         }
       }
-    }, []); // Empty dependency array ensures this runs only once
+    }, []);
 
     // SINGLE effect to handle collection changes
     useEffect(() => {
@@ -244,9 +244,24 @@ export default function CollectionsPage() {
     }, [searchQuery, activeSort, activeFilters, itemsPerPage, currentPage, collection, navigate, location.pathname]);
 
     // Filter function to apply filters to data
-    const filterData = useCallback(() => {
+    const searchFilterSortData = useCallback(() => {
         let result = [...data];
 
+        result = searchData(result);
+        result = filterData(result);
+        result = sortData(result);
+
+        setFilteredData(result);
+        
+        console.log("Filter function called with:", {
+            filters: activeFilters,
+            search: searchQuery,
+            sort: activeSort
+        });
+    }, [data, activeFilters, searchQuery, activeSort, collection]);
+
+    // Function to handle search filtering
+    function searchData(result) {
         if (searchQuery && searchQuery.trim() !== '') {
             const query = searchQuery.toLowerCase().trim();
 
@@ -264,7 +279,17 @@ export default function CollectionsPage() {
                 );
             }
         }
+        return result;
+    }
 
+    // Function to apply active filters
+    function filterData(result) {
+
+        return result;
+    }
+
+    // Function to handle sorting
+    function sortData(result) {
         if (activeSort) {
             switch (activeSort) {
                 case "newest":
@@ -310,21 +335,13 @@ export default function CollectionsPage() {
                     break;
             }
         }
-
-        setFilteredData(result);
-        
-        // Log that the filter function was called
-        console.log("Filter function called with:", {
-            filters: activeFilters,
-            search: searchQuery,
-            sort: activeSort
-        });
-    }, [data, activeFilters, searchQuery, activeSort, collection]);
+        return result;
+    }
 
     // Apply filters whenever filter parameters or data changes
     useEffect(() => {
-        filterData();
-    }, [filterData, data, activeFilters, searchQuery, activeSort]);
+        searchFilterSortData();
+    }, [searchFilterSortData, data, activeFilters, searchQuery, activeSort]);
 
     // Reset to page 1 when filters change
     useEffect(() => {
@@ -336,7 +353,6 @@ export default function CollectionsPage() {
 
     // Make sure data is being loaded properly for each collection
     useEffect(() => {
-        // Define collection-specific filters and sort options
         switch (collection) {
             case "cues":
                 getCueCollection()
@@ -359,7 +375,6 @@ export default function CollectionsPage() {
                                 max: highestPrice,
                                 paramPrefix: "price"
                             },
-                            // Other filter options remain the same
                             {
                                 title: "Availability",
                                 type: "checkbox",
@@ -394,7 +409,6 @@ export default function CollectionsPage() {
                     });
                 break;
                 
-            // Do the same for accessories and materials cases
             case "accessories":
                 getAccessoryCollection()
                     .then((res) => {
