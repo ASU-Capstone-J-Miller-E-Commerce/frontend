@@ -254,11 +254,11 @@ export default function CollectionsPage() {
 
         setFilteredData(result);
         
-        console.log("Filter function called with:", {
-            filters: activeFilters,
-            search: searchQuery,
-            sort: activeSort
-        });
+        // console.log("Filter function called with:", {
+        //     filters: activeFilters,
+        //     search: searchQuery,
+        //     sort: activeSort
+        // });
     }, [data, activeFilters, searchQuery, activeSort, collection]);
 
     // Function to handle search filtering
@@ -310,8 +310,63 @@ export default function CollectionsPage() {
 
     // Filter function for materials collection
     function filterMaterials(items) {
+        // Skip filtering if no filters applied
+        if (Object.keys(activeFilters).length === 0) {
+            return items;
+        }
         
-        return items;
+        // Get active filters by category
+        const activeTypes = Object.keys(activeFilters).filter(key => 
+            ['wood', 'crystal'].includes(key) && activeFilters[key]
+        );
+        
+        const activeTiers = Object.keys(activeFilters).filter(key => 
+            ['Tier 1', 'Tier 2', 'Tier 3', 'Tier 4'].includes(key) && activeFilters[key]
+        );
+        
+        const activeColors = Object.keys(activeFilters).filter(key => 
+            COLOR_OPTIONS.some(option => option.value === key) && activeFilters[key]
+        );
+        
+        return items.filter(item => {
+            // Type filtering - check based on keys rather than materialType
+            if (activeTypes.length > 0) {
+                const isWood = Boolean(item.commonName);
+                const isCrystal = Boolean(item.crystalName);
+                
+                const matchesActiveTypes = activeTypes.some(type => 
+                    (type === 'wood' && isWood) || 
+                    (type === 'crystal' && isCrystal)
+                );
+                
+                if (!matchesActiveTypes) {
+                    return false;
+                }
+            }
+            
+            // Tier filtering
+            if (activeTiers.length > 0) {
+                console.log(item.iter, activeFilters)
+                const itemTier = item.tier;
+                if (!item.tier || !activeTiers.includes(itemTier)) {
+                    return false;
+                }
+            }
+            
+            // Color filtering
+            if (activeColors.length > 0) {
+                const itemColors = item.colors || [];
+
+                if (itemColors.length === 0 || !activeColors.some(color => 
+                    itemColors.some(itemColor => itemColor.includes(color))
+                )) {
+                    return false;
+                }
+            }
+            
+            // Item passed all filter tests
+            return true;
+        });
     }
 
     // Function to handle sorting
@@ -385,7 +440,7 @@ export default function CollectionsPage() {
             case "cues":
                 getCueCollection()
                     .then((res) => {
-                        const data = [];
+                        const data = [...res.data];
 
                         const lowestPrice = data.length ? 
                         Math.min(...data.map(item => (item.price !== undefined && item.price !== null) ? item.price : Infinity)) : 
@@ -490,10 +545,10 @@ export default function CollectionsPage() {
                         title: "Tier",
                         type: "checkbox",
                         options: [
-                            { label: "Tier 1", value: "tier1" },
-                            { label: "Tier 2", value: "tier2" },
-                            { label: "Tier 3", value: "tier3" },
-                            { label: "Tier 4", value: "tier4" },
+                            { label: "Tier 1", value: "Tier 1" },
+                            { label: "Tier 2", value: "Tier 2" },
+                            { label: "Tier 3", value: "Tier 3" },
+                            { label: "Tier 4", value: "Tier 4" },
                         ]
                     },
                     {

@@ -5,29 +5,18 @@ export const CUE_BASIC_MATERIAL_OPTIONS = [
 ];
 
 export const COLOR_OPTIONS = [
-    { value: 'black', label: 'Black' },
-    { value: 'blue', label: 'Blue' },
-    { value: 'brown_light', label: 'Brown - Light' },
-    { value: 'brown_med', label: 'Brown - Med' },
-    { value: 'brown_dark', label: 'Brown - Dark' },
-    { value: 'cream', label: 'Cream' },
-    { value: 'green_light', label: 'Green - Light' },
-    { value: 'green_med', label: 'Green - Med' },
-    { value: 'green_dark', label: 'Green - Dark' },
-    { value: 'green_tint', label: 'Green Tint' },
-    { value: 'grey_light', label: 'Grey - Light' },
-    { value: 'grey_med', label: 'Grey - Med' },
-    { value: 'grey_dark', label: 'Grey - Dark' },
-    { value: 'orange', label: 'Orange' },
-    { value: 'pink', label: 'Pink' },
-    { value: 'purple', label: 'Purple' },
-    { value: 'red_light', label: 'Red - Light' },
-    { value: 'red_med', label: 'Red - Med' },
-    { value: 'red_bright', label: 'Red - Bright' },
-    { value: 'white', label: 'White' },
-    { value: 'yellow_light', label: 'Yellow - Light' },
-    { value: 'yellow_med', label: 'Yellow - Med' },
-    { value: 'yellow_bright', label: 'Yellow - Bright' }
+    { value: 'Black', label: 'Black' },
+    { value: 'Blue', label: 'Blue' },
+    { value: 'Brown', label: 'Brown' },
+    { value: 'Cream', label: 'Cream' },
+    { value: 'Green', label: 'Green' },
+    { value: 'Grey', label: 'Grey' },
+    { value: 'Orange', label: 'Orange' },
+    { value: 'Pink', label: 'Pink' },
+    { value: 'Purple', label: 'Purple' },
+    { value: 'Red', label: 'Red' },
+    { value: 'White', label: 'White' },
+    { value: 'Yellow', label: 'Yellow' }
 ];
 
 export const METAPHYSICAL_OPTIONS = [
