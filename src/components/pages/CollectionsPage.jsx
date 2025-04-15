@@ -342,17 +342,20 @@ export default function CollectionsPage() {
                 getCueCollection()
                     .then((res) => {
                         const data = [...res.data];
-                        
-                        // Calculate the highest price (round up to nearest 100)
+
+                        const lowestPrice = data.length ? 
+                        Math.min(...data.map(item => (item.price !== undefined && item.price !== null) ? item.price : Infinity)) : 
+                        0;
+                    
                         const highestPrice = data.length ? 
-                            Math.ceil(Math.max(...data.map(item => item.price || 0)) / 100) * 100 : 
-                            10000; // Default if no data
+                        Math.max(...data.map(item => (item.price !== undefined && item.price !== null) ? item.price : 0)) : 
+                        10000;
                         
                         setFilterOptions([
                             {
                                 title: "Price",
                                 type: "priceRange",
-                                min: 0,
+                                min: lowestPrice,
                                 max: highestPrice,
                                 paramPrefix: "price"
                             },
@@ -396,17 +399,20 @@ export default function CollectionsPage() {
                 getAccessoryCollection()
                     .then((res) => {
                         const data = [...res.data];
-                        
-                        // Calculate highest price
+
+                        const lowestPrice = data.length ? 
+                        Math.min(...data.map(item => (item.price !== undefined && item.price !== null) ? item.price : Infinity)) : 
+                        0;
+
                         const highestPrice = data.length ? 
-                            Math.ceil(Math.max(...data.map(item => item.price || 0)) / 100) * 100 : 
-                            500;
+                        Math.max(...data.map(item => (item.price !== undefined && item.price !== null) ? item.price : 0)) : 
+                        500;
                             
                         setFilterOptions([
                             {
                                 title: "Price",
                                 type: "priceRange",
-                                min: 0,
+                                min: lowestPrice,
                                 max: highestPrice,
                                 paramPrefix: "price"
                             },

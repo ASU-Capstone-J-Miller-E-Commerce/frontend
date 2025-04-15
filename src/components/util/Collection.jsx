@@ -96,16 +96,26 @@ const PriceRangeFilter = ({ min = 0, max = 3500, paramPrefix, onFilterChange, ac
     }, [minValue, maxValue, isDraggingMin, isDraggingMax]);
     
     const getPercentage = (value) => {
+        // Map the value from the [min, max] range to the [0, 100] range
+        const percentage = ((value - min) / (max - min)) * 100;
+        
+        // Add buffer only at the edges for better handle usability
         const buffer = 12;
         const bufferPercentage = (buffer / sliderRef.current?.clientWidth) * 100 || 0;
-        const rawPercentage = (value / max) * 100;
-        return bufferPercentage + rawPercentage * (100 - 2 * bufferPercentage) / 100;
+        
+        // For minimum value, return nearly 0 (with tiny buffer)
+        if (value === min) return 0;
+        // For maximum value, return nearly 100 (with tiny buffer)
+        if (value === max) return 100;
+        
+        // For values in between, apply buffer on both sides proportionally
+        return bufferPercentage + percentage * (100 - 2 * bufferPercentage) / 100;
     };
     
     const handleMinChange = (e) => {
-        const inputValue = e.target.value === '' ? 0 : parseInt(e.target.value);
+        const inputValue = e.target.value === '' ? min : parseInt(e.target.value);
         if (isNaN(inputValue)) return;
-        const constrainedValue = Math.max(0, Math.min(inputValue, maxValue - 50));
+        const constrainedValue = Math.max(min, Math.min(inputValue, maxValue - 50));
         setMinValue(constrainedValue);
     };
     
@@ -121,14 +131,14 @@ const PriceRangeFilter = ({ min = 0, max = 3500, paramPrefix, onFilterChange, ac
         
         const rect = sliderRef.current.getBoundingClientRect();
         const percentage = (e.clientX - rect.left) / rect.width;
-        const value = Math.round(percentage * max);
+        const value = Math.round(min + percentage * (max - min));
         
         // Determine whether to move min or max handle
         const minDistance = Math.abs(value - minValue);
         const maxDistance = Math.abs(value - maxValue);
         
         if (minDistance <= maxDistance) {
-            setMinValue(Math.min(value, maxValue - 50));
+            setMinValue(Math.max(min, Math.min(value, maxValue - 50)));
         } else {
             setMaxValue(Math.max(value, minValue + 50));
         }
@@ -148,14 +158,15 @@ const PriceRangeFilter = ({ min = 0, max = 3500, paramPrefix, onFilterChange, ac
         
         const rect = sliderRef.current.getBoundingClientRect();
         const percentage = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-        const value = Math.round(percentage * max);
+        // This calculation doesn't account for the min value
+        const value = Math.round(min + percentage * (max - min));
         
         if (isDraggingMin) {
-            setMinValue(Math.min(value, maxValue - 50));
+            setMinValue(Math.max(min, Math.min(value, maxValue - 50)));
         } else if (isDraggingMax) {
             setMaxValue(Math.max(value, minValue + 50));
         }
-    }, [isDraggingMin, isDraggingMax, minValue, maxValue, max]);
+    }, [isDraggingMin, isDraggingMax, minValue, maxValue, max, min]);
     
     const handleMouseUp = useCallback(() => {
         setIsDraggingMin(false);
