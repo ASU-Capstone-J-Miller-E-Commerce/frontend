@@ -306,13 +306,31 @@ export default function CollectionsPage() {
         const minPrice = activeFilters.price_min;
         const maxPrice = activeFilters.price_max;
         
-        // Get active availability filters (similar to how activeColors are extracted)
+        // Get active availability filters
         const activeAvailability = Object.keys(activeFilters).filter(key => 
             ['available', 'upcoming', 'sold'].includes(key) && activeFilters[key]
         );
         
-        // If no price filters and no availability filters, return all items
-        if ((minPrice === undefined && maxPrice === undefined) && activeAvailability.length === 0) {
+        // Get active feature filters
+        const hasInlays = activeFilters.inlays;
+        const hasNoInlays = activeFilters.no_inlays;
+        const hasPoints = activeFilters.points;
+        const hasNoPoints = activeFilters.no_points;
+        const hasWrap = activeFilters.wrap;
+        const hasNoWrap = activeFilters.no_wrap;
+        const hasStandardButt = activeFilters.standard_butt;
+        const hasFullSpliceButt = activeFilters.full_splice_butt;
+        const hasNoFullSpliceButt = activeFilters.no_full_splice_butt;
+        
+        // Are any feature filters active?
+        const hasFeatureFilters = hasInlays || hasNoInlays || hasPoints || hasNoPoints || 
+                                 hasWrap || hasNoWrap || hasStandardButt || 
+                                 hasFullSpliceButt || hasNoFullSpliceButt;
+        
+        // If no filters applied, return all items
+        if ((minPrice === undefined && maxPrice === undefined) && 
+            activeAvailability.length === 0 && 
+            !hasFeatureFilters) {
             return items;
         }
         
@@ -334,7 +352,7 @@ export default function CollectionsPage() {
                 }
             }
             
-            // Availability filtering (similar to color filtering in materials)
+            // Availability filtering
             if (activeAvailability.length > 0) {
                 // If no status on item, skip it when filtering by availability
                 if (!item.status) {
@@ -358,6 +376,45 @@ export default function CollectionsPage() {
                 }
             }
             
+            // Feature filtering - implement placeholder conditions
+            if (hasFeatureFilters) {
+                // INLAYS - placeholder filter condition
+                if (hasInlays && !item.hasInlays) { // Replace with your actual condition
+                    return false;
+                }
+                if (hasNoInlays && item.hasInlays) { // Replace with your actual condition
+                    return false;
+                }
+                
+                // POINTS - placeholder filter condition
+                if (hasPoints && !item.hasPoints) { // Replace with your actual condition
+                    return false;
+                }
+                if (hasNoPoints && item.hasPoints) { // Replace with your actual condition
+                    return false;
+                }
+                
+                // WRAP - placeholder filter condition
+                if (hasWrap && !item.hasWrap) { // Replace with your actual condition
+                    return false;
+                }
+                if (hasNoWrap && item.hasWrap) { // Replace with your actual condition
+                    return false;
+                }
+                
+                // BUTT TYPES - placeholder filter condition
+                if (hasStandardButt && !item.hasStandardButt) { // Replace with your actual condition
+                    return false;
+                }
+                if (hasFullSpliceButt && !item.hasFullSpliceButt) { // Replace with your actual condition
+                    return false;
+                }
+                if (hasNoFullSpliceButt && item.hasFullSpliceButt) { // Replace with your actual condition
+                    return false;
+                }
+            }
+            
+            // Item passed all filter tests
             return true;
         });
     }
@@ -558,10 +615,16 @@ export default function CollectionsPage() {
                             {
                                 title: "Features",
                                 type: "checkbox",
+                                isExclusivePair: true,
                                 options: [
                                     { label: "Inlays", value: "inlays" },
+                                    { label: "No Inlays", value: "no_inlays", oppositeOf: "inlays" },
                                     { label: "Points", value: "points" },
-                                    { label: "Wrap", value: "wrap" }
+                                    { label: "No Points", value: "no_points", oppositeOf: "points" },
+                                    { label: "Wrap", value: "wrap" },
+                                    { label: "No Wrap", value: "no_wrap", oppositeOf: "wrap" },
+                                    { label: "Standard Butt", value: "standard_butt" },
+                                    { label: "FullSplice  Butt", value: "full_splice_butt" },
                                 ]
                             },
                         ]);

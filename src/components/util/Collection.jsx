@@ -3,12 +3,25 @@ import { Card } from "./Card";
 import { NavLink } from "react-router-dom";
 
 // Filter Dropdown Component that can accept either options or custom content
-const FilterDropdown = ({ title, options, customContent, onFilterChange, activeValues, isFirstFilter = false }) => {
-    const [isOpen, setIsOpen] = useState(isFirstFilter); // Only open if it's the first filter
+const FilterDropdown = ({ title, options, customContent, onFilterChange, activeValues, isFirstFilter = false, isExclusivePair = false }) => {
+    const [isOpen, setIsOpen] = useState(isFirstFilter);
 
     const handleCheckboxChange = (value) => {
         onFilterChange(value, !activeValues[value]);
     };
+
+    // Filter options to hide opposites of selected values
+    const filteredOptions = isExclusivePair 
+        ? options.filter(option => {
+            // If this is a negative option, check if the positive option is active
+            if (option.oppositeOf) {
+                return !activeValues[option.oppositeOf];
+            }
+            // For positive options, check if its negative counterpart is active
+            const oppositeOption = options.find(o => o.oppositeOf === option.value);
+            return oppositeOption ? !activeValues[oppositeOption.value] : true;
+        })
+        : options;
 
     return (
         <div className="filter-dropdown">
@@ -26,7 +39,7 @@ const FilterDropdown = ({ title, options, customContent, onFilterChange, activeV
                         customContent
                     ) : (
                         <ul>
-                            {options.map((option, index) => (
+                            {filteredOptions.map((option, index) => (
                                 <li key={index}>
                                     <label>
                                         <input 
@@ -392,7 +405,8 @@ const FilterArea = ({ filterOptions, activeFilters, onFilterChange }) => {
                 <FilterDropdown 
                     key={index}
                     title={filter.title} 
-                    isFirstFilter={index === 0} // Only the first filter (index 0) gets true
+                    isFirstFilter={index === 0}
+                    isExclusivePair={filter.isExclusivePair}
                     customContent={
                         filter.type === "priceRange" 
                             ? <PriceRangeFilter 
