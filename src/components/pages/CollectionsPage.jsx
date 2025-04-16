@@ -388,8 +388,13 @@ export default function CollectionsPage() {
                 // INLAYS filtering
                 if (activeInlayFilters.length > 0) {
                     const matchesInlayFilter = activeInlayFilters.some(key => {
-                        if (key === 'inlays') return item.hasInlays;
-                        if (key === 'no_inlays') return !item.hasInlays;
+                        // Check if any of the inlay quantities are greater than 0
+                        const hasInlays = (item.forearmInlayQuantity > 0 || 
+                                          item.handleInlayQuantity > 0 || 
+                                          item.buttsleeveInlayQuantity > 0);
+                                          
+                        if (key === 'inlays') return hasInlays;
+                        if (key === 'no_inlays') return !hasInlays;
                         return false;
                     });
                     
@@ -401,8 +406,12 @@ export default function CollectionsPage() {
                 // POINTS filtering
                 if (activePointFilters.length > 0) {
                     const matchesPointFilter = activePointFilters.some(key => {
-                        if (key === 'points') return item.hasPoints;
-                        if (key === 'no_points') return !item.hasPoints;
+                        // Check if any of the point quantities are greater than 0
+                        const hasPoints = (item.forearmPointQuantity > 0 || 
+                                          item.buttSleevePointQuantity > 0);
+                                          
+                        if (key === 'points') return hasPoints;
+                        if (key === 'no_points') return !hasPoints;
                         return false;
                     });
                     
