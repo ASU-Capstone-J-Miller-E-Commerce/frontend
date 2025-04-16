@@ -311,21 +311,28 @@ export default function CollectionsPage() {
             ['available', 'upcoming', 'sold'].includes(key) && activeFilters[key]
         );
         
-        // Get active feature filters
-        const hasInlays = activeFilters.inlays;
-        const hasNoInlays = activeFilters.no_inlays;
-        const hasPoints = activeFilters.points;
-        const hasNoPoints = activeFilters.no_points;
-        const hasWrap = activeFilters.wrap;
-        const hasNoWrap = activeFilters.no_wrap;
-        const hasStandardButt = activeFilters.standard_butt;
-        const hasFullSpliceButt = activeFilters.full_splice_butt;
-        const hasNoFullSpliceButt = activeFilters.no_full_splice_butt;
+        // Get active feature filters by category - similar to materials approach
+        const activeInlayFilters = Object.keys(activeFilters).filter(key => 
+            ['inlays', 'no_inlays'].includes(key) && activeFilters[key]
+        );
         
-        // Are any feature filters active?
-        const hasFeatureFilters = hasInlays || hasNoInlays || hasPoints || hasNoPoints || 
-                                 hasWrap || hasNoWrap || hasStandardButt || 
-                                 hasFullSpliceButt || hasNoFullSpliceButt;
+        const activePointFilters = Object.keys(activeFilters).filter(key => 
+            ['points', 'no_points'].includes(key) && activeFilters[key]
+        );
+        
+        const activeWrapFilters = Object.keys(activeFilters).filter(key => 
+            ['wrap', 'no_wrap'].includes(key) && activeFilters[key]
+        );
+        
+        const activeButtFilters = Object.keys(activeFilters).filter(key => 
+            ['standard_butt', 'full_splice_butt'].includes(key) && activeFilters[key]
+        );
+        
+        // Check if any feature filters are active at all
+        const hasFeatureFilters = activeInlayFilters.length > 0 || 
+                                 activePointFilters.length > 0 || 
+                                 activeWrapFilters.length > 0 || 
+                                 activeButtFilters.length > 0;
         
         // If no filters applied, return all items
         if ((minPrice === undefined && maxPrice === undefined) && 
@@ -376,41 +383,58 @@ export default function CollectionsPage() {
                 }
             }
             
-            // Feature filtering - implement placeholder conditions
+            // Feature filtering - using materials filtering approach
             if (hasFeatureFilters) {
-                // INLAYS - placeholder filter condition
-                if (hasInlays && !item.hasInlays) { // Replace with your actual condition
-                    return false;
-                }
-                if (hasNoInlays && item.hasInlays) { // Replace with your actual condition
-                    return false;
-                }
-                
-                // POINTS - placeholder filter condition
-                if (hasPoints && !item.hasPoints) { // Replace with your actual condition
-                    return false;
-                }
-                if (hasNoPoints && item.hasPoints) { // Replace with your actual condition
-                    return false;
+                // INLAYS filtering
+                if (activeInlayFilters.length > 0) {
+                    const matchesInlayFilter = activeInlayFilters.some(key => {
+                        if (key === 'inlays') return item.hasInlays;
+                        if (key === 'no_inlays') return !item.hasInlays;
+                        return false;
+                    });
+                    
+                    if (!matchesInlayFilter) {
+                        return false;
+                    }
                 }
                 
-                // WRAP - placeholder filter condition
-                if (hasWrap && !item.hasWrap) { // Replace with your actual condition
-                    return false;
-                }
-                if (hasNoWrap && item.hasWrap) { // Replace with your actual condition
-                    return false;
+                // POINTS filtering
+                if (activePointFilters.length > 0) {
+                    const matchesPointFilter = activePointFilters.some(key => {
+                        if (key === 'points') return item.hasPoints;
+                        if (key === 'no_points') return !item.hasPoints;
+                        return false;
+                    });
+                    
+                    if (!matchesPointFilter) {
+                        return false;
+                    }
                 }
                 
-                // BUTT TYPES - placeholder filter condition
-                if (hasStandardButt && !item.hasStandardButt) { // Replace with your actual condition
-                    return false;
+                // WRAP filtering
+                if (activeWrapFilters.length > 0) {
+                    const matchesWrapFilter = activeWrapFilters.some(key => {
+                        if (key === 'wrap') return item.includeWrap;
+                        if (key === 'no_wrap') return !item.includeWrap;
+                        return false;
+                    });
+                    
+                    if (!matchesWrapFilter) {
+                        return false;
+                    }
                 }
-                if (hasFullSpliceButt && !item.hasFullSpliceButt) { // Replace with your actual condition
-                    return false;
-                }
-                if (hasNoFullSpliceButt && item.hasFullSpliceButt) { // Replace with your actual condition
-                    return false;
+                
+                // BUTT TYPE filtering - using OR logic
+                if (activeButtFilters.length > 0) {
+                    const matchesButtFilter = activeButtFilters.some(key => {
+                        if (key === 'standard_butt') return !item.isFullSplice;
+                        if (key === 'full_splice_butt') return item.isFullSplice;
+                        return false;
+                    });
+                    
+                    if (!matchesButtFilter) {
+                        return false;
+                    }
                 }
             }
             
@@ -624,7 +648,7 @@ export default function CollectionsPage() {
                                     { label: "Wrap", value: "wrap" },
                                     { label: "No Wrap", value: "no_wrap", oppositeOf: "wrap" },
                                     { label: "Standard Butt", value: "standard_butt" },
-                                    { label: "FullSplice  Butt", value: "full_splice_butt" },
+                                    { label: "Full Splice Butt", value: "full_splice_butt" },
                                 ]
                             },
                         ]);
