@@ -306,24 +306,56 @@ export default function CollectionsPage() {
         const minPrice = activeFilters.price_min;
         const maxPrice = activeFilters.price_max;
         
-        // If no price filters, return all items
-        if (minPrice === undefined && maxPrice === undefined) {
+        // Get active availability filters (similar to how activeColors are extracted)
+        const activeAvailability = Object.keys(activeFilters).filter(key => 
+            ['available', 'upcoming', 'sold'].includes(key) && activeFilters[key]
+        );
+        
+        // If no price filters and no availability filters, return all items
+        if ((minPrice === undefined && maxPrice === undefined) && activeAvailability.length === 0) {
             return items;
         }
         
         return items.filter(item => {
-            // Skip items without price
-            if (item.price === undefined || item.price === null) {
-                return false;
+            // Price filtering
+            if (minPrice !== undefined || maxPrice !== undefined) {
+                // Skip items without price
+                if (item.price === undefined || item.price === null) {
+                    return false;
+                }
+                
+                // Check if price is within range
+                if (minPrice !== undefined && item.price < minPrice) {
+                    return false;
+                }
+                
+                if (maxPrice !== undefined && item.price > maxPrice) {
+                    return false;
+                }
             }
             
-            // Check if price is within range
-            if (minPrice !== undefined && item.price < minPrice) {
-                return false;
-            }
-            
-            if (maxPrice !== undefined && item.price > maxPrice) {
-                return false;
+            // Availability filtering (similar to color filtering in materials)
+            if (activeAvailability.length > 0) {
+                // If no status on item, skip it when filtering by availability
+                if (!item.status) {
+                    return false;
+                }
+                
+                // Map filter keys to expected status values
+                const statusMap = {
+                    'available': 'Available',
+                    'upcoming': 'Coming Soon',
+                    'sold': 'Sold'
+                };
+                
+                // Check if item's status matches any active availability filter
+                const matchesActiveAvailability = activeAvailability.some(key => 
+                    item.status === statusMap[key]
+                );
+                
+                if (!matchesActiveAvailability) {
+                    return false;
+                }
             }
             
             return true;
