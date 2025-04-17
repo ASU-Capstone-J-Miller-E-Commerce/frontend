@@ -657,7 +657,7 @@ export default function CollectionsPage() {
                                     { label: "Wrap", value: "wrap" },
                                     { label: "No Wrap", value: "no_wrap", oppositeOf: "wrap" },
                                     { label: "Standard Butt", value: "standard_butt" },
-                                    { label: "Full Splice Butt", value: "full_splice_butt" },
+                                    { label: "Full Splice Butt", value: "full_splice_butt", oppositeOf: "standard_butt" },
                                 ]
                             },
                         ]);

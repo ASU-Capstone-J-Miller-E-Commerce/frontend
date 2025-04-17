@@ -9,7 +9,6 @@ import Footer from "./components/Footer";
 import HomePage from "./components/pages/HomePage.jsx";
 import CollectionsPage from "./components/pages/CollectionsPage.jsx";
 import ProductPage from "./components/pages/ProductPage.jsx";
-import MaterialPage from "./components/pages/MaterialPage.jsx";
 import BuildACuePage from "./components/pages/BuildACuePage.jsx";
 import NotFoundPage from "./components/pages/NotFoundPage.jsx";
 import LoginPage from "./components/pages/user/LogInPage.jsx";
@@ -17,6 +16,7 @@ import CreateAccountPage from "./components/pages/user/CreateAccountPage.jsx";
 import ProfilePage from "./components/pages/user/ProfilePage.jsx";
 import SettingsPage from "./components/pages/user/SettingsPage.jsx";
 import PasswordReset from "./components/pages/user/PasswordReset.jsx";
+import ContactPage from "./components/pages/ContactPage.jsx"
 
 import UserLayout from "./components/pages/user/UserLayout.jsx";
 
@@ -108,12 +108,8 @@ function App() {
                     </Route>
 
                     <Route path="/products/:guid" element={<ProductPage />} />
-                    <Route path="/products" element={<Navigate to="/" replace />} />
 
                     <Route path="/build-a-cue" element={<BuildACuePage />} />
-
-                    <Route path="/materials/:guid" element={<MaterialPage />} />
-                    <Route path="/materials" element={<Navigate to="/" replace />} />
 
                     {/* 
                         User Pages
@@ -134,6 +130,14 @@ function App() {
                         </Route>
                         <Route index element={<Navigate to="/" replace />} />
                         <Route path="*" element={<Navigate to="/" replace />} />
+                    </Route>
+
+                    {/* 
+                        Other Pages
+                    */}
+                    <Route path="/pages">
+                        <Route index element={<Navigate to="/" replace />} />
+                        <Route path="contact" element={<ContactPage />} />
                     </Route>
 
                     <Route path="*" element={<NotFoundPage />} />
