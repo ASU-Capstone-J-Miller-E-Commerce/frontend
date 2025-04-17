@@ -4,6 +4,8 @@ import logo from "../images/white_logo.jpg";
 import { createFocusTrap } from "focus-trap";
 import { DrawerLoginButton, LoginButton } from "./util/Buttons";
 import { NavLink, useLocation } from "react-router-dom";
+import { searchSite } from '../util/requests';
+import { motion, AnimatePresence } from "framer-motion";
 
 const options = {
     "Materials": [
@@ -31,6 +33,10 @@ export default function Header() {
     const [openDrawer, setOpenDrawer] = useState(false);
     const [hasScrolled, setHasScrolled] = useState(false);
     const [focusTrap, setFocusTrap] = useState(null);
+    const [showSearch, setShowSearch] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
     const headerRef = useRef(null);
     const location = useLocation();
@@ -134,7 +140,29 @@ export default function Header() {
         setOpenDropdown(null);
     };
 
+    const handleSearch = () => {
+        if (searchQuery.trim() !== "") {
+            setIsLoading(true);
+            console.log("Searching for:", searchQuery);
+            searchSite(searchQuery)
+            .then((res) => {
+                setSearchResults(res.data)
+                setIsLoading(false);
+            })
+            .catch((err) => {
+
+            })
+        }
+    };
+    
+    const hideSearch = () => {
+        setSearchQuery("");
+        setSearchResults([]);
+        setShowSearch(false);
+    }
+
     return (
+        <>
         <header className="main-header sticky" ref={headerRef}>
             {openDrawer && <div className="overlay header-overlay" />}
             {/* Drawer */}
@@ -177,27 +205,112 @@ export default function Header() {
             </div>
 
             {/* Nav Section w/ Dropdown Menu*/}
-            <nav className="header-navigation">
-                <ul className="header-list-menu list-menu">
-                    {navItems.map((navItem) => {
-                        const { text, link, options } = navItem;
+            {showSearch ? (
+                <div className="header-search-container">
+                    <input 
+                        type="text" 
+                        placeholder="Search..." 
+                        className="header-search-input"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                handleSearch();
+                            }
+                        }}
+                        autoFocus
+                    />
+                    <button 
+                        className="fa-solid fa-xmark header-icon" 
+                        onClick={() => hideSearch()}
+                    />
+                </div>
+                
+            ) : (
+                <>
+                    <nav className="header-navigation">
+                        <ul className="header-list-menu list-menu">
+                            {navItems.map((navItem) => {
+                                const { text, link, options } = navItem;
 
-                        return (
-                            <li key={text}>
-                                <HeaderNavItem text={text} link={link} options={options} isDropdown={!link && options} isOpen={openDropdown === text} onToggle={handleDropdown} onLinkClick={handleLinkClick}/>
-                            </li>
-                        );
-                    })}
-                </ul>
-            </nav>
+                                return (
+                                    <li key={text}>
+                                        <HeaderNavItem 
+                                            text={text} 
+                                            link={link} 
+                                            options={options} 
+                                            isDropdown={!link && options} 
+                                            isOpen={openDropdown === text} 
+                                            onToggle={handleDropdown} 
+                                            onLinkClick={handleLinkClick}
+                                        />
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </nav>
 
-            {/* Icons */}
-            <div className="header-icons">
-                <button className="fa-solid fa-magnifying-glass header-icon" />
-                <LoginButton onClick={handleLinkClick} />
-                <button className="fa-solid fa-cart-shopping header-icon" />
-            </div>
+                    <div className="header-icons">
+                        <button 
+                            className="fa-solid fa-magnifying-glass header-icon" 
+                            onClick={() => setShowSearch(true)}
+                        />
+                        <LoginButton onClick={handleLinkClick} />
+                        <button className="fa-solid fa-cart-shopping header-icon" />
+                    </div>
+                </>
+            )}
         </header>
+        <AnimatePresence>
+        {showSearch && (isLoading || searchResults.length > 0) && (
+            <motion.div
+            className="search-results-container"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{
+                type: "spring",
+                stiffness: 200,
+                damping: 20,
+                mass: 0.5
+            }}
+            >
+            {isLoading ? (
+                <div className="loading-message">Loading...</div>
+            ) : searchResults.length > 0 ? (
+                <>
+                <div className="results-grid">
+                    {searchResults.slice(0, 4).map((item) => (
+                    <a href={item.guid} key={item.guid} className="result-card">
+                        <div className="result-image-container">
+                            <img className="result-image" src={item.imageUrls[0]} />
+                        </div>
+                        <div className="result-text-container">
+                            <h3 className="result-item">{item.crystalName ? (`Crystal`) : (item.accessoryNumber ? (`Accessory`) : (item.commonName ? (`Wood`) : (`Cue`)))}</h3>
+                            <h3 className="result-title">{item.name ? (item.name) : (item.commonName ? (item.commonName) : (item.crystalName))}</h3>
+                            <p className="result-description">{item.description ? (item.description.length > 20 ? (item.description.slice(0, 20) + `...`) : (item.description)) : (item.crystalCategory)}</p>
+                            <p className="result-price">{item.price ? (`$` + Number(item.price).toFixed(2)) : (null)}</p>
+                        </div>
+                    </a>
+                    ))}
+                </div>
+                {searchResults.length > 4 && (
+                    <div className="view-all-container">
+                    <button
+                        className="view-all-button"
+                        onClick={() => setShowAllResults(true)}
+                    >
+                        View All
+                    </button>
+                    </div>
+                )}
+                </>
+            ) : null}
+            </motion.div>
+        )}
+        </AnimatePresence>
+
+        </>
     );
 }
 
