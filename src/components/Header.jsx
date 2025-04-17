@@ -140,11 +140,11 @@ export default function Header() {
         setOpenDropdown(null);
     };
 
-    const handleSearch = () => {
-        if (searchQuery.trim() !== "") {
+    const handleSearch = (value) => {
+        if (value.trim() !== "") {
             setIsLoading(true);
-            console.log("Searching for:", searchQuery);
-            searchSite(searchQuery)
+            console.log("Searching for:", value);
+            searchSite(value)
             .then((res) => {
                 setSearchResults(res.data)
                 setIsLoading(false);
@@ -152,6 +152,10 @@ export default function Header() {
             .catch((err) => {
 
             })
+        }
+        else
+        {
+            setSearchResults([]);
         }
     };
     
@@ -212,11 +216,10 @@ export default function Header() {
                         placeholder="Search..." 
                         className="header-search-input"
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                                handleSearch();
-                            }
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setSearchQuery(value);
+                            handleSearch(value);
                         }}
                         autoFocus
                     />
