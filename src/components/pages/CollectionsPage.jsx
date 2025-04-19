@@ -251,7 +251,7 @@ export default function CollectionsPage() {
         result = searchData(result);
         result = filterData(result);
         result = sortData(result);
-
+        setCurrentPage(1);
         setFilteredData(result);
         
         // console.log("Filter function called with:", {

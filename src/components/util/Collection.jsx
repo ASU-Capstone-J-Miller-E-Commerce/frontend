@@ -553,10 +553,7 @@ export default function Collection({
                     {/* Product listing */}
                     <div className="collection-listing">
                         {loading ? (
-                            <div className="collection-loading">
-                                <div className="loading-spinner"></div>
-                                <p>Loading items...</p>
-                            </div>
+                            null
                         ) : currentItems.length > 0 ? (
                             <ul>
                                 {currentItems.map((item, index) => {

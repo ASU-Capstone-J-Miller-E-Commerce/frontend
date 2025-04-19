@@ -8,7 +8,6 @@ export const COLOR_OPTIONS = [
     { value: 'Black', label: 'Black' },
     { value: 'Blue', label: 'Blue' },
     { value: 'Brown', label: 'Brown' },
-    { value: 'Cream', label: 'Cream' },
     { value: 'Green', label: 'Green' },
     { value: 'Grey', label: 'Grey' },
     { value: 'Orange', label: 'Orange' },
