@@ -122,3 +122,142 @@
 .empty-collection-message {
     font-size: 18px;
 }
+
+/* Mobile Layout Adjustments */
+@media (max-width: 770px) {
+    /* Container adjustments */
+    .collection-wrapper {
+        padding: 0 15px;
+    }
+    
+    .collection-container {
+        display: block;
+    }
+    
+    /* Hide desktop filters on mobile */
+    .collection-filters {
+        display: none;
+    }
+    
+    /* Show filters when opened in mobile mode */
+    .collection-filters.mobile-open {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: white;
+        z-index: 100;
+        padding: 15px;
+        overflow-y: auto;
+    }
+    
+    /* Mobile search bar */
+    .collection-search {
+        margin-bottom: 15px;
+        width: 100%;
+    }
+    
+    /* Mobile filter and sort row */
+    .mobile-controls-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        width: 100%;
+    }
+    
+    /* Filter button styling */
+    .filter-button {
+        display: flex;
+        align-items: center;
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 8px 16px;
+        font-size: 16px;
+        cursor: pointer;
+        width: 48%;
+    }
+    
+    .filter-button i {
+        margin-right: 8px;
+    }
+    
+    /* Sorting options container */
+    .mobile-sorting-options {
+        width: 48%;
+    }
+    
+    .mobile-sorting-options select {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 100%;
+        padding: 8px;
+    }
+    
+    /* Product count */
+    .mobile-product-count {
+        width: 100%;
+        margin: 0 0 20px 0;
+        font-size: 16px;
+        font-weight: 500;
+    }
+    
+    /* Hide desktop control elements */
+    .collection-controls {
+        display: none;
+    }
+    
+    /* Mobile filter header */
+    .mobile-filter-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 15px;
+    }
+    
+    .mobile-filter-header h3 {
+        margin: 0;
+    }
+    
+    .mobile-filter-close {
+        background: transparent;
+        border: none;
+        font-size: 20px;
+        padding: 5px;
+        cursor: pointer;
+    }
+    
+    /* Filter overlay background */
+    .filter-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 99;
+    }
+}
+
+/* Very small mobile screens */
+@media (max-width: 400px) {
+    .mobile-controls-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .filter-button {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+    
+    .mobile-sorting-options {
+        width: 100%;
+    }
+}

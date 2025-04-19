@@ -488,7 +488,8 @@
     margin-bottom: 18px;
 }
 
-.sorting-options select {
+.sorting-options select,
+.mobile-sorting-options select {
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 3px;
@@ -496,9 +497,17 @@
 }
 
 .collection-wrapper {
-    padding: 36px 50px;
+    padding: 32px 15px;
     margin: 0 auto;
     max-width: 83rem;
+}
+
+@media (min-width: 770px) {
+    .collection-wrapper {
+        padding: 36px 50px;
+        margin: 0 auto;
+        max-width: 83rem;
+    }
 }
 
 .collection-listing ul{
@@ -722,7 +731,8 @@
 }
 
 .items-per-page select,
-.sorting-options select {
+.sorting-options select,
+.mobile-sorting-options select {
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 3px;

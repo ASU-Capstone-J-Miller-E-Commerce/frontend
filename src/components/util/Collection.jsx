@@ -444,6 +444,19 @@ export default function Collection({
     onItemsPerPageChange,
     onPageChange
 }) {
+    const [showMobileFilters, setShowMobileFilters] = useState(false);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 770);
+    
+    // Track window width for responsive behavior
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 770);
+        };
+        
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     const handleSearchInputChange = (e) => {
         onSearchChange(e.target.value);
     };
@@ -486,11 +499,43 @@ export default function Collection({
             onFilterChange(key, undefined);
         });
     };
-
+    
+    const toggleMobileFilters = () => {
+        setShowMobileFilters(!showMobileFilters);
+        if (!showMobileFilters) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+    };
+    
     return (
         <div className="collection-wrapper">
+            {/* Mobile Filters Overlay */}
+            {showMobileFilters && <div className="filter-overlay" onClick={toggleMobileFilters}></div>}
+            
+            {/* Mobile/Desktop Filters */}
+            <div className={`collection-filters ${showMobileFilters ? 'mobile-open' : ''}`}>
+                {isMobile && (
+                    <div className="mobile-filter-header">
+                        <h3>Filter By</h3>
+                        <button className="mobile-filter-close" onClick={toggleMobileFilters}>
+                            <i className="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                )}
+                
+                {isMobile && (
+                    <FilterArea 
+                        filterOptions={filterOptions} 
+                        activeFilters={activeFilters}
+                        onFilterChange={onFilterChange}
+                    />
+                )}
+            </div>
+            
             <div className="collection-container">
-                {/* Filters Column */}
+                {/* Desktop Filters Column - hidden on mobile via CSS */}
                 <FilterArea 
                     filterOptions={filterOptions} 
                     activeFilters={activeFilters}
@@ -499,7 +544,7 @@ export default function Collection({
 
                 {/* Main content area */}
                 <div className="collection-content">
-                    {/* Search bar */}
+                    {/* Search bar - always at the top */}
                     <div className="collection-search">
                         <i className="fa-solid fa-magnifying-glass search-icon"></i>
                         <input 
@@ -510,37 +555,66 @@ export default function Collection({
                         />
                     </div>
                     
-                    {/* Product count and sorting */}
-                    <div className="collection-controls">
-                        <div className="product-count">
-                            {loading ? null : data.length} products
-                        </div>
-                        <div className="display-options">
-                            <div className="items-per-page">
-                                <select 
-                                    value={validItemsPerPageValues.includes(itemsPerPage) ? itemsPerPage : 12}
-                                    onChange={handleItemsPerPageChange}
-                                    className="show-select"
-                                >
-                                    <option value="12">Show 12</option>
-                                    <option value="24">Show 24</option>
-                                    <option value="48">Show 48</option>
-                                    {!validItemsPerPageValues.includes(itemsPerPage) && (
-                                        <option value={itemsPerPage}>Show {itemsPerPage}</option>
-                                    )}
-                                </select>
+                    {/* Mobile controls - Filter button and Sort dropdown */}
+                    {isMobile && (
+                        <>
+                            <div className="mobile-controls-row">
+                                <button className="filter-button" onClick={toggleMobileFilters}>
+                                    <i className="fa-solid fa-filter"></i>
+                                    Filter By
+                                </button>
+                                
+                                <div className="mobile-sorting-options">
+                                    <select value={activeSort} onChange={handleSortChange}>
+                                        {sortOptions.map((option, index) => (
+                                            <option key={index} value={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
                             </div>
-                            <div className="sorting-options">
-                                <select value={activeSort} onChange={handleSortChange}>
-                                    {sortOptions.map((option, index) => (
-                                        <option key={index} value={option.value}>
-                                            {option.label}
-                                        </option>
-                                    ))}
-                                </select>
+                            
+                            {/* Product count for mobile */}
+                            <div className="mobile-product-count">
+                                {loading ? null : `${data.length} Products`}
+                            </div>
+                        </>
+                    )}
+                    
+                    {/* Desktop controls - only shown on desktop */}
+                    {!isMobile && (
+                        <div className="collection-controls">
+                            <div className="product-count">
+                                {loading ? null : `${data.length} products`}
+                            </div>
+                            <div className="display-options">
+                                <div className="items-per-page">
+                                    <select 
+                                        value={validItemsPerPageValues.includes(itemsPerPage) ? itemsPerPage : 12}
+                                        onChange={handleItemsPerPageChange}
+                                        className="show-select"
+                                    >
+                                        <option value="12">Show 12</option>
+                                        <option value="24">Show 24</option>
+                                        <option value="48">Show 48</option>
+                                        {!validItemsPerPageValues.includes(itemsPerPage) && (
+                                            <option value={itemsPerPage}>Show {itemsPerPage}</option>
+                                        )}
+                                    </select>
+                                </div>
+                                <div className="sorting-options">
+                                    <select value={activeSort} onChange={handleSortChange}>
+                                        {sortOptions.map((option, index) => (
+                                            <option key={index} value={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    )}
 
                     {/* Active Filters */}
                     <ActiveFilters 
@@ -550,7 +624,7 @@ export default function Collection({
                         onClearAll={handleClearAllFilters}
                     />
 
-                    {/* Product listing */}
+                    {/* Product listing - same for both mobile and desktop */}
                     <div className="collection-listing">
                         {loading ? (
                             null
@@ -576,7 +650,7 @@ export default function Collection({
                                                 title={title}
                                                 tag={tag}
                                                 price={item.price}
-                                                linkTo={`/${collection}/${item._id}`} // Generate link using collection name
+                                                linkTo={`/${collection}/${item._id}`}
                                             />
                                         </li>
                                     );
@@ -585,14 +659,12 @@ export default function Collection({
                         ) : (
                             <div className="empty-collection-message">
                                 {Object.keys(activeFilters).length === 0 && !searchQuery ? (
-                                    // No items in collection and no filters applied
                                     <div>
                                         <p>
                                             There are currently no products in this collection, for additional information or requests visit the <NavLink to="/pages/contact" className="inline-link">contact us page</NavLink>.
                                         </p>
                                     </div>
                                 ) : (
-                                    // Items exist but none match current filters
                                     <div>
                                         <p>
                                             No products found that match your current filters. For additional information or requests visit the <NavLink to="/pages/contact" className="inline-link">contact us page</NavLink>.
