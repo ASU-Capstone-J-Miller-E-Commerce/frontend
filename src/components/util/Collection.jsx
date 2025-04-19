@@ -513,7 +513,7 @@ export default function Collection({
                     {/* Product count and sorting */}
                     <div className="collection-controls">
                         <div className="product-count">
-                            {data.length} products
+                            {loading ? null : data.length} products
                         </div>
                         <div className="display-options">
                             <div className="items-per-page">
@@ -584,12 +584,21 @@ export default function Collection({
                             </ul>
                         ) : (
                             <div className="empty-collection-message">
-                                <p>No items found that match your current filters.</p>
-                                <p>
-                                    <NavLink to={`/${collection}`} className="return-link">
-                                        <i className="fa-solid fa-arrow-left"></i> Return to all {collection}
-                                    </NavLink>
-                                </p>
+                                {Object.keys(activeFilters).length === 0 && !searchQuery ? (
+                                    // No items in collection and no filters applied
+                                    <div>
+                                        <p>
+                                            There are currently no products in this collection, for additional information or requests visit the <NavLink to="/pages/contact" className="inline-link">contact us page</NavLink>.
+                                        </p>
+                                    </div>
+                                ) : (
+                                    // Items exist but none match current filters
+                                    <div>
+                                        <p>
+                                            No products found that match your current filters. For additional information or requests visit the <NavLink to="/pages/contact" className="inline-link">contact us page</NavLink>.
+                                        </p>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>

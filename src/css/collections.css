@@ -118,3 +118,7 @@
 .card-link:hover .card-tag {
     color: #555;
 }
+
+.empty-collection-message {
+    font-size: 18px;
+}
