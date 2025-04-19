@@ -618,7 +618,7 @@ export default function CollectionsPage() {
             case "cues":
                 getCueCollection()
                     .then((res) => {
-                        const data = [];
+                        const data = [...res.data];
 
                         const lowestPrice = data.length ? 
                         Math.min(...data.map(item => (item.price !== undefined && item.price !== null) ? item.price : Infinity)) : 
