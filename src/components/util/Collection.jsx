@@ -1,6 +1,14 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Card } from "./Card";
 import { NavLink } from "react-router-dom";
+import { Dialog, AppBar, Toolbar, IconButton, Typography, Slide, DialogActions } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import { DefaultButton } from "./Buttons";
+
+// Create a transition component for the dialog
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 // Filter Dropdown Component that can accept either options or custom content
 const FilterDropdown = ({ title, options, customContent, onFilterChange, activeValues, isFirstFilter = false, isExclusivePair = false }) => {
@@ -502,37 +510,56 @@ export default function Collection({
     
     const toggleMobileFilters = () => {
         setShowMobileFilters(!showMobileFilters);
-        if (!showMobileFilters) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'auto';
-        }
     };
     
     return (
         <div className="collection-wrapper">
-            {/* Mobile Filters Overlay */}
-            {showMobileFilters && <div className="filter-overlay" onClick={toggleMobileFilters}></div>}
-            
-            {/* Mobile/Desktop Filters */}
-            <div className={`collection-filters ${showMobileFilters ? 'mobile-open' : ''}`}>
-                {isMobile && (
-                    <div className="mobile-filter-header">
-                        <h3>Filter By</h3>
-                        <button className="mobile-filter-close" onClick={toggleMobileFilters}>
-                            <i className="fa-solid fa-xmark"></i>
-                        </button>
+            {/* Material UI Full Screen Dialog for Mobile Filters */}
+            {isMobile && (
+                <Dialog
+                    fullScreen
+                    open={showMobileFilters}
+                    onClose={toggleMobileFilters}
+                    TransitionComponent={Transition}
+                >
+                    <AppBar sx={{ position: 'relative', bgcolor: 'white', color: 'black' }}>
+                        <Toolbar>
+                            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                                Filter By
+                            </Typography>
+                            <IconButton
+                                edge="end"
+                                color="inherit"
+                                onClick={toggleMobileFilters}
+                                aria-label="close"
+                            >
+                                <CloseIcon />
+                            </IconButton>
+                        </Toolbar>
+                    </AppBar>
+                    <div className="dialog-filter-container">
+                        <FilterArea 
+                            filterOptions={filterOptions} 
+                            activeFilters={activeFilters}
+                            onFilterChange={onFilterChange}
+                        />
                     </div>
-                )}
-                
-                {isMobile && (
-                    <FilterArea 
-                        filterOptions={filterOptions} 
-                        activeFilters={activeFilters}
-                        onFilterChange={onFilterChange}
-                    />
-                )}
-            </div>
+                    <DialogActions sx={{ 
+                        position: 'sticky', 
+                        bottom: 0, 
+                        bgcolor: 'white', 
+                        borderTop: '1px solid #eee',
+                        padding: '15px',
+                        display: 'flex',
+                        justifyContent: 'center'
+                    }}>
+                        <DefaultButton 
+                            text={`See ${data.length} Product(s)`}
+                            onClick={toggleMobileFilters}
+                        />
+                    </DialogActions>
+                </Dialog>
+            )}
             
             <div className="collection-container">
                 {/* Desktop Filters Column - hidden on mobile via CSS */}
