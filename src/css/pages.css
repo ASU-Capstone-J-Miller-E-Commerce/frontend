@@ -497,7 +497,7 @@
 }
 
 .collection-wrapper {
-    padding: 32px 15px;
+    padding: 32px 10px;
     margin: 0 auto;
     max-width: 83rem;
 }
@@ -527,18 +527,31 @@
     }
 }
 
-/* Updated card sizing with max-width constraints */
+/* Updated card sizing with proper space filling and responsive behavior */
 .collection-listing ul li {
-    width: calc(50% - 8px * 3 / 4); /* Half width on mobile */
-    flex-grow: 0; /* Changed from 1 to 0 to prevent stretching */
+    width: calc((100% - 4px) / 2); /* Half width minus one gap, divided by 2 items */
+    flex-grow: 0; 
     flex-shrink: 0;
-    max-width: calc(50% - 8px * 3 / 4); /* Max width for mobile */
+    max-width: calc((100% - 4px) / 2); /* Max width for mobile */
+    min-width: calc((100% - 4px) / 2); /* Ensure exact 2 items per row */
+    box-sizing: border-box; /* Include padding in width calculation */
 }
 
+/* No intermediate breakpoints - go straight from 2 per row to 4 per row */
 @media (min-width: 990px) {
     .collection-listing ul li {
-        width: calc(25% - 8px * 3 / 4); /* Quarter width on desktop */
-        max-width: calc(25% - 8px * 3 / 4); /* Max width for desktop */
+        width: calc((100% - 8px * 3) / 4); /* Full width minus three gaps, divided by 4 items */
+        max-width: calc((100% - 8px * 3) / 4); /* Max width for desktop */
+        min-width: calc((100% - 8px * 3) / 4); /* Force exactly 4 items per row */
+    }
+}
+
+/* Force 2 items per row for all sizes between mobile and desktop */
+@media (min-width: 500px) and (max-width: 989px) {
+    .collection-listing ul li {
+        width: calc((100% - 8px) / 2); /* Half width minus gap for larger gap on medium screens */
+        max-width: calc((100% - 8px) / 2);
+        min-width: calc((100% - 8px) / 2);
     }
 }
 
