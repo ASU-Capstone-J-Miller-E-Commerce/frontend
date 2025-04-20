@@ -417,6 +417,17 @@
     color: var(--miller-white);
   }
 
+  @media (max-width: 770px) {
+      .collection-banner {
+          height: 85px;
+          padding-left: 20px;
+      }
+
+      .collection-banner h1 {
+          font-size: 2.5rem;
+      }
+  }
+
 .collection-page {
     /* margin: 0px 20px; */
 }
