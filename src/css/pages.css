@@ -768,10 +768,20 @@
 
 /* Style for dropdown options */
 .items-per-page select option,
-.sorting-options select option {
+.sorting-options select option,
+.mobile-sorting-options select option {
     font-size: 15px; /* Smaller text */
     padding: 4px 8px; /* Consistent padding */
     text-align: left; /* Left align text */
+}
+
+.mobile-sorting-options select option {
+    font-size: 15px;
+        /* Smaller text */
+        padding: 4px 8px;
+        /* Consistent padding */
+        text-align: left;
+        /* Left align text */
 }
 
 /* Remove any potential extra styles that might be causing misalignment */
