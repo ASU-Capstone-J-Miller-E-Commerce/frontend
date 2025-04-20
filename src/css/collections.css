@@ -216,9 +216,13 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding-bottom: 15px;
+        padding: 15px 20px;
+        position: sticky;
+        top: 0;
+        background-color: white;
+        z-index: 1000;
         border-bottom: 1px solid #eee;
-        margin-bottom: 15px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
     
     .mobile-filter-header h3 {
@@ -273,6 +277,8 @@
     padding: 20px;
     overflow-y: auto;
     max-height: calc(100vh - 64px); /* Subtract the AppBar height */
+    font-family: 'VTGoblinHand', system-ui, Helvetica, Arial, sans-serif;
+    height: calc(100vh - 130px); /* Account for header and footer */
 }
 
 /* Ensure filter dropdowns are visible in dialog */
@@ -331,8 +337,55 @@
     font-size: 16px;
     font-weight: 500;
     color: #333;
+    font-family: 'bouwsma-uncial', system-ui, Helvetica, Arial, sans-serif;
 }
 
-.dialog-filter-container .filter-dropdown-header i {
-    color: #666;
+/* Admin-style mobile filter header */
+.mobile-filter-header .dialog-header1 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 500;
+    color: #333;
+    font-family: 'bouwsma-uncial', system-ui, Helvetica, Arial, sans-serif;
+}
+
+/* Close button styling to match admin action buttons */
+.mobile-filter-header .admin-action-button {
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #555;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.mobile-filter-header .admin-action-button:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+/* Dialog actions at bottom */
+.MuiDialogActions-root {
+    position: sticky !important;
+    bottom: 0 !important;
+    background-color: white !important;
+    border-top: 1px solid #eee !important;
+    padding: 15px !important;
+    box-shadow: 0 -2px 4px rgba(0,0,0,0.05) !important;
+    font-family: 'VTGoblinHand', system-ui, Helvetica, Arial, sans-serif !important;
+}
+
+/* Override Material UI typography in dialog */
+.MuiDialog-paper .MuiTypography-root {
+    font-family: 'bouwsma-uncial', system-ui, Helvetica, Arial, sans-serif !important;
+}
+
+/* Ensure filter dropdown headers use the correct font */
+.dialog-filter-container .filter-dropdown-header h4 {
+    font-family: 'bouwsma-uncial', system-ui, Helvetica, Arial, sans-serif;
+    color: #333;
 }

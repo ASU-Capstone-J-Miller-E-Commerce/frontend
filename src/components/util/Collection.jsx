@@ -522,21 +522,27 @@ export default function Collection({
                     onClose={toggleMobileFilters}
                     TransitionComponent={Transition}
                 >
-                    <AppBar sx={{ position: 'relative', bgcolor: 'white', color: 'black' }}>
-                        <Toolbar>
-                            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-                                Filter By
-                            </Typography>
-                            <IconButton
-                                edge="end"
-                                color="inherit"
-                                onClick={toggleMobileFilters}
-                                aria-label="close"
-                            >
-                                <CloseIcon />
-                            </IconButton>
-                        </Toolbar>
-                    </AppBar>
+                    <div className="mobile-filter-header" style={{ 
+                        borderBottom: '1px solid #eee',
+                        padding: '15px 20px',
+                        position: 'sticky',
+                        top: 0,
+                        backgroundColor: 'white',
+                        zIndex: 1000
+                    }}>
+                        <h1 className="dialog-header1">Filter By</h1>
+                        <button
+                            type="button"
+                            className="fa-solid fa-xmark admin-action-button"
+                            onClick={toggleMobileFilters}
+                            style={{ 
+                                fontSize: '1.5rem',
+                                background: 'none',
+                                border: 'none',
+                                cursor: 'pointer' 
+                            }}
+                        />
+                    </div>
                     <div className="dialog-filter-container">
                         <FilterArea 
                             filterOptions={filterOptions} 
