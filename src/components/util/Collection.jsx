@@ -344,7 +344,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 
 // Add this component before the main Collection component
 
-const ActiveFilters = ({ filters, options, onFilterRemove, onClearAll }) => {
+const ActiveFilters = ({ filters, options, onFilterRemove, onClearAll, isMobile }) => {
     // Count active filters (excluding price range filters that are at their default values)
     const filterCount = Object.keys(filters).length;
     
@@ -355,12 +355,12 @@ const ActiveFilters = ({ filters, options, onFilterRemove, onClearAll }) => {
         // Skip undefined values
         if (value === undefined) return null;
         
-        // Handle price filters differently
+        // Handle price filters differently - keep short for both desktop and mobile
         if (key.endsWith('_min')) {
-            return `Price: Min $${value}`;
+            return isMobile ? `$${value}+` : `Price: Min $${value}`;
         }
         if (key.endsWith('_max')) {
-            return `Price: Max $${value}`;
+            return isMobile ? `$${value}` : `Price: Max $${value}`;
         }
         
         // Find which filter group this option belongs to and the option itself
@@ -368,7 +368,12 @@ const ActiveFilters = ({ filters, options, onFilterRemove, onClearAll }) => {
             if (group.type === 'checkbox') {
                 const option = group.options.find(opt => opt.value === key);
                 if (option) {
-                    // Return with category: label format
+                    // For mobile, return just the label without the category
+                    if (isMobile) {
+                        return option.label;
+                    }
+                    
+                    // For desktop, return with category: label format
                     const categoryName = group.title.replace(/:$/, ''); // Remove any trailing colon
                     return `${categoryName}: ${option.label}`;
                 }
@@ -656,6 +661,7 @@ export default function Collection({
                         options={filterOptions}
                         onFilterRemove={handleFilterRemove}
                         onClearAll={handleClearAllFilters}
+                        isMobile={isMobile}
                     />
 
                     {/* Product listing - same for both mobile and desktop */}

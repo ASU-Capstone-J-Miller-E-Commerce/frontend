@@ -775,15 +775,6 @@
     text-align: left; /* Left align text */
 }
 
-.mobile-sorting-options select option {
-    font-size: 15px;
-        /* Smaller text */
-        padding: 4px 8px;
-        /* Consistent padding */
-        text-align: left;
-        /* Left align text */
-}
-
 /* Remove any potential extra styles that might be causing misalignment */
 .items-per-page,
 .sorting-options {
