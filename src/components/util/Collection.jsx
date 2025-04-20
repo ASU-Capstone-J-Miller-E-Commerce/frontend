@@ -536,10 +536,11 @@ export default function Collection({
                             className="fa-solid fa-xmark admin-action-button"
                             onClick={toggleMobileFilters}
                             style={{ 
-                                fontSize: '1.5rem',
+                                fontSize: '1.8rem',
                                 background: 'none',
                                 border: 'none',
-                                cursor: 'pointer' 
+                                cursor: 'pointer',
+                                padding: "0 10px"
                             }}
                         />
                     </div>

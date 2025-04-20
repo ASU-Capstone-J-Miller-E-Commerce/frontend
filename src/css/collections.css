@@ -256,7 +256,7 @@
         margin-top: 14px;
         gap: 10px; /* Standardized from 10px to match other spacing */
     }
-    
+
     .filter-button {
         width: 100%;
         margin-bottom: 0; /* Remove this since we're using gap */
