@@ -4,6 +4,8 @@ import logo from "../images/white_logo.jpg";
 import { createFocusTrap } from "focus-trap";
 import { DrawerLoginButton, LoginButton } from "./util/Buttons";
 import { NavLink, useLocation } from "react-router-dom";
+import { Dialog, IconButton, InputBase, Box } from "@mui/material";
+import { Search, Close } from "@mui/icons-material";
 
 const options = {
     "Materials": [
@@ -32,6 +34,7 @@ export default function Header() {
     const [hasScrolled, setHasScrolled] = useState(false);
     const [focusTrap, setFocusTrap] = useState(null);
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+    const [searchOpen, setSearchOpen] = useState(false);
     const headerRef = useRef(null);
     const location = useLocation();
     
@@ -134,6 +137,14 @@ export default function Header() {
         setOpenDropdown(null);
     };
 
+    const handleSearchOpen = () => {
+        setSearchOpen(true);
+    };
+
+    const handleSearchClose = () => {
+        setSearchOpen(false);
+    };
+
     return (
         <header className="main-header sticky" ref={headerRef}>
             {openDrawer && <div className="overlay header-overlay" />}
@@ -193,10 +204,20 @@ export default function Header() {
 
             {/* Icons */}
             <div className="header-icons">
-                <button className="fa-solid fa-magnifying-glass header-icon" />
+                <button 
+                    className="fa-solid fa-magnifying-glass header-icon" 
+                    onClick={handleSearchOpen}
+                    aria-label="Search"
+                />
                 <LoginButton onClick={handleLinkClick} />
                 <button className="fa-solid fa-cart-shopping header-icon" />
             </div>
+
+            <SearchDialog 
+                open={searchOpen} 
+                onClose={handleSearchClose} 
+                hasScrolled={hasScrolled} 
+            />
         </header>
     );
 }
@@ -322,5 +343,93 @@ function DrawerNavItem({ openDropdown, text, isDropdown, isOpen, onToggle, optio
                 </nav>
             </div>
         </div>
+    );
+}
+
+function SearchDialog({ open, onClose, hasScrolled }) {
+    const searchInputRef = useRef(null);
+    
+    useEffect(() => {
+        if (open && searchInputRef.current) {
+            setTimeout(() => {
+                searchInputRef.current.focus();
+            }, 100);
+        }
+    }, [open]);
+    
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        onClose();
+    };
+    
+    return (
+        <Dialog
+            fullWidth
+            open={open}
+            onClose={onClose}
+            PaperProps={{
+                sx: {
+                    position: 'absolute',
+                    top: 0,
+                    margin: 0,
+                    width: '100%',
+                    maxWidth: '100%',
+                    borderRadius: 0,
+                    bgcolor: 'black',
+                    color: 'white',
+                    boxShadow: 'none',
+                    height: hasScrolled ? '70px' : '100px',
+                    transition: 'height 0.3s ease'
+                }
+            }}
+            // Remove the transparent backdrop styling to enable the default gray backdrop
+            BackdropProps={{
+                sx: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Standard Material UI backdrop color
+                }
+            }}
+        >
+            <Box
+                component="form"
+                onSubmit={handleSearchSubmit}
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    height: '100%',
+                    padding: '0 20px'
+                }}
+            >
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        backgroundColor: 'white',
+                        borderRadius: '4px',
+                        padding: '5px 10px',
+                        width: '100%'
+                    }}
+                >
+                    <Search sx={{ color: 'black', marginRight: 1 }} />
+                    <InputBase
+                        placeholder="Search..."
+                        inputRef={searchInputRef}
+                        fullWidth
+                        sx={{
+                            color: 'black',
+                            '& .MuiInputBase-input': {
+                                fontSize: '1.2rem',
+                            }
+                        }}
+                    />
+                    <IconButton 
+                        onClick={onClose} 
+                        sx={{ color: 'black' }}
+                        aria-label="Close search"
+                    >
+                        <Close />
+                    </IconButton>
+                </Box>
+            </Box>
+        </Dialog>
     );
 }
