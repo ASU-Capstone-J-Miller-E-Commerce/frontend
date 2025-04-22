@@ -6,6 +6,7 @@ import { DrawerLoginButton, LoginButton } from "./util/Buttons";
 import { NavLink, useLocation } from "react-router-dom";
 import { Dialog, IconButton, InputBase, Box } from "@mui/material";
 import { Search, Close } from "@mui/icons-material";
+import { searchSite } from "../util/requests";
 
 const options = {
     "Materials": [
@@ -348,6 +349,7 @@ function DrawerNavItem({ openDropdown, text, isDropdown, isOpen, onToggle, optio
 
 function SearchDialog({ open, onClose, hasScrolled }) {
     const searchInputRef = useRef(null);
+    const [searchResults, setSearchResults] = useState([]);
     
     useEffect(() => {
         if (open && searchInputRef.current) {
@@ -361,6 +363,15 @@ function SearchDialog({ open, onClose, hasScrolled }) {
         e.preventDefault();
         onClose();
     };
+
+    const handleSearchInput = (e) => {
+        const query = e.target.value;
+
+        searchSite(query)
+            .then((response) => {
+                console.log(response.data);
+            })
+    }
     
     return (
         <Dialog
@@ -414,6 +425,7 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                         placeholder="Search..."
                         inputRef={searchInputRef}
                         fullWidth
+                        onChange={handleSearchInput}
                         sx={{
                             color: 'black',
                             '& .MuiInputBase-input': {
