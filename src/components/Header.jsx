@@ -4,9 +4,10 @@ import logo from "../images/white_logo.jpg";
 import { createFocusTrap } from "focus-trap";
 import { DrawerLoginButton, LoginButton } from "./util/Buttons";
 import { NavLink, useLocation } from "react-router-dom";
-import { Dialog, IconButton, InputBase, Box } from "@mui/material";
+import { Dialog, IconButton, InputBase, Box, Typography } from "@mui/material";
 import { Search, Close } from "@mui/icons-material";
 import { searchSite } from "../util/requests";
+import { Card } from "./util/Card"; // Import the Card component
 
 const options = {
     "Materials": [
@@ -385,6 +386,26 @@ function SearchDialog({ open, onClose, hasScrolled }) {
             });
     }
     
+    // Helper function to get appropriate display name and link
+    const getItemDetails = (item) => {
+        let name = '';
+        let link = '';
+        
+        if (item.name) {
+            name = item.name;
+            if (item.cueNumber) link = `/cues/${item._id}`;
+            else if (item.accessoryNumber) link = `/accessories/${item._id}`;
+        } else if (item.commonName) {
+            name = item.commonName;
+            link = `/materials/${item._id}`;
+        } else if (item.crystalName) {
+            name = item.crystalName;
+            link = `/materials/${item._id}`;
+        }
+        
+        return { name, link };
+    };
+    
     return (
         <Dialog
             fullWidth
@@ -401,14 +422,20 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                     bgcolor: 'black',
                     color: 'white',
                     boxShadow: 'none',
-                    height: hasScrolled ? '70px' : '100px',
-                    transition: 'height 0.3s ease'
+                    // Height handling for search results
+                    height: searchResults.length > 0 || nothingFound ? 'auto' : (hasScrolled ? '70px' : '100px'),
+                    minHeight: hasScrolled ? '70px' : '100px',
+                    // Use 95vh to take up almost the entire viewport while leaving a small margin
+                    maxHeight: searchResults.length > 0 || nothingFound ? '100vh' : 'auto',
+                    // Always maintain scroll capability
+                    overflowY: searchResults.length > 0 || nothingFound ? 'auto' : 'hidden',
+                    // Smooth transition for size changes
+                    transition: 'all 0.3s ease'
                 }
             }}
-            // Remove the transparent backdrop styling to enable the default gray backdrop
             BackdropProps={{
                 sx: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Standard Material UI backdrop color
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
                 }
             }}
         >
@@ -417,8 +444,8 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                 onSubmit={handleSearchSubmit}
                 sx={{
                     display: 'flex',
-                    alignItems: 'center',
-                    height: '100%',
+                    flexDirection: 'column',
+                    height: 'auto',
                     padding: '0 20px'
                 }}
             >
@@ -429,7 +456,8 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                         backgroundColor: 'white',
                         borderRadius: '4px',
                         padding: '5px 10px',
-                        width: '100%'
+                        width: '100%',
+                        margin: '15px 0'
                     }}
                 >
                     <Search sx={{ color: 'black', marginRight: 1 }} />
@@ -453,6 +481,79 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                         <Close />
                     </IconButton>
                 </Box>
+                
+                {/* Search Results Grid */}
+                {searchResults.length > 0 && (
+                    <Box
+                        sx={{
+                            padding: '0 0 20px 0',
+                            width: '100%',
+                            backgroundColor: 'white',
+                            borderRadius: '4px',
+                            color: 'black'
+                        }}
+                    >
+                        <Box
+                            className="search-results-grid"
+                            sx={{
+                                display: 'grid',
+                                gridTemplateColumns: {
+                                    xs: 'repeat(2, 1fr)',  // 2 per row on mobile
+                                    sm: 'repeat(3, 1fr)',  // 3 per row on tablets
+                                    md: 'repeat(4, 1fr)'   // 4 per row on desktop
+                                },
+                                gap: '15px',
+                                padding: '15px'
+                            }}
+                        >
+                            {searchResults.map((item, index) => {
+                                const { name, link } = getItemDetails(item);
+                                return (
+                                    <Card 
+                                        key={index}
+                                        title={name}
+                                        image={item.imageUrls && item.imageUrls.length > 0 ? item.imageUrls[0] : '/placeholder.png'}
+                                        tag={item.cueNumber || item.accessoryNumber || ''}
+                                        price={item.price}
+                                        linkTo={link}
+                                    />
+                                );
+                            })}
+                        </Box>
+                        
+                        {hasMoreResults && (
+                            <Box sx={{ textAlign: 'center', padding: '10px', borderTop: '1px solid #eee' }}>
+                                <Typography 
+                                    component={NavLink} 
+                                    to="/search" 
+                                    onClick={onClose}
+                                    sx={{ 
+                                        color: 'inherit', 
+                                        textDecoration: 'underline',
+                                        '&:hover': { color: '#666' }
+                                    }}
+                                >
+                                    View all results
+                                </Typography>
+                            </Box>
+                        )}
+                    </Box>
+                )}
+                
+                {nothingFound && (
+                    <Box
+                        sx={{
+                            padding: '20px',
+                            width: '100%',
+                            backgroundColor: 'white',
+                            borderRadius: '4px',
+                            color: 'black',
+                            textAlign: 'center'
+                        }}
+                    >
+                        <Typography>No results found</Typography>
+                    </Box>
+                )}
             </Box>
         </Dialog>
     );
