@@ -348,8 +348,10 @@ function DrawerNavItem({ openDropdown, text, isDropdown, isOpen, onToggle, optio
 }
 
 function SearchDialog({ open, onClose, hasScrolled }) {
-    const searchInputRef = useRef(null);
     const [searchResults, setSearchResults] = useState([]);
+    const [hasMoreResults, setHasMoreResults] = useState(false);
+    const [nothingFound, setNothingFound] = useState(false);
+    const searchInputRef = useRef(null);
     
     useEffect(() => {
         if (open && searchInputRef.current) {
@@ -367,10 +369,20 @@ function SearchDialog({ open, onClose, hasScrolled }) {
     const handleSearchInput = (e) => {
         const query = e.target.value;
 
+        if (query.length === 0) {
+            setSearchResults([]);
+            setHasMoreResults(false);
+            setNothingFound(false);
+            return;
+        }
+
         searchSite(query)
             .then((response) => {
-                console.log(response.data);
-            })
+                const { items, hasMoreResults } = response.data;
+                setSearchResults(items);
+                setHasMoreResults(hasMoreResults);
+                setNothingFound(items.length === 0);
+            });
     }
     
     return (
