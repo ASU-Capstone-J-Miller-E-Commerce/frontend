@@ -354,6 +354,18 @@ function SearchDialog({ open, onClose, hasScrolled }) {
     const [nothingFound, setNothingFound] = useState(false);
     const searchInputRef = useRef(null);
     
+    // Reset state when dialog closes
+    useEffect(() => {
+        if (!open) {
+            setSearchResults([]);
+            setHasMoreResults(false);
+            setNothingFound(false);
+            if (searchInputRef.current) {
+                searchInputRef.current.value = '';
+            }
+        }
+    }, [open]);
+    
     useEffect(() => {
         if (open && searchInputRef.current) {
             setTimeout(() => {
