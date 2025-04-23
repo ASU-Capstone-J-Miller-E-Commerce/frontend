@@ -435,7 +435,7 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                     position: 'absolute',
                     top: 0,
                     margin: 0,
-                    width: '100%',
+                    width: '100%', 
                     maxWidth: '100%',
                     borderRadius: 0,
                     bgcolor: 'black',
@@ -448,6 +448,7 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                     maxHeight: searchResults.length > 0 || nothingFound ? '100vh' : 'auto',
                     // Always maintain scroll capability
                     overflowY: searchResults.length > 0 || nothingFound ? 'auto' : 'hidden',
+                    overflowX: 'hidden', // Prevent horizontal scrolling
                     // Smooth transition for size changes
                     transition: 'all 0.3s ease'
                 }
@@ -465,7 +466,13 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                     display: 'flex',
                     flexDirection: 'column',
                     height: 'auto',
-                    padding: '0 20px'
+                    padding: {
+                        xs: '0 10px', // Smaller padding on mobile
+                        sm: '0 150px', // Medium padding on tablets
+                        md: '0 300px'  // Larger padding on desktop
+                    },
+                    width: '100%',
+                    boxSizing: 'border-box', // Ensure padding is included in width calculation
                 }}
             >
                 <Box
@@ -474,9 +481,10 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                         alignItems: 'center',
                         backgroundColor: 'white',
                         borderRadius: '4px',
-                        padding: '5px 10px',
+                        padding: '5px 15px', // Increased horizontal padding from 10px to 15px
                         width: '100%',
-                        margin: '15px 0'
+                        margin: '15px 0',
+                        boxSizing: 'border-box' // Ensure padding is included in width calculation
                     }}
                 >
                     <Search sx={{ color: 'black', marginRight: 1 }} />
@@ -509,7 +517,9 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                             width: '100%',
                             backgroundColor: 'white',
                             borderRadius: '4px',
-                            color: 'black'
+                            color: 'black',
+                            boxSizing: 'border-box', // Ensure padding is included in width calculation
+                            overflow: 'hidden' // Prevent content from spilling out
                         }}
                     >
                         <Box
@@ -522,7 +532,8 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                                     md: 'repeat(4, 1fr)'   // 4 per row on desktop
                                 },
                                 gap: '15px',
-                                padding: '15px'
+                                padding: '20px 15px', // Increased padding from 15px to 20px top/bottom and 25px left/right
+                                boxSizing: 'border-box' // Ensure padding is included in width calculation
                             }}
                         >
                             {searchResults.map((item, index) => {
