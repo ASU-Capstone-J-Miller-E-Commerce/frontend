@@ -468,25 +468,30 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                 {/* Black search bar section */}
                 <Box
                     sx={{
-                        backgroundColor: 'black', // Changed to black background
-                        padding: {
-                            xs: '10px 10px', // Smaller padding on mobile
-                            sm: '15px 175px', // Medium padding on tablets
-                            md: '15px 350px'  // Larger padding on desktop
-                        },
+                        backgroundColor: 'black',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: hasScrolled ? '70px' : '100px',
                         width: '100%',
                         boxSizing: 'border-box',
+                        transition: 'height 0.3s ease',
                     }}
                 >
                     <Box
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
-                            backgroundColor: 'white', // Keep input background white
+                            backgroundColor: 'white',
                             borderRadius: '4px',
                             padding: '5px 15px',
-                            width: '100%',
-                            boxSizing: 'border-box'
+                            width: {
+                                xs: '90%',
+                                sm: '70%',
+                                md: '50%',
+                                lg: '40%'
+                            },
+                            maxWidth: '600px',
                         }}
                     >
                         <Search sx={{ color: 'black', marginRight: 1 }} />
