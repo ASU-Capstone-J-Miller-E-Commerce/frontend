@@ -516,7 +516,6 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                 {searchResults.length > 0 && (
                     <Box
                         sx={{
-                            padding: '0 0 20px 0',
                             width: '100%',
                             backgroundColor: 'white',
                             borderRadius: '4px',
