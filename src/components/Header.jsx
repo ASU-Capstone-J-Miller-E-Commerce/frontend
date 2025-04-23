@@ -499,6 +499,7 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                                 color: 'black',
                                 '& .MuiInputBase-input': {
                                     fontSize: '1.2rem',
+                                    fontFamily: "'VTGoblinHand', system-ui, Helvetica, Arial, sans-serif"
                                 }
                             }}
                         />
@@ -520,13 +521,14 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                             backgroundColor: 'white',
                             borderRadius: '4px',
                             padding: {
-                                xs: '10px 10px', // Smaller padding on mobile
-                                sm: '15px 175px', // Medium padding on tablets
-                                md: '15px 350px'  // Larger padding on desktop
+                                xs: '10px 10px',
+                                sm: '15px 175px',
+                                md: '15px 350px'
                             },
                             color: 'black',
-                            boxSizing: 'border-box', // Ensure padding is included in width calculation
-                            overflow: 'hidden' // Prevent content from spilling out
+                            boxSizing: 'border-box',
+                            overflow: 'hidden',
+                            fontFamily: "'VTGoblinHand', system-ui, Helvetica, Arial, sans-serif"
                         }}
                     >
                         <Box
@@ -565,7 +567,8 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                                 sx={{ 
                                     color: 'inherit', 
                                     textDecoration: 'underline',
-                                    '&:hover': { color: '#666' }
+                                    '&:hover': { color: '#666' },
+                                    fontFamily: "'VTGoblinHand', system-ui, Helvetica, Arial, sans-serif"
                                 }}
                             >
                                 View all results
@@ -582,10 +585,13 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                             backgroundColor: 'white',
                             borderRadius: '4px',
                             color: 'black',
-                            textAlign: 'center'
+                            textAlign: 'center',
+                            fontFamily: "'VTGoblinHand', system-ui, Helvetica, Arial, sans-serif"
                         }}
                     >
-                        <Typography>No results found</Typography>
+                        <Typography sx={{ fontFamily: "'VTGoblinHand', system-ui, Helvetica, Arial, sans-serif" }}>
+                            No results found
+                        </Typography>
                     </Box>
                 )}
             </Box>
