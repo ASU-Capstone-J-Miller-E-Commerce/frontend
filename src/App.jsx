@@ -26,6 +26,7 @@ import "./css/fontawesome/solid.css";
 import "react-toastify/dist/ReactToastify.css";
 import OrdersPage from "./components/pages/user/OrdersPage.jsx";
 import AdminPage from "./components/pages/user/AdminPage.jsx";
+import SearchPage from "./components/pages/SearchPage.jsx";
 
 const GuestRoute = () => {
     const isAuthenticated = useSelector(state => !!state.user?.authenticated);
@@ -110,6 +111,8 @@ function App() {
                     <Route path="/products/:guid" element={<ProductPage />} />
 
                     <Route path="/build-a-cue" element={<BuildACuePage />} />
+
+                    <Route path="/search" element={<SearchPage />} />
 
                     {/* 
                         User Pages

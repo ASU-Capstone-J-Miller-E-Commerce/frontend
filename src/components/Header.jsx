@@ -3,7 +3,7 @@ import { useOutsideClick } from "../util/hooks";
 import logo from "../images/white_logo.jpg";
 import { createFocusTrap } from "focus-trap";
 import { DrawerLoginButton, LoginButton } from "./util/Buttons";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Dialog, IconButton, InputBase, Box, Typography } from "@mui/material";
 import { Search, Close } from "@mui/icons-material";
 import { searchSite } from "../util/requests";
@@ -352,7 +352,9 @@ function SearchDialog({ open, onClose, hasScrolled }) {
     const [searchResults, setSearchResults] = useState([]);
     const [hasMoreResults, setHasMoreResults] = useState(false);
     const [nothingFound, setNothingFound] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
     const searchInputRef = useRef(null);
+    const navigate = useNavigate();
     
     // Reset state when dialog closes
     useEffect(() => {
@@ -360,6 +362,7 @@ function SearchDialog({ open, onClose, hasScrolled }) {
             setSearchResults([]);
             setHasMoreResults(false);
             setNothingFound(false);
+            setSearchQuery('');
             if (searchInputRef.current) {
                 searchInputRef.current.value = '';
             }
@@ -376,11 +379,15 @@ function SearchDialog({ open, onClose, hasScrolled }) {
     
     const handleSearchSubmit = (e) => {
         e.preventDefault();
-        onClose();
+        if (searchQuery.trim()) {
+            navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+            onClose();
+        }
     };
 
     const handleSearchInput = (e) => {
         const query = e.target.value;
+        setSearchQuery(query);
 
         if (query.length === 0) {
             setSearchResults([]);
@@ -537,7 +544,7 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                             <Box sx={{ textAlign: 'center', padding: '10px', borderTop: '1px solid #eee' }}>
                                 <Typography 
                                     component={NavLink} 
-                                    to="/search" 
+                                    to={`/search?query=${encodeURIComponent(searchQuery)}`}
                                     onClick={onClose}
                                     sx={{ 
                                         color: 'inherit', 
