@@ -350,7 +350,6 @@ function DrawerNavItem({ openDropdown, text, isDropdown, isOpen, onToggle, optio
 
 function SearchDialog({ open, onClose, hasScrolled }) {
     const [searchResults, setSearchResults] = useState([]);
-    const [hasMoreResults, setHasMoreResults] = useState(false);
     const [nothingFound, setNothingFound] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const searchInputRef = useRef(null);
@@ -360,7 +359,6 @@ function SearchDialog({ open, onClose, hasScrolled }) {
     useEffect(() => {
         if (!open) {
             setSearchResults([]);
-            setHasMoreResults(false);
             setNothingFound(false);
             setSearchQuery('');
             if (searchInputRef.current) {
@@ -391,17 +389,14 @@ function SearchDialog({ open, onClose, hasScrolled }) {
 
         if (query.length === 0) {
             setSearchResults([]);
-            setHasMoreResults(false);
             setNothingFound(false);
             return;
         }
 
         searchSite(query)
             .then((response) => {
-                const { items, hasMoreResults } = response.data;
-                setSearchResults(items);
-                setHasMoreResults(hasMoreResults);
-                setNothingFound(items.length === 0);
+                setSearchResults(response.data);
+                setNothingFound(response.data.length === 0);
             });
     }
     
@@ -438,11 +433,11 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                     width: '100%', 
                     maxWidth: '100%',
                     borderRadius: 0,
-                    bgcolor: 'black',
+                    bgcolor: searchResults.length > 0 || nothingFound ? 'white' : 'black', // Make entire dialog black when empty
                     color: 'white',
                     boxShadow: 'none',
                     // Height handling for search results
-                    height: searchResults.length > 0 || nothingFound ? 'auto' : (hasScrolled ? '70px' : '100px'),
+                    height: searchResults.length > 0 || nothingFound ? 'auto' : 'auto', // Let black background adjust to content
                     minHeight: hasScrolled ? '70px' : '100px',
                     // Use 95vh to take up almost the entire viewport while leaving a small margin
                     maxHeight: searchResults.length > 0 || nothingFound ? '100vh' : 'auto',
@@ -466,50 +461,58 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                     display: 'flex',
                     flexDirection: 'column',
                     height: 'auto',
-                    padding: {
-                        xs: '0 10px', // Smaller padding on mobile
-                        sm: '0 150px', // Medium padding on tablets
-                        md: '0 300px'  // Larger padding on desktop
-                    },
                     width: '100%',
                     boxSizing: 'border-box', // Ensure padding is included in width calculation
                 }}
             >
+                {/* Black search bar section */}
                 <Box
                     sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        backgroundColor: 'white',
-                        borderRadius: '4px',
-                        padding: '5px 15px', // Increased horizontal padding from 10px to 15px
+                        backgroundColor: 'black', // Changed to black background
+                        padding: {
+                            xs: '10px 10px', // Smaller padding on mobile
+                            sm: '15px 175px', // Medium padding on tablets
+                            md: '15px 350px'  // Larger padding on desktop
+                        },
                         width: '100%',
-                        margin: '15px 0',
-                        boxSizing: 'border-box' // Ensure padding is included in width calculation
+                        boxSizing: 'border-box',
                     }}
                 >
-                    <Search sx={{ color: 'black', marginRight: 1 }} />
-                    <InputBase
-                        placeholder="Search..."
-                        inputRef={searchInputRef}
-                        fullWidth
-                        onChange={handleSearchInput}
+                    <Box
                         sx={{
-                            color: 'black',
-                            '& .MuiInputBase-input': {
-                                fontSize: '1.2rem',
-                            }
+                            display: 'flex',
+                            alignItems: 'center',
+                            backgroundColor: 'white', // Keep input background white
+                            borderRadius: '4px',
+                            padding: '5px 15px',
+                            width: '100%',
+                            boxSizing: 'border-box'
                         }}
-                    />
-                    <IconButton 
-                        onClick={onClose} 
-                        sx={{ color: 'black' }}
-                        aria-label="Close search"
                     >
-                        <Close />
-                    </IconButton>
+                        <Search sx={{ color: 'black', marginRight: 1 }} />
+                        <InputBase
+                            placeholder="Search..."
+                            inputRef={searchInputRef}
+                            fullWidth
+                            onChange={handleSearchInput}
+                            sx={{
+                                color: 'black',
+                                '& .MuiInputBase-input': {
+                                    fontSize: '1.2rem',
+                                }
+                            }}
+                        />
+                        <IconButton 
+                            onClick={onClose} 
+                            sx={{ color: 'black' }}
+                            aria-label="Close search"
+                        >
+                            <Close />
+                        </IconButton>
+                    </Box>
                 </Box>
                 
-                {/* Search Results Grid */}
+                {/* White results section (no changes needed here) */}
                 {searchResults.length > 0 && (
                     <Box
                         sx={{
@@ -517,6 +520,11 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                             width: '100%',
                             backgroundColor: 'white',
                             borderRadius: '4px',
+                            padding: {
+                                xs: '10px 10px', // Smaller padding on mobile
+                                sm: '15px 175px', // Medium padding on tablets
+                                md: '15px 350px'  // Larger padding on desktop
+                            },
                             color: 'black',
                             boxSizing: 'border-box', // Ensure padding is included in width calculation
                             overflow: 'hidden' // Prevent content from spilling out
@@ -532,7 +540,6 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                                     md: 'repeat(4, 1fr)'   // 4 per row on desktop
                                 },
                                 gap: '15px',
-                                padding: '20px 15px', // Increased padding from 15px to 20px top/bottom and 25px left/right
                                 boxSizing: 'border-box' // Ensure padding is included in width calculation
                             }}
                         >
@@ -551,22 +558,20 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                             })}
                         </Box>
                         
-                        {hasMoreResults && (
-                            <Box sx={{ textAlign: 'center', padding: '10px', borderTop: '1px solid #eee' }}>
-                                <Typography 
-                                    component={NavLink} 
-                                    to={`/search?query=${encodeURIComponent(searchQuery)}`}
-                                    onClick={onClose}
-                                    sx={{ 
-                                        color: 'inherit', 
-                                        textDecoration: 'underline',
-                                        '&:hover': { color: '#666' }
-                                    }}
-                                >
-                                    View all results
-                                </Typography>
-                            </Box>
-                        )}
+                        <Box sx={{ textAlign: 'center', padding: '10px'}}>
+                            <Typography 
+                                component={NavLink} 
+                                to={`/search?query=${encodeURIComponent(searchQuery)}`}
+                                onClick={onClose}
+                                sx={{ 
+                                    color: 'inherit', 
+                                    textDecoration: 'underline',
+                                    '&:hover': { color: '#666' }
+                                }}
+                            >
+                                View all results
+                            </Typography>
+                        </Box>
                     </Box>
                 )}
                 
