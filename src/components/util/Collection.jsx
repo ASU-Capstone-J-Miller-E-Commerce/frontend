@@ -724,8 +724,9 @@ export default function Collection({
                             </ul>
                         ) : (
                             <div className="empty-collection-message">
-                                {isSearchCollection ? (
-                                    <p>No products found for "{searchQuery}". Try a different search term.</p>
+                                        {isSearchCollection ? (<div>
+                                            <p>No products found for "{searchQuery}". Try a different search term. For additional information or requests visit the <NavLink to="/pages/contact" className="inline-link">contact us page</NavLink>.</p>
+                                            </div>
                                 ) : Object.keys(activeFilters).length === 0 && !searchQuery ? (
                                     <div>
                                         <p>
