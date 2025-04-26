@@ -518,66 +518,101 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                     </Box>
                 </Box>
                 
-                {/* White results section (no changes needed here) */}
+                {/* White results section with improved styling to match collections */}
                 {searchResults.length > 0 && (
                     <Box
                         sx={{
                             width: '100%',
                             backgroundColor: 'white',
-                            borderRadius: '4px',
-                            padding: {
-                                xs: '10px 10px',
-                                sm: '15px 175px',
-                                md: '15px 350px'
-                            },
+                            display: 'flex',
+                            justifyContent: 'center',
                             color: 'black',
-                            boxSizing: 'border-box',
                             overflow: 'hidden',
                             fontFamily: "'VTGoblinHand', system-ui, Helvetica, Arial, sans-serif"
                         }}
                     >
                         <Box
-                            className="search-results-grid"
                             sx={{
-                                display: 'grid',
-                                gridTemplateColumns: {
-                                    xs: 'repeat(2, 1fr)',  // 2 per row on mobile
-                                    sm: 'repeat(3, 1fr)',  // 3 per row on tablets
-                                    md: 'repeat(4, 1fr)'   // 4 per row on desktop
+                                width: {
+                                    xs: '90%',
+                                    sm: '70%',
+                                    md: '50%',
+                                    lg: '40%'
                                 },
-                                gap: '15px',
-                                boxSizing: 'border-box' // Ensure padding is included in width calculation
+                                maxWidth: '600px',
+                                padding: '15px 0',
+                                boxSizing: 'border-box'
                             }}
                         >
-                            {searchResults.map((item, index) => {
-                                const { name, link } = getItemDetails(item);
-                                return (
-                                    <Card 
-                                        key={index}
-                                        title={name}
-                                        image={item.imageUrls && item.imageUrls.length > 0 ? item.imageUrls[0] : '/placeholder.png'}
-                                        tag={item.cueNumber || item.accessoryNumber || ''}
-                                        price={item.price}
-                                        linkTo={link}
-                                    />
-                                );
-                            })}
-                        </Box>
-                        
-                        <Box sx={{ textAlign: 'center', padding: '10px'}}>
-                            <Typography 
-                                component={NavLink} 
-                                to={`/search?query=${encodeURIComponent(searchQuery)}`}
-                                onClick={onClose}
-                                sx={{ 
-                                    color: 'inherit', 
-                                    textDecoration: 'underline',
-                                    '&:hover': { color: '#666' },
-                                    fontFamily: "'VTGoblinHand', system-ui, Helvetica, Arial, sans-serif"
+                            <Box
+                                className="search-results-grid"
+                                sx={{
+                                    display: 'grid',
+                                    gridTemplateColumns: {
+                                        xs: 'repeat(2, minmax(0, 1fr))',
+                                        sm: 'repeat(3, minmax(0, 1fr))',
+                                        md: 'repeat(4, minmax(0, 1fr))'
+                                    },
+                                    gap: '15px',
+                                    width: '100%',
+                                    '& > div': {
+                                        // Force equal width and proper containment
+                                        minWidth: 0,
+                                        maxWidth: '100%',
+                                        overflow: 'hidden',
+                                        // Set fixed aspect ratio
+                                        aspectRatio: '1 / 1.2',
+                                        // Fix inner styling
+                                        '& .card-wrapper': {
+                                            width: '100%',
+                                            height: '100%',
+                                            boxSizing: 'border-box',
+                                        },
+                                        '& .card-image': {
+                                            width: '100%',
+                                            height: 'auto',
+                                            aspectRatio: '1 / 1',
+                                            overflow: 'hidden'
+                                        },
+                                        '& .card-image img': {
+                                            aspectRatio: '1 / 1',
+                                            objectFit: 'cover',
+                                            width: '100%',
+                                            height: '100%'
+                                        }
+                                    }
                                 }}
                             >
-                                View all results
-                            </Typography>
+                                {searchResults.map((item, index) => {
+                                    const { name, link } = getItemDetails(item);
+                                    return (
+                                        <Card 
+                                            key={index}
+                                            title={name}
+                                            image={item.imageUrls && item.imageUrls.length > 0 ? item.imageUrls[0] : '/placeholder.png'}
+                                            tag={item.cueNumber || item.accessoryNumber || ''}
+                                            price={item.price}
+                                            linkTo={link}
+                                        />
+                                    );
+                                })}
+                            </Box>
+                            
+                            <Box sx={{ textAlign: 'center', padding: '10px 0' }}>
+                                <Typography 
+                                    component={NavLink} 
+                                    to={`/search?query=${encodeURIComponent(searchQuery)}`}
+                                    onClick={onClose}
+                                    sx={{ 
+                                        color: 'inherit', 
+                                        textDecoration: 'underline',
+                                        '&:hover': { color: '#666' },
+                                        fontFamily: "'VTGoblinHand', system-ui, Helvetica, Arial, sans-serif"
+                                    }}
+                                >
+                                    View all results
+                                </Typography>
+                            </Box>
                         </Box>
                     </Box>
                 )}
