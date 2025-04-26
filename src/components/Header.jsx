@@ -491,7 +491,7 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                                 md: '50%',
                                 lg: '40%'
                             },
-                            maxWidth: '600px',
+                            maxWidth: '1000px',
                             boxSizing: 'border-box',
                         }}
                     >
@@ -541,9 +541,8 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                                     md: '50%',
                                     lg: '40%'
                                 },
-                                maxWidth: '600px',
-                                padding: '15px 0',
-                                boxSizing: 'border-box'
+                                maxWidth: '1000px',
+                                padding: '20px 0',
                             }}
                         >
                             <Box
@@ -622,18 +621,31 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                 {nothingFound && (
                     <Box
                         sx={{
-                            padding: '20px',
                             width: '100%',
                             backgroundColor: 'white',
-                            borderRadius: '4px',
+                            display: 'flex',
+                            justifyContent: 'center',
                             color: 'black',
                             textAlign: 'center',
                             fontFamily: "'VTGoblinHand', system-ui, Helvetica, Arial, sans-serif"
                         }}
                     >
-                        <Typography sx={{ fontFamily: "'VTGoblinHand', system-ui, Helvetica, Arial, sans-serif" }}>
-                            No results found
-                        </Typography>
+                        <Box
+                            sx={{
+                                width: {
+                                    xs: '90%',
+                                    sm: '70%',
+                                    md: '50%',
+                                    lg: '40%'
+                                },
+                                maxWidth: '800px',
+                                padding: '20px 0',
+                            }}
+                        >
+                            <Typography sx={{ fontFamily: "'VTGoblinHand', system-ui, Helvetica, Arial, sans-serif" }}>
+                                No results found
+                            </Typography>
+                        </Box>
                     </Box>
                 )}
             </Box>
