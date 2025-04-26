@@ -450,12 +450,13 @@ export default function Collection({
     itemsPerPage = 12,
     currentPage = 1,
     collection = '',
-    loading = false, // New prop for loading state
+    loading = false,
     onFilterChange,
     onSortChange,
     onSearchChange,
     onItemsPerPageChange,
-    onPageChange
+    onPageChange,
+    isSearchCollection = false
 }) {
     const [showMobileFilters, setShowMobileFilters] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 770);
@@ -472,6 +473,18 @@ export default function Collection({
 
     const handleSearchInputChange = (e) => {
         onSearchChange(e.target.value);
+    };
+
+    // For search collection, we'll open the header search dialog
+    const handleSearchClick = (e) => {
+        if (isSearchCollection) {
+            e.preventDefault();
+            // Find the header search button and click it
+            const searchButton = document.querySelector('.header-icon[aria-label="Search"]');
+            if (searchButton) {
+                searchButton.click();
+            }
+        }
     };
 
     const handleSortChange = (e) => {
@@ -519,8 +532,8 @@ export default function Collection({
     
     return (
         <div className="collection-wrapper">
-            {/* Material UI Full Screen Dialog for Mobile Filters */}
-            {isMobile && (
+            {/* Mobile filters dialog - only show for regular collections */}
+            {isMobile && !isSearchCollection && (
                 <Dialog
                     fullScreen
                     open={showMobileFilters}
@@ -574,12 +587,14 @@ export default function Collection({
             )}
             
             <div className="collection-container">
-                {/* Desktop Filters Column - hidden on mobile via CSS */}
-                <FilterArea 
-                    filterOptions={filterOptions} 
-                    activeFilters={activeFilters}
-                    onFilterChange={onFilterChange}
-                />
+                {/* Desktop Filters Column - hidden on mobile and search collections */}
+                {!isSearchCollection && (
+                    <FilterArea 
+                        filterOptions={filterOptions} 
+                        activeFilters={activeFilters}
+                        onFilterChange={onFilterChange}
+                    />
+                )}
 
                 {/* Main content area */}
                 <div className="collection-content">
@@ -591,11 +606,13 @@ export default function Collection({
                             placeholder="Search products" 
                             value={searchQuery}
                             onChange={handleSearchInputChange}
+                            onClick={handleSearchClick}
+                            readOnly={isSearchCollection} // Make read-only for search collection
                         />
                     </div>
                     
-                    {/* Mobile controls - Filter button and Sort dropdown */}
-                    {isMobile && (
+                    {/* Mobile controls - Filter button and Sort dropdown (hide for search collection) */}
+                    {isMobile && !isSearchCollection && (
                         <>
                             <div className="mobile-controls-row">
                                 <button className="filter-button" onClick={toggleMobileFilters}>
@@ -621,8 +638,8 @@ export default function Collection({
                         </>
                     )}
                     
-                    {/* Desktop controls - only shown on desktop */}
-                    {!isMobile && (
+                    {/* Desktop controls - only shown on desktop for regular collections */}
+                    {!isMobile && !isSearchCollection && (
                         <div className="collection-controls">
                             <div className="product-count">
                                 {loading ? null : `${data.length} products`}
@@ -655,14 +672,16 @@ export default function Collection({
                         </div>
                     )}
 
-                    {/* Active Filters */}
-                    <ActiveFilters 
-                        filters={activeFilters}
-                        options={filterOptions}
-                        onFilterRemove={handleFilterRemove}
-                        onClearAll={handleClearAllFilters}
-                        isMobile={isMobile}
-                    />
+                    {/* Active Filters - hide for search collection */}
+                    {!isSearchCollection && (
+                        <ActiveFilters 
+                            filters={activeFilters}
+                            options={filterOptions}
+                            onFilterRemove={handleFilterRemove}
+                            onClearAll={handleClearAllFilters}
+                            isMobile={isMobile}
+                        />
+                    )}
 
                     {/* Product listing - same for both mobile and desktop */}
                     <div className="collection-listing">
@@ -674,13 +693,20 @@ export default function Collection({
                                     // Fix the collection comparison and handle material title fields
                                     let title;
                                     let tag;
+                                    let linkTo;
 
-                                    if (collection === 'cues' || collection === 'accessories') {
+                                    if (collection === 'cues' || item.cueNumber) {
                                         title = item.name;
-                                        tag = item.cueNumber || item.accessoryNumber;
+                                        tag = item.cueNumber;
+                                        linkTo = `/cues/${item._id}`;
+                                    } else if (collection === 'accessories' || item.accessoryNumber) {
+                                        title = item.name;
+                                        tag = item.accessoryNumber;
+                                        linkTo = `/accessories/${item._id}`;
                                     } else {
                                         // For materials, handle both wood and crystal types
                                         title = item.commonName || item.crystalName || item.name || 'Unknown';
+                                        linkTo = `/materials/${item._id}`;
                                     }
                                     
                                     return (
@@ -690,7 +716,7 @@ export default function Collection({
                                                 title={title}
                                                 tag={tag}
                                                 price={item.price}
-                                                linkTo={`/${collection}/${item._id}`}
+                                                linkTo={isSearchCollection ? linkTo : `/${collection}/${item._id}`}
                                             />
                                         </li>
                                     );
@@ -698,7 +724,9 @@ export default function Collection({
                             </ul>
                         ) : (
                             <div className="empty-collection-message">
-                                {Object.keys(activeFilters).length === 0 && !searchQuery ? (
+                                {isSearchCollection ? (
+                                    <p>No products found for "{searchQuery}". Try a different search term.</p>
+                                ) : Object.keys(activeFilters).length === 0 && !searchQuery ? (
                                     <div>
                                         <p>
                                             There are currently no products in this collection, for additional information or requests visit the <NavLink to="/pages/contact" className="inline-link">contact us page</NavLink>.

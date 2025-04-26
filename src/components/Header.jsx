@@ -378,7 +378,7 @@ function SearchDialog({ open, onClose, hasScrolled }) {
     const handleSearchSubmit = (e) => {
         e.preventDefault();
         if (searchQuery.trim()) {
-            navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+            navigate(`/collections/search?search=${encodeURIComponent(searchQuery)}`);
             onClose();
         }
     };

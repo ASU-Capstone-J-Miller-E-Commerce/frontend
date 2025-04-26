@@ -106,13 +106,14 @@ function App() {
                         <Route path="cues" element={<CollectionsPage />} />
                         <Route path="accessories" element={<CollectionsPage />} />
                         <Route path="materials" element={<CollectionsPage />} />
+                        <Route path="search" element={<CollectionsPage />} />
                     </Route>
 
                     <Route path="/products/:guid" element={<ProductPage />} />
 
                     <Route path="/build-a-cue" element={<BuildACuePage />} />
 
-                    <Route path="/search" element={<SearchPage />} />
+                    
 
                     {/* 
                         User Pages

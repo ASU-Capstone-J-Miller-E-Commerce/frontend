@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getAccessoryCollection, getCueCollection, getMaterialCollection } from "../../util/requests";
+import { getAccessoryCollection, getCueCollection, getMaterialCollection, searchSite } from "../../util/requests";
 import Collection from "../util/Collection";
 import { COLOR_OPTIONS } from "../../util/globalConstants";
 
@@ -18,11 +18,45 @@ export default function CollectionsPage() {
     const [itemsPerPage, setItemsPerPage] = useState(12);
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
+    const [isSearchCollection, setIsSearchCollection] = useState(false);
     
     // Track if this is an initial load or direct navigation with filters
     const isInitialMount = useRef(true);
     const lastNavigatedUrl = useRef('');
     const isFilterReset = useRef(false);
+
+    // Determine if this is a search collection page
+    useEffect(() => {
+        const pathParts = location.pathname.split("/");
+        const isSearch = pathParts.includes("search");
+        setIsSearchCollection(isSearch);
+        
+        // If this is a search page, get the query from URL using "search" parameter
+        if (isSearch) {
+            const params = new URLSearchParams(location.search);
+            const query = params.get('search');
+            if (query) {
+                setSearchQuery(query);
+                setActiveFilters({});
+                setActiveSort('');
+            }
+        }
+    }, [location.pathname, location.search]);
+
+    // If this is a search collection, fetch search results instead of regular collection
+    useEffect(() => {
+        if (isSearchCollection && searchQuery) {
+            setLoading(true);
+            searchSite(searchQuery, true)
+                .then((response) => {
+                    setData(response.data);
+                    setFilteredData(response.data);
+                })
+                .always(() => {
+                    setLoading(false);
+                });
+        }
+    }, [isSearchCollection, searchQuery]);
 
     // Special effect that only runs once on initial mount to handle direct navigation with filters
     useEffect(() => {
@@ -86,6 +120,8 @@ export default function CollectionsPage() {
 
     // SINGLE effect to handle collection changes
     useEffect(() => {
+        if (isSearchCollection) return; // Skip for search collection
+
         const path = location.pathname.split("/").pop();
         
         // Don't do anything if we're already on this collection
@@ -149,7 +185,7 @@ export default function CollectionsPage() {
             isFilterReset.current = false;
         }, 300);
         
-    }, [location.pathname]);
+    }, [location.pathname, isSearchCollection]);
 
     // Handle URL parameter changes (only when not switching collections)
     useEffect(() => {
@@ -202,8 +238,8 @@ export default function CollectionsPage() {
 
     // Update URL when filters or pagination changes
     useEffect(() => {
-        // Skip during initial mount, collection change, or if collection is empty
-        if (isInitialMount.current || isFilterReset.current || !collection) {
+        // Skip during initial mount, collection change, search collection, or if collection is empty
+        if (isInitialMount.current || isFilterReset.current || !collection || isSearchCollection) {
             return;
         }
         
@@ -242,10 +278,15 @@ export default function CollectionsPage() {
             lastNavigatedUrl.current = newUrl;
             navigate(newUrl, { replace: true });
         }
-    }, [searchQuery, activeSort, activeFilters, itemsPerPage, currentPage, collection, navigate, location.pathname]);
+    }, [searchQuery, activeSort, activeFilters, itemsPerPage, currentPage, collection, navigate, location.pathname, isSearchCollection]);
 
     // Filter function to apply filters to data
     const searchFilterSortData = useCallback(() => {
+        if (isSearchCollection) {
+            // For search collection, don't apply filters or sorting
+            return;
+        }
+        
         let result = [...data];
 
         result = searchData(result);
@@ -253,13 +294,7 @@ export default function CollectionsPage() {
         result = sortData(result);
         setCurrentPage(1);
         setFilteredData(result);
-        
-        // console.log("Filter function called with:", {
-        //     filters: activeFilters,
-        //     search: searchQuery,
-        //     sort: activeSort
-        // });
-    }, [data, activeFilters, searchQuery, activeSort, collection]);
+    }, [data, activeFilters, searchQuery, activeSort, collection, isSearchCollection]);
 
     // Function to handle search filtering
     function searchData(result) {
@@ -776,8 +811,13 @@ export default function CollectionsPage() {
         });
     };
     
-    // Handle search changes
+    // Handle search changes - for non-search collections
     const handleSearchChange = (query) => {
+        if (isSearchCollection) {
+            // For search collection, clicking the search bar should open the header search dialog
+            // We'll implement this in the Collection component
+            return;
+        }
         setSearchQuery(query);
     };
     
@@ -798,23 +838,24 @@ export default function CollectionsPage() {
     
     return (
         <div className="collection-page">
-            <CollectionBanner collection={collection} />
+            <CollectionBanner collection={isSearchCollection ? "Search Results" : collection} />
             <Collection 
-                data={filteredData} // Use filteredData instead of raw data
-                filterOptions={filterOptions} 
-                sortOptions={sortOptions}
+                data={filteredData}
+                filterOptions={isSearchCollection ? [] : filterOptions} 
+                sortOptions={isSearchCollection ? [] : sortOptions}
                 activeFilters={activeFilters}
                 activeSort={activeSort}
                 searchQuery={searchQuery}
                 itemsPerPage={itemsPerPage}
                 currentPage={currentPage}
-                collection={collection}
-                loading={loading} // Pass loading state
+                collection={isSearchCollection ? "search" : collection}
+                loading={loading}
                 onFilterChange={handleFilterChange}
                 onSortChange={handleSortChange}
                 onSearchChange={handleSearchChange}
                 onItemsPerPageChange={handleItemsPerPageChange}
                 onPageChange={handlePageChange}
+                isSearchCollection={isSearchCollection}
             />
         </div>
     );
