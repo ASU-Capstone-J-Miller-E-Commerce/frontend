@@ -484,7 +484,7 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                             alignItems: 'center',
                             backgroundColor: 'white',
                             borderRadius: '4px',
-                            padding: '5px 15px',
+                            padding: '5px 10px',
                             width: {
                                 xs: '90%',
                                 sm: '70%',
@@ -492,9 +492,10 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                                 lg: '40%'
                             },
                             maxWidth: '600px',
+                            boxSizing: 'border-box',
                         }}
                     >
-                        <Search sx={{ color: 'black', marginRight: 1 }} />
+                        <Search sx={{ color: 'black', marginRight: 1, flexShrink: 0 }} />
                         <InputBase
                             placeholder="Search..."
                             inputRef={searchInputRef}
@@ -502,6 +503,7 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                             onChange={handleSearchInput}
                             sx={{
                                 color: 'black',
+                                flexGrow: 1,
                                 '& .MuiInputBase-input': {
                                     fontSize: '1.2rem',
                                     fontFamily: "'VTGoblinHand', system-ui, Helvetica, Arial, sans-serif"
@@ -510,7 +512,7 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                         />
                         <IconButton 
                             onClick={onClose} 
-                            sx={{ color: 'black' }}
+                            sx={{ color: 'black', flexShrink: 0 }}
                             aria-label="Close search"
                         >
                             <Close />
