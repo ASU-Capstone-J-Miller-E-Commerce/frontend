@@ -91,7 +91,6 @@ function App() {
                 stacked
                 pauseOnHover
                 toastClassName="toast-class"
-                className="toast-body-class"
             />
             <main className="jmiller-app">
                 <Header />

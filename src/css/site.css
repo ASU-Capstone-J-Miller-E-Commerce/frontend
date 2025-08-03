@@ -101,7 +101,37 @@ p {
   font-family: 'bouwsma-uncial', system-ui, Helvetica, Arial, sans-serif !important;
   font-size: .8em;
   color: var(--miller-black) !important;
-  width: 30vw !important;
+  width: 40vw !important;
+}
+
+.Toastify__toast-container--top-center {
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  right: auto !important;
+  width: auto;
+}
+
+.Toastify__toast {
+  padding: 12px !important;
+}
+
+@media (max-width: 990px) {
+  .toast-class {
+    margin-top: 45px;
+    font-size: 0.8em;
+    width: 70vw !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .toast-class {
+    margin-top: 45px;
+    font-size: 0.55em;
+    width: 80vw !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    position: fixed !important;
+  }
 }
 
 .form-field-input[list],

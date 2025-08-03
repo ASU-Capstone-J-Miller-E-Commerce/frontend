@@ -884,4 +884,17 @@
     background-color: #555;
 }
 
-/* Card NavLink styles */
+/* Mobile optimizations for user area */
+@media (max-width: 600px) {
+    .user-content {
+        padding: 10px;
+        font-size: 15px;
+    }
+    .account-section {
+        padding: 6px;
+        font-size: 15px;
+    }
+    .account-section-title {
+        font-size: 1.1rem;
+    }
+}
