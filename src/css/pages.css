@@ -80,6 +80,13 @@
     grid-template-columns: auto 1fr;
 }
 
+@media (max-width: 750px) {
+    .user-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr auto;
+    }
+}
+
 .user-drawer-menu {
     background: var(--miller-dark-grey);
     padding: 0;
@@ -89,9 +96,25 @@
     flex-direction: column;
 }
 
+@media (max-width: 7px) {
+    .user-drawer-menu {
+        height: auto;
+        flex-direction: row;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+}
+
 .user-nav {
     display: flex;
     flex-direction: column;
+}
+
+@media (max-width: 750px) {
+    .user-nav {
+        flex-direction: row;
+        width: 100%;
+    }
 }
 
 .user-nav-list {
@@ -102,8 +125,25 @@
     position: sticky;
 }
 
+@media (max-width: 750px) {
+    .user-nav-list {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        position: static;
+        z-index: auto;
+    }
+}
+
 .user-nav-item {
     font-size: 20px;
+}
+
+@media (max-width: 750px) {
+    .user-nav-item {
+        flex: 1;
+        font-size: 16px;
+    }
 }
 
 .user-nav-item a {
@@ -115,6 +155,23 @@
     text-decoration: none;
     font-size: 1.05rem;
     font-weight: 500;
+}
+
+@media (max-width: 750px) {
+    .user-nav-item a {
+        padding: 12px 8px;
+        justify-content: center;
+        font-size: 0.9rem;
+        text-align: center;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 450px) {
+    .user-nav-item a {
+        padding: 8px 4px;
+        font-size: 0.75rem;
+    }
 }
 
 .user-nav-item a:hover,
@@ -130,6 +187,18 @@
     height: 100%;
 }
 
+@media (max-width: 750px) {
+    .user-content {
+        grid-row: 1;
+        overflow-y: auto;
+        height: auto;
+        min-height: 0;
+    }
+}
+
+/*==============================================================
+# Admin page
+==============================================================*/
 .admin-header {
     background-color: var(--miller-dark-grey);
     top: var(--header-height);
