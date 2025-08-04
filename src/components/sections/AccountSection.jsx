@@ -9,14 +9,7 @@ export default function AccountSection({ title, children, onEdit }) {
                     {onEdit && (
                         <button
                             type="button"
-                            className="fa-solid fa-pencil admin-action-button"
-                            style={{ 
-                                display: 'inline-block', 
-                                justifySelf: 'right', 
-                                fontSize: '1.5rem',
-                                marginTop: '-0.05rem', 
-                                marginLeft: '0.5rem'
-                            }}
+                            className="fa-solid fa-pencil account-action-button"
                             onClick={onEdit}
                         />
                     )}

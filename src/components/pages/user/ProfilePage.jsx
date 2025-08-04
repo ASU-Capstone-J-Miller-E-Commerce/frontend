@@ -46,7 +46,8 @@ export default function ProfilePage() {
                     <div className="flex-h" style={{ alignItems: 'center', marginBottom: '1rem' }}>
                         <p style={{ 
                             margin: 0, 
-                            minWidth: '60px' 
+                            minWidth: '60px' ,
+                            whiteSpace: 'nowrap'
                         }}>Name:</p> 
                         <p style={{ 
                             margin: 0, 
@@ -59,7 +60,8 @@ export default function ProfilePage() {
                     <div className="flex-h" style={{ alignItems: 'center' }}>
                         <p style={{ 
                             margin: 0, 
-                            minWidth: '60px' 
+                            minWidth: '60px',
+                            whiteSpace: 'nowrap'
                         }}>Email:</p>
                         <p style={{ 
                             margin: 0, 

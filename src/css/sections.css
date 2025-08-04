@@ -93,3 +93,46 @@
 .account-section-wrapper {
     margin: 0px 0px 20px 0px;
 }
+
+.account-action-button {
+    color: var(--miller-black);
+    padding: 5px;
+    transition: transform 0.3s ease;
+    display: inline-block;
+    justify-self: right;
+    font-size: 1.6rem;
+    margin-top: -0.2rem;
+    margin-left: 0.5rem;
+}
+.account-action-button:hover {
+    transform: scale(1.1);
+}
+
+@media (max-width: 750px) {
+    .account-section {
+        padding: 6px;
+        font-size: 1rem;
+    }
+
+    .account-section-title {
+        font-size: 1.1rem;
+    }
+
+    .account-section-wrapper {
+        margin: 0 0 12px 0;
+    }
+
+    .account-section-content {
+        white-space: normal;
+        font-size: 0.98rem;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+    }
+
+    .account-action-button {
+        font-size: 1.3rem;
+        padding: 3px;
+        margin-top: 0;
+        margin-left: 0.3rem;
+    }
+}
