@@ -14,7 +14,7 @@ export default function ProfilePage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const { register, handleSubmit, formState: { errors }, reset, watch } = useForm();
+    const { register, handleSubmit, formState: { errors }, reset, watch, setFocus } = useForm();
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -82,6 +82,7 @@ export default function ProfilePage() {
                 PaperProps={{
                     className: "miller-dialog-typography"
                 }}
+                TransitionProps={{ onEntered: () => setFocus("firstName") }}
             >
                 <DialogTitle>
                     Edit Profile

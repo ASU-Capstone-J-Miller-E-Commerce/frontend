@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FormField } from "../../util/Inputs";
 import { useForm } from "react-hook-form";
 import { DefaultButton } from "../../util/Buttons";
@@ -10,17 +10,21 @@ import { Dialog, DialogTitle, DialogContent, useForkRef } from "@mui/material";
 
 export default function LoginPage () {
     const navigate = useNavigate();
-    const { register, handleSubmit, watch, formState: { errors } } = useForm({
+    const { register, handleSubmit, watch, formState: { errors }, setFocus: setLoginFocus } = useForm({
         defaultValues: {
             email: "",
             password: "",
         }
     });
-    const { register: verRegister, handleSubmit: verHandleSubmit, watch: verWatch, formState: { errors: verErrors }, reset: verReset } = useForm({
+    const { register: verRegister, handleSubmit: verHandleSubmit, watch: verWatch, formState: { errors: verErrors }, reset: verReset, setFocus: setVerifyFocus } = useForm({
         defaultValues: {
             verCode: "",
         }
     });
+
+    useEffect(() => {
+        setLoginFocus("email");
+    }, [setLoginFocus]);
 
     //2FA Modal
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -127,6 +131,7 @@ export default function LoginPage () {
                     maxWidth="sm" 
                     className="miller-dialog-typography"
                     PaperProps={{ className: "miller-dialog-typography" }}
+                    TransitionProps={{ onEntered: () => setVerifyFocus("verCode") }}
                 >
                     <DialogTitle>
                         Enter Your Authentication Code :

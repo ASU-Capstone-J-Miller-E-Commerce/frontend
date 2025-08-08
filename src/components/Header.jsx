@@ -367,14 +367,6 @@ function SearchDialog({ open, onClose, hasScrolled }) {
         }
     }, [open]);
     
-    useEffect(() => {
-        if (open && searchInputRef.current) {
-            setTimeout(() => {
-                searchInputRef.current.focus();
-            }, 100);
-        }
-    }, [open]);
-    
     const handleSearchSubmit = (e) => {
         e.preventDefault();
         if (searchQuery.trim()) {
@@ -452,6 +444,9 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                 sx: {
                     backgroundColor: 'rgba(0, 0, 0, 0.5)',
                 }
+            }}
+            TransitionProps={{
+                onEntered: () => searchInputRef.current?.focus(),
             }}
         >
             <Box
