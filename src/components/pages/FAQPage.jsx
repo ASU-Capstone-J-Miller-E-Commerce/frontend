@@ -1,9 +1,9 @@
 import React from "react";
 
-export default function SearchPage () {
+export default function FAQPage () {
     return (
         <div>
-            Search
+            FAQ
         </div>
     );
 }
