@@ -23,7 +23,8 @@ export default function LoginPage () {
     });
 
     useEffect(() => {
-        setLoginFocus("email");
+        const t = setTimeout(() => setLoginFocus("email"), 0);
+        return () => clearTimeout(t);
     }, [setLoginFocus]);
 
     //2FA Modal
@@ -88,6 +89,7 @@ export default function LoginPage () {
                 {/* FIELDS */}
                 <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
                     <FormField 
+                        autoFocus
                         title="Email"
                         type="text"
                         value={email}
