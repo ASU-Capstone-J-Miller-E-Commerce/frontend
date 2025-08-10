@@ -4,6 +4,13 @@ export const CUE_BASIC_MATERIAL_OPTIONS = [
     { _id: 'Other', commonName: 'Other' },
 ];
 
+// Social media links for footer
+export const SOCIAL_MEDIA_LINKS = [
+    { name: "Facebook", icon: "fa-brands fa-facebook", url: "#" },
+    { name: "Instagram", icon: "fa-brands fa-instagram", url: "#" },
+    { name: "Bluesky", icon: "fa-brands fa-bluesky", url: "#" }
+];
+
 export const COLOR_OPTIONS = [
     { value: 'Black', label: 'Black' },
     { value: 'Blue', label: 'Blue' },
