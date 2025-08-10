@@ -4,10 +4,10 @@ import logo from "../images/white_logo.jpg";
 import { SOCIAL_MEDIA_LINKS } from "../util/globalConstants";
 
 const navigationLinks = [
-    { text: "About Us", link: "/about" },
-    { text: "References", link: "/references" },
-    { text: "FAQ", link: "/faq" },
-    { text: "Contact Us", link: "/contact" }
+    { text: "About Us", link: "/pages/about-us" },
+    { text: "References", link: "/pages/references" },
+    { text: "FAQ", link: "/pages/faq" },
+    { text: "Contact Us", link: "/pages/contact-us" }
 ];
 
 export default function Footer () {
@@ -39,7 +39,7 @@ export default function Footer () {
                     <ul className="footer-nav-list">
                         {navigationLinks.map((navItem) => (
                             <li key={navItem.text}>
-                                <NavLink to={navItem.link} className="footer-nav-link">
+                                <NavLink to={navItem.link} className="main-nav-text">
                                     {navItem.text}
                                 </NavLink>
                             </li>

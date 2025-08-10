@@ -8,6 +8,7 @@ import { Dialog, IconButton, InputBase, Box, Typography } from "@mui/material";
 import { Search, Close } from "@mui/icons-material";
 import { searchSite } from "../util/requests";
 import { Card } from "./util/Card"; // Import the Card component
+import { SOCIAL_MEDIA_LINKS } from "../util/globalConstants";
 
 const options = {
     "Materials": [
@@ -175,8 +176,16 @@ export default function Header() {
                     <div className={openDropdown ? "drawer-footer hidden" : "drawer-footer"}>
                         <DrawerLoginButton onClick={handleLinkClick} />
                         <div>
-                            <button className="fa-brands fa-instagram header-icon" />
-                            <button className="fa-brands fa-facebook header-icon" />
+                            {SOCIAL_MEDIA_LINKS.map((social) => (
+                                <a 
+                                    key={social.name}
+                                    href={social.url}
+                                    className={`header-icon ${social.icon}`}
+                                    aria-label={social.name}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                />
+                            ))}
                         </div>
                     </div>
                 </div>
