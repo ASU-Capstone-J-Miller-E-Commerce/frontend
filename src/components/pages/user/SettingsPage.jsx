@@ -88,9 +88,7 @@ export default function SettingsPage() {
 
     return (
         <div className="user-content">
-            <AccountSection title="Password" onEdit={() => setIsPWModalOpen(true)}>
-                <p>password</p>
-            </AccountSection>
+            <AccountSection title="Password" onEdit={() => setIsPWModalOpen(true)}/>
             <AccountSection title="Two factor authentication" onEdit={!userData.TFAEnabled && onGenerate}>
                 {userData.TFAEnabled ? (
                     <p>Two Factor Authentication is Setup!</p>
@@ -99,9 +97,7 @@ export default function SettingsPage() {
                     <p>No 2FA</p>
                 )}
             </AccountSection>
-            <AccountSection title="Notifications">
-                <p>notifications</p>
-            </AccountSection>
+            <AccountSection title="Notifications"/>
 
            {/* Modal */}
            <Dialog 

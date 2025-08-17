@@ -43,7 +43,7 @@ export default function LoginPage () {
             .then((res) => {
                 receiveResponse(res);
 
-                if(res.data[0] == true)
+                if(res.data[0] === true)
                 {
                     setTempToken(res.data[1]);
                     setIV(res.data[2]);
@@ -142,8 +142,6 @@ export default function LoginPage () {
                     <DialogContent>
                         <form onSubmit={verHandleSubmit(handle2FAVerify)}>
                             <div className="form-column" style={{ width: '100%' }}>
-                                <div className="form-row" style={{ width: '100%' }}>
-                                    <div className="flex-1">
                                         <FormField
                                             title="Code"
                                             type="password"
@@ -157,9 +155,6 @@ export default function LoginPage () {
                                                 }
                                             })}
                                         />
-                                        
-                                    </div>
-                                </div>
 
                                 <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '1rem' }}>
                                     <span 
