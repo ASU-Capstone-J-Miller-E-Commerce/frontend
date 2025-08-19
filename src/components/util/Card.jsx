@@ -10,7 +10,7 @@ export function Card({title, image, price, tag, linkTo="#"}) {
             <div className="card-wrapper">
                 {/* Card image */}
                 <div className="card-image">
-                    <img src={image}/>
+                    <img src={image} alt={title} />
                 </div>
                 {/* Card Content */}
                 <div className="card-content">
@@ -27,5 +27,33 @@ export function Card({title, image, price, tag, linkTo="#"}) {
                 </div>
             </div>
         </NavLink>
+    );
+}
+
+export function MaterialCard({ title, image, price, tag, material }) {
+    const hasPrice = price !== undefined && price !== null && price !== "";
+
+    const handleClick = () => {
+        if (window.openMaterialDialog && material) {
+            window.openMaterialDialog(material);
+        }
+    };
+
+    return (
+        <div className="card-link" onClick={handleClick} style={{ cursor: 'pointer' }}>
+            <div className="card-wrapper">
+                {/* Card image */}
+                <div className="card-image">
+                    <img src={image} alt={title} />
+                </div>
+                {/* Card Content */}
+                <div className="card-content">
+                    {/* Header  */}
+                    <p className="card-title">
+                        {hasPrice && `[${tag}]`} {title}
+                    </p>
+                </div>
+            </div>
+        </div>
     );
 }

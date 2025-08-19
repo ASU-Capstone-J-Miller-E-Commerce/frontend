@@ -408,14 +408,14 @@ function SearchDialog({ open, onClose, hasScrolled }) {
         
         if (item.name) {
             name = item.name;
-            if (item.cueNumber) link = `/cues/${item._id}`;
-            else if (item.accessoryNumber) link = `/accessories/${item._id}`;
+            if (item.cueNumber) link = `/cues/${item.guid}`;
+            else if (item.accessoryNumber) link = `/accessories/${item.guid}`;
         } else if (item.commonName) {
             name = item.commonName;
-            link = `/materials/${item._id}`;
+            link = `/materials/${item.guid}`;
         } else if (item.crystalName) {
             name = item.crystalName;
-            link = `/materials/${item._id}`;
+            link = `/materials/${item.guid}`;
         }
         
         return { name, link };

@@ -24,6 +24,7 @@ import ReferencesPage from "./components/pages/ReferencesPage.jsx";
 import AdminPage from "./components/pages/user/AdminPage.jsx";
 
 import UserLayout from "./components/pages/user/UserLayout.jsx";
+import MaterialDialog from "./components/dialogs/MaterialDialog.jsx";
 
 import "./css/fontawesome/fontawesome.css";
 import "./css/fontawesome/brands.css";
@@ -95,6 +96,7 @@ function App() {
                 pauseOnHover
                 toastClassName="toast-class"
             />
+            <MaterialDialog />
             <main className="jmiller-app">
                 <Header />
                 <Routes>

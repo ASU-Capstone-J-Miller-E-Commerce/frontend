@@ -1,8 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
-import { Card } from "./Card";
+import { Card, MaterialCard } from "./Card";
 import { NavLink } from "react-router-dom";
-import { Dialog, AppBar, Toolbar, IconButton, Typography, Slide, DialogActions } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { Dialog, Slide, DialogActions } from "@mui/material";
 import { DefaultButton } from "./Buttons";
 
 // Create a transition component for the dialog
@@ -698,26 +697,34 @@ export default function Collection({
                                     if (collection === 'cues' || item.cueNumber) {
                                         title = item.name;
                                         tag = item.cueNumber;
-                                        linkTo = `/cues/${item._id}`;
+                                        linkTo = `/cues/${item.guid}`;
                                     } else if (collection === 'accessories' || item.accessoryNumber) {
                                         title = item.name;
                                         tag = item.accessoryNumber;
-                                        linkTo = `/accessories/${item._id}`;
+                                        linkTo = `/accessories/${item.guid}`;
                                     } else {
                                         // For materials, handle both wood and crystal types
                                         title = item.commonName || item.crystalName || item.name || 'Unknown';
-                                        linkTo = `/materials/${item._id}`;
                                     }
-                                    
+                                    console.log(item);
                                     return (
                                         <li key={index}>
-                                            <Card 
-                                                image={item.imageUrls && item.imageUrls.length > 0 ? item.imageUrls[0] : '/placeholder.png'}
-                                                title={title}
-                                                tag={tag}
-                                                price={item.price}
-                                                linkTo={isSearchCollection ? linkTo : `/${collection}/${item._id}`}
-                                            />
+                                            {collection === 'materials' ? (
+                                                <MaterialCard 
+                                                    image={item.imageUrls && item.imageUrls.length > 0 ? item.imageUrls[0] : '/placeholder.png'}
+                                                    title={title}
+                                                    tag={tag}
+                                                    material={item}
+                                                />
+                                            ) : (
+                                                <Card 
+                                                    image={item.imageUrls && item.imageUrls.length > 0 ? item.imageUrls[0] : '/placeholder.png'}
+                                                    title={title}
+                                                    tag={tag}
+                                                    price={item.price}
+                                                    linkTo={isSearchCollection ? linkTo : `/${collection}/${item.guid}`}
+                                                />
+                                            )}
                                         </li>
                                     );
                                 })}
