@@ -711,18 +711,18 @@ export default function Collection({
                                         <li key={index}>
                                             {collection === 'materials' ? (
                                                 <MaterialCard 
-                                                    image={item.imageUrls && item.imageUrls.length > 0 ? item.imageUrls[0] : '/placeholder.png'}
                                                     title={title}
                                                     tag={tag}
                                                     material={item}
+                                                    images={item.imageUrls}
                                                 />
                                             ) : (
                                                 <Card 
-                                                    image={item.imageUrls && item.imageUrls.length > 0 ? item.imageUrls[0] : '/placeholder.png'}
                                                     title={title}
                                                     tag={tag}
                                                     price={item.price}
                                                     linkTo={isSearchCollection ? linkTo : `/${collection}/${item.guid}`}
+                                                    images={item.imageUrls}
                                                 />
                                             )}
                                         </li>
