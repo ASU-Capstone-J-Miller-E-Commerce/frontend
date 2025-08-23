@@ -573,8 +573,29 @@ select.form-field-input::-ms-expand {
 .miller-dialog-typography h1,
 .miller-dialog-typography h2,
 .miller-dialog-typography h3,
+.miller-dialog-typography h4,
+.miller-dialog-typography h5,
+.miller-dialog-typography h6,
 .miller-dialog-typography .MuiDialogTitle-root {
-  font-family: 'bouwsma-uncial', system-ui, Helvetica, Arial, sans-serif;
+  font-family: 'bouwsma-uncial', system-ui, Helvetica, Arial, sans-serif !important;
+}
+
+/* Attribute labels should also use bouwsma-uncial */
+.miller-dialog-typography .MuiTypography-root[color="primary"] {
+  font-family: 'bouwsma-uncial', serif !important;
+}
+
+/* Body text should use VTGoblin Hand - target specific MUI classes */
+.miller-dialog-typography .MuiTypography-body1,
+.miller-dialog-typography .MuiTypography-body2,
+.miller-dialog-typography .MuiTypography-root.MuiTypography-body1,
+.miller-dialog-typography .MuiTypography-root.MuiTypography-body2 {
+  font-family: 'VTGoblinHand', system-ui, Helvetica, Arial, sans-serif !important;
+}
+
+/* Ensure text.secondary colored elements use VTGoblin Hand */
+.miller-dialog-typography .MuiTypography-root[color="text.secondary"] {
+  font-family: 'VTGoblinHand', system-ui, Helvetica, Arial, sans-serif !important;
 }
 
 /* Fix for Font Awesome icons - preserve their font */

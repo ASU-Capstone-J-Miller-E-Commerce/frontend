@@ -75,6 +75,20 @@ export function getMaterialCollection() {
     });
 }
 
+export function getWoodByGuid(guid) {
+    return _ajax({
+        url: `/materials/wood/${guid}`,
+        method: "GET",
+    });
+}
+
+export function getCrystalByGuid(guid) {
+    return _ajax({
+        url: `/materials/crystal/${guid}`,
+        method: "GET",
+    });
+}
+
 
 /*==============================================================
 # Users
