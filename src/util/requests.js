@@ -89,6 +89,20 @@ export function getCrystalByGuid(guid) {
     });
 }
 
+export function getCueByGuid(guid) {
+    return _ajax({
+        url: `/cues/${guid}`,
+        method: "GET",
+    });
+}
+
+export function getAccessoryByGuid(guid) {
+    return _ajax({
+        url: `/accessories/${guid}`,
+        method: "GET",
+    });
+}
+
 
 /*==============================================================
 # Users
