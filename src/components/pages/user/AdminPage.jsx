@@ -708,7 +708,6 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
     const onSubmit = (data) => {
         data.isFullSplice = buttType;
         data.includeWrap = includeWrap;
-        console.log(data)
         if (existingCue) {
             editCue(data._id, data)
                 .then((res) => {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export function MaterialCard({title, price, tag, material, images}) {
+export function MaterialCard({title, price, tag, material, images, onClick}) {
     const hasPrice = price !== undefined && price !== null && price !== "";
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     
@@ -9,8 +9,8 @@ export function MaterialCard({title, price, tag, material, images}) {
     const hasMultipleImages = imageArray.length > 1;
     
     const handleClick = () => {
-        if (window.openMaterialDialog && material) {
-            window.openMaterialDialog(material);
+        if (onClick && material?.guid) {
+            onClick(material.guid);
         }
     };
     

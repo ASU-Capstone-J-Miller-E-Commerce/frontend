@@ -26,6 +26,87 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
+// Material cache to avoid redundant API calls
+const materialCache = new Map();
+
+// Cache expiry time (30 minutes)
+const CACHE_EXPIRY_MS = 30 * 60 * 1000;
+
+// Dialog state management
+let dialogState = {
+    setOpen: null,
+    setMaterial: null,
+    setCurrentImageIndex: null,
+    setLoading: null,
+    setError: null,
+    fetchMaterialData: null
+};
+
+// Exported functions for controlling the dialog
+export const showMaterialDialog = async (guidOrMaterial) => {
+    if (!dialogState.setOpen) {
+        console.error('MaterialDialog not mounted yet');
+        return;
+    }
+
+    let guid;
+    let materialType = null;
+
+    if (typeof guidOrMaterial === 'string') {
+        // It's just a GUID
+        guid = guidOrMaterial;
+    } else if (guidOrMaterial && typeof guidOrMaterial === 'object') {
+        // It's a material object
+        guid = guidOrMaterial.guid;
+        
+        // Determine type based on properties
+        if (guidOrMaterial.commonName) {
+            materialType = 'wood';
+        } else if (guidOrMaterial.crystalName) {
+            materialType = 'crystal';
+        }
+    }
+
+    if (!guid) {
+        console.error('GUID is required to show material dialog');
+        return;
+    }
+
+    dialogState.setOpen(true);
+    dialogState.setCurrentImageIndex(0);
+    dialogState.setLoading(true);
+    dialogState.setError(null);
+    dialogState.setMaterial(null);
+
+    try {
+        const materialData = await dialogState.fetchMaterialData(guid, materialType);
+        dialogState.setMaterial(materialData);
+    } catch (err) {
+        console.error('Error fetching material:', err);
+        dialogState.setError('Failed to load material details. Please try again.');
+    } finally {
+        dialogState.setLoading(false);
+    }
+};
+
+export const hideMaterialDialog = () => {
+    if (!dialogState.setOpen) {
+        console.error('MaterialDialog not mounted yet');
+        return;
+    }
+
+    dialogState.setOpen(false);
+    dialogState.setMaterial(null);
+    dialogState.setLoading(false);
+    dialogState.setError(null);
+    dialogState.setCurrentImageIndex(0);
+};
+
+export const clearMaterialCache = () => {
+    materialCache.clear();
+    console.log('Material cache cleared');
+};
+
 const MaterialDialog = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -35,59 +116,60 @@ const MaterialDialog = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // Expose function globally to open dialog
-    React.useEffect(() => {
-        window.openMaterialDialog = async (materialData) => {
-            setOpen(true);
-            setCurrentImageIndex(0);
-            setLoading(true);
-            setError(null);
-            setMaterial(null);
-
-            try {
-                let fullMaterialData;
-                
-                // Check if we have a full material object or just basic info with GUID
-                if (materialData.commonName || materialData.crystalName) {
-                    // If we have the name fields, this might be full data already
-                    // But we still want to fetch fresh data from backend
-                    const isWood = Boolean(materialData.commonName);
-                    const guid = materialData.guid;
-                    
-                    if (isWood) {
-                        const response = await getWoodByGuid(guid);
-                        fullMaterialData = response.data;
-                    } else {
-                        const response = await getCrystalByGuid(guid);
-                        fullMaterialData = response.data;
-                    }
-                } else {
-                    // Try to determine type and fetch accordingly
-                    // First try as wood, then as crystal if that fails
-                    try {
-                        const response = await getWoodByGuid(materialData.guid);
-                        fullMaterialData = response.data;
-                    } catch (woodError) {
-                        try {
-                            const response = await getCrystalByGuid(materialData.guid);
-                            fullMaterialData = response.data;
-                        } catch (crystalError) {
-                            throw new Error('Material not found');
-                        }
-                    }
-                }
-                
-                setMaterial(fullMaterialData);
-            } catch (err) {
-                console.error('Error fetching material:', err);
-                setError('Failed to load material details. Please try again.');
-            } finally {
-                setLoading(false);
-            }
-        };
+    // Fetch material data with caching
+    const fetchMaterialData = async (guid, materialType = null) => {
+        // Check cache first
+        const cacheKey = guid;
+        const cached = materialCache.get(cacheKey);
         
+        if (cached && (Date.now() - cached.timestamp) < CACHE_EXPIRY_MS) {
+            console.log('Using cached material data for GUID:', guid);
+            return cached.data;
+        }
+
+        // If we know the material type, fetch directly
+        if (materialType === 'wood') {
+            const response = await getWoodByGuid(guid);
+            const materialData = response.data;
+            
+            // Cache the result
+            materialCache.set(cacheKey, {
+                data: materialData,
+                timestamp: Date.now()
+            });
+            
+            return materialData;
+        } else if (materialType === 'crystal') {
+            const response = await getCrystalByGuid(guid);
+            const materialData = response.data;
+            
+            // Cache the result
+            materialCache.set(cacheKey, {
+                data: materialData,
+                timestamp: Date.now()
+            });
+            
+            return materialData;
+        }
+    };
+
+    // Register state setters when component mounts
+    React.useEffect(() => {
+        dialogState.setOpen = setOpen;
+        dialogState.setMaterial = setMaterial;
+        dialogState.setCurrentImageIndex = setCurrentImageIndex;
+        dialogState.setLoading = setLoading;
+        dialogState.setError = setError;
+        dialogState.fetchMaterialData = fetchMaterialData;
+
         return () => {
-            delete window.openMaterialDialog;
+            // Clean up references when component unmounts
+            dialogState.setOpen = null;
+            dialogState.setMaterial = null;
+            dialogState.setCurrentImageIndex = null;
+            dialogState.setLoading = null;
+            dialogState.setError = null;
+            dialogState.fetchMaterialData = null;
         };
     }, []);
 
@@ -99,10 +181,7 @@ const MaterialDialog = () => {
     }, [material]);
 
     const handleClose = () => {
-        setOpen(false);
-        setMaterial(null);
-        setLoading(false);
-        setError(null);
+        hideMaterialDialog();
     };
 
     // Determine if it's wood or crystal based on properties (with null checks)

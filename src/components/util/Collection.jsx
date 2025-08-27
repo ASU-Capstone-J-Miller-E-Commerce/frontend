@@ -455,6 +455,7 @@ export default function Collection({
     onSearchChange,
     onItemsPerPageChange,
     onPageChange,
+    onMaterialClick,
     isSearchCollection = false
 }) {
     const [showMobileFilters, setShowMobileFilters] = useState(false);
@@ -706,7 +707,6 @@ export default function Collection({
                                         // For materials, handle both wood and crystal types
                                         title = item.commonName || item.crystalName || item.name || 'Unknown';
                                     }
-                                    console.log(item);
                                     return (
                                         <li key={index}>
                                             {collection === 'materials' ? (
@@ -715,6 +715,7 @@ export default function Collection({
                                                     tag={tag}
                                                     material={item}
                                                     images={item.imageUrls}
+                                                    onClick={onMaterialClick}
                                                 />
                                             ) : (
                                                 <Card 

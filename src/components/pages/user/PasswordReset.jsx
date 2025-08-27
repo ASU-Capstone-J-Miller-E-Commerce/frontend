@@ -35,7 +35,6 @@ export default function PasswordReset () {
                         title="Email"
                         type="text"
                         value={email}
-                        onChange={(e) => console.log(e.target.value)}
                         error={errors.email && errors.email.message}
                         {...register("email", {
                             required: "Email is required",

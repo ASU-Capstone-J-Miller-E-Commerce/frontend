@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getAccessoryCollection, getCueCollection, getMaterialCollection, searchSite } from "../../util/requests";
 import Collection from "../util/Collection";
 import { COLOR_OPTIONS } from "../../util/globalConstants";
+import { showMaterialDialog } from "../dialogs/MaterialDialog";
 
 export default function CollectionsPage() {
     const location = useLocation();
@@ -559,7 +560,6 @@ export default function CollectionsPage() {
             
             // Tier filtering
             if (activeTiers.length > 0) {
-                console.log(item.iter, activeFilters)
                 const itemTier = item.tier;
                 if (!item.tier || !activeTiers.includes(itemTier)) {
                     return false;
@@ -835,6 +835,11 @@ export default function CollectionsPage() {
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
+
+    // Handle material card clicks
+    const handleMaterialClick = (material) => {
+        showMaterialDialog(material);
+    };
     
     return (
         <div className="collection-page">
@@ -855,6 +860,7 @@ export default function CollectionsPage() {
                 onSearchChange={handleSearchChange}
                 onItemsPerPageChange={handleItemsPerPageChange}
                 onPageChange={handlePageChange}
+                onMaterialClick={handleMaterialClick}
                 isSearchCollection={isSearchCollection}
             />
         </div>
