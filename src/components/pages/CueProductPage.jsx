@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { DefaultButton } from "../util/Buttons";
 import { getCueByGuid } from "../../util/requests";
+import MaterialLink from "../util/MaterialLink";
 import NotFoundPage from "./NotFoundPage";
 
 export default function CueProductPage() {
@@ -168,49 +169,65 @@ export default function CueProductPage() {
                             {cue.shaftMaterial && (
                                 <div className="material-item">
                                     <span className="material-label">Shaft Material:</span>
-                                    <span className="material-value">{cue.shaftMaterial}</span>
+                                    <span className="material-value">
+                                        <MaterialLink material={cue.shaftMaterial} />
+                                    </span>
                                 </div>
                             )}
                             {cue.forearmMaterial && (
                                 <div className="material-item">
                                     <span className="material-label">Forearm Material:</span>
-                                    <span className="material-value">{cue.forearmMaterial}</span>
+                                    <span className="material-value">
+                                        <MaterialLink material={cue.forearmMaterial} />
+                                    </span>
                                 </div>
                             )}
                             {cue.handleMaterial && (
                                 <div className="material-item">
                                     <span className="material-label">Handle Material:</span>
-                                    <span className="material-value">{cue.handleMaterial}</span>
+                                    <span className="material-value">
+                                        <MaterialLink material={cue.handleMaterial} />
+                                    </span>
                                 </div>
                             )}
                             {cue.buttSleeveMaterial && (
                                 <div className="material-item">
                                     <span className="material-label">Butt Sleeve Material:</span>
-                                    <span className="material-value">{cue.buttSleeveMaterial}</span>
+                                    <span className="material-value">
+                                        <MaterialLink material={cue.buttSleeveMaterial} />
+                                    </span>
                                 </div>
                             )}
                             {cue.ferruleMaterial && (
                                 <div className="material-item">
                                     <span className="material-label">Ferrule Material:</span>
-                                    <span className="material-value">{cue.ferruleMaterial}</span>
+                                    <span className="material-value">
+                                        <MaterialLink material={cue.ferruleMaterial} />
+                                    </span>
                                 </div>
                             )}
                             {cue.jointPinMaterial && (
                                 <div className="material-item">
                                     <span className="material-label">Joint Pin Material:</span>
-                                    <span className="material-value">{cue.jointPinMaterial}</span>
+                                    <span className="material-value">
+                                        <MaterialLink material={cue.jointPinMaterial} />
+                                    </span>
                                 </div>
                             )}
                             {cue.jointCollarMaterial && (
                                 <div className="material-item">
                                     <span className="material-label">Joint Collar Material:</span>
-                                    <span className="material-value">{cue.jointCollarMaterial}</span>
+                                    <span className="material-value">
+                                        <MaterialLink material={cue.jointCollarMaterial} />
+                                    </span>
                                 </div>
                             )}
                             {cue.buttCapMaterial && (
                                 <div className="material-item">
                                     <span className="material-label">Butt Cap Material:</span>
-                                    <span className="material-value">{cue.buttCapMaterial}</span>
+                                    <span className="material-value">
+                                        <MaterialLink material={cue.buttCapMaterial} />
+                                    </span>
                                 </div>
                             )}
                         </div>
@@ -226,7 +243,9 @@ export default function CueProductPage() {
                                         <h4>Forearm Inlays</h4>
                                         <div className="detail-item">
                                             <span className="detail-label">Material:</span>
-                                            <span className="detail-value">{cue.forearmInlayMaterial}</span>
+                                            <span className="detail-value">
+                                                <MaterialLink material={cue.forearmInlayMaterial} />
+                                            </span>
                                         </div>
                                         {cue.forearmInlayQuantity && (
                                             <div className="detail-item">
@@ -253,7 +272,9 @@ export default function CueProductPage() {
                                         <h4>Handle Inlays</h4>
                                         <div className="detail-item">
                                             <span className="detail-label">Material:</span>
-                                            <span className="detail-value">{cue.handleInlayMaterial}</span>
+                                            <span className="detail-value">
+                                                <MaterialLink material={cue.handleInlayMaterial} />
+                                            </span>
                                         </div>
                                         {cue.handleInlayQuantity && (
                                             <div className="detail-item">

@@ -5,9 +5,9 @@ export const SOCIAL_MEDIA_LINKS = [
 ];
 
 export const CUE_BASIC_MATERIAL_OPTIONS = [
-    { _id: 'Juma', commonName: 'Juma' },
-    { _id: 'Black Juma', commonName: 'Black Juma' },
-    { _id: 'Other', commonName: 'Other' },
+    { guid: 'Juma', commonName: 'Juma' },
+    { guid: 'Black Juma', commonName: 'Black Juma' },
+    { guid: 'Other', commonName: 'Other' },
 ];
 
 export const COLOR_OPTIONS = [
