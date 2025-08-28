@@ -1176,14 +1176,14 @@
     gap: 1.5rem;
 }
 
-.form-row {
+.contact-row {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1rem;
 }
 
 @media (min-width: 768px) {
-    .form-row {
+    .contact-row {
         grid-template-columns: 1fr 1fr;
     }
 }

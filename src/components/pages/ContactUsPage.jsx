@@ -59,7 +59,7 @@ export default function ContactUsPage() {
                     </p>
                     
                     <form className="contact-form" onSubmit={handleSubmit(onSubmit)}>
-                        <div className="form-row">
+                        <div className="contact-row">
                             <div className="form-column flex-1">
                                 <FormField
                                     autoFocus
@@ -89,7 +89,7 @@ export default function ContactUsPage() {
                             </div>
                         </div>
 
-                        <div className="form-row">
+                        <div className="contact-row">
                             <div className="form-column flex-1">
                                 <FormField
                                     type="tel"
