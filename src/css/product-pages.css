@@ -1,3 +1,20 @@
+.full-width-btn {
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+.contact-link {
+    color: #856404;
+    font-weight: 600;
+    text-decoration: underline;
+    margin-left: 4px;
+    transition: color 0.2s;
+}
+.contact-link:hover {
+    color: #a67c00;
+    text-decoration: underline;
+}
 .description-text {
     margin-bottom: 0;
 }
@@ -281,6 +298,7 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: 12px;
+    padding: 12px 0px;
 }
 
 .spec-item,
@@ -369,6 +387,11 @@
     border-radius: 6px;
     text-align: center;
     font-weight: 500;
+}
+
+.unavailable-notice.yellow-notice {
+    background-color: #fff3cd;
+    color: #856404;
 }
 
 /*==============================================================

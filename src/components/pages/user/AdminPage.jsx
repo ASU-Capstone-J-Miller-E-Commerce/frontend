@@ -468,7 +468,7 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
     ferruleMaterial: 'Juma',
     shaftMaterial: 'Hard Maple',
     shaftTaper: 'Pro-Taper',
-    jointPinSize: '3/8-10 Modified',
+    jointPinSize: '3/8-10 in Modified',
     jointPinMaterial: 'Stainless Steel',
     jointCollarMaterial: 'Black Juma',
     forearmMaterial: '',
@@ -786,7 +786,6 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
     const forearmInlayDescription = watch("forearmInlayDescription");
     const handleInlayDescription = watch("handleInlayDescription");
     const buttsleeveInlayDescription = watch("buttsleeveInlayDescription");
-    // Add these new watches
     const ringType = watch("ringType");
     const ringsDescription = watch("ringsDescription");
     const forearmInlayMaterial = watch("forearmInlayMaterial");

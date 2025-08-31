@@ -58,7 +58,7 @@ export default function AccessoryProductPage() {
     const images = accessory.imageUrls || [];
     const hasImages = images.length > 0;
     const hasPrice = accessory.price !== undefined && accessory.price !== null && accessory.price !== "";
-    const isAvailable = accessory.status === "available";
+    const isAvailable = accessory.status === "Available";
 
     return (
         <div className="product-page">
@@ -117,7 +117,6 @@ export default function AccessoryProductPage() {
 
                     {accessory.description && (
                         <div className="product-description">
-                            <h3>Description</h3>
                             <p>{accessory.description}</p>
                         </div>
                     )}
@@ -125,9 +124,10 @@ export default function AccessoryProductPage() {
                     {/* Purchase Section */}
                     <div className="product-purchase">
                         {isAvailable && hasPrice ? (
-                            <DefaultButton 
-                                text={`Purchase for $${Number(accessory.price).toFixed(2)}`} 
-                                onClick={handlePurchase} 
+                            <DefaultButton
+                                text="Add to Cart"
+                                onClick={handlePurchase}
+                                className="full-width-btn"
                             />
                         ) : isAvailable ? (
                             <DefaultButton 

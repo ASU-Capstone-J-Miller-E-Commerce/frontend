@@ -105,10 +105,10 @@ export const SHAFT_TAPER_OPTIONS = [
 ];
 
 export const JOINT_PIN_SIZE_OPTIONS = [
-    { value: '3_8_10_mod', label: '3/8-10 Modified' },
-    { value: '3_8_10', label: '3/8-10' },
-    { value: '5_16_14', label: '5/16-14' },
-    { value: '5_16_18', label: '5/16-18' },
+    { value: '3_8_10_mod', label: '3/8-10 in Modified' },
+    { value: '3_8_10', label: '3/8-10 in' },
+    { value: '5_16_14', label: '5/16-14 in' },
+    { value: '5_16_18', label: '5/16-18 in' },
     { value: 'american_ball', label: 'American Ball Thread / Radial' },
     { value: 'wavy', label: 'Wavy' },
     { value: 'quick_release', label: 'Quick Release' },

@@ -4,6 +4,7 @@ import { DefaultButton } from "../util/Buttons";
 import { getCueByGuid } from "../../util/requests";
 import MaterialLink from "../util/MaterialLink";
 import NotFoundPage from "./NotFoundPage";
+import { NavLink } from "react-router-dom";
 
 function SectionDropdown({ title, children, defaultOpen = false }) {
     const [open, setOpen] = useState(defaultOpen);
@@ -159,14 +160,20 @@ export default function CueProductPage() {
                     <div className="product-purchase">
                         {isAvailable && hasPrice ? (
                             <DefaultButton 
-                                text={`Purchase for $${Number(cue.price).toFixed(2)}`} 
+                                text="Add to Cart" 
                                 onClick={handlePurchase} 
+                                className="full-width-btn"
                             />
                         ) : isAvailable ? (
                             <DefaultButton 
                                 text="Contact for Pricing" 
                                 onClick={() => navigate("/contact")} 
+                                className="full-width-btn"
                             />
+                        ) : cue.status === "Coming Soon" ? (
+                            <div className="unavailable-notice yellow-notice">
+                                This cue is coming soon. <NavLink to="/pages/contact-us" className="contact-link">Contact us</NavLink> for more details!
+                            </div>
                         ) : (
                             <div className="unavailable-notice">
                                 This cue is currently {cue.status}.
@@ -180,19 +187,19 @@ export default function CueProductPage() {
                             {cue.overallLength && (
                                 <div className="spec-item">
                                     <span className="spec-label">Overall Length:</span>
-                                    <span className="spec-value">{cue.overallLength}</span>
+                                    <span className="spec-value">{cue.overallLength} in</span>
                                 </div>
                             )}
                             {cue.overallWeight && (
                                 <div className="spec-item">
                                     <span className="spec-label">Overall Weight:</span>
-                                    <span className="spec-value">{cue.overallWeight}</span>
+                                    <span className="spec-value">{cue.overallWeight} oz</span>
                                 </div>
                             )}
                             {cue.tipSize && (
                                 <div className="spec-item">
                                     <span className="spec-label">Tip Size:</span>
-                                    <span className="spec-value">{cue.tipSize}</span>
+                                    <span className="spec-value">{cue.tipSize} mm</span>
                                 </div>
                             )}
                             {cue.shaftTaper && (
