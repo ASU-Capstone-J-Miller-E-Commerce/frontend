@@ -102,6 +102,10 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+    position: sticky;
+    top: 30px;
+    align-self: flex-start;
+    z-index: 2;
 }
 
 .product-main-image {
@@ -407,6 +411,12 @@
         grid-template-columns: 1fr;
         gap: 20px;
         padding: 0 15px;
+    }
+
+    .product-gallery {
+        position: static;
+        top: unset;
+        z-index: unset;
     }
 
     .product-info {
