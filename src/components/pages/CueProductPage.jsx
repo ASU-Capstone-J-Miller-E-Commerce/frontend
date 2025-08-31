@@ -91,7 +91,7 @@ export default function CueProductPage() {
     const images = cue.imageUrls || [];
     const hasImages = images.length > 0;
     const hasPrice = cue.price !== undefined && cue.price !== null && cue.price !== "";
-    const isAvailable = cue.status === "available";
+    const isAvailable = cue.status === "Available";
 
 
     return (
@@ -135,7 +135,7 @@ export default function CueProductPage() {
                 {/* Product Info */}
                 <div className="product-info">
                     <div className="product-header">
-                        <div className="product-title-section">
+                        <div>
                             <span className="product-number">[{cue.cueNumber}]</span>
                             <h1 className="product-title">{cue.name}</h1>
                         </div>
@@ -144,14 +144,13 @@ export default function CueProductPage() {
                                 ${Number(cue.price).toFixed(2)}
                             </div>
                         )}
-                        <div className={`product-status ${cue.status}`}>
-                            {cue.status.charAt(0).toUpperCase() + cue.status.slice(1)}
+                        <div className={`product-status ${cue.status.replace(/\s+/g, '-')}`}>
+                            {cue.status}
                         </div>
                     </div>
 
                     {cue.description && (
                         <div className="product-description">
-                            <h3 className="description-header">Description</h3>
                             <p className="description-text">{cue.description}</p>
                         </div>
                     )}
