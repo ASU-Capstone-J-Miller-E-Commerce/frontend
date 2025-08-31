@@ -103,7 +103,7 @@
     flex-direction: column;
     gap: 15px;
     position: sticky;
-    top: 30px;
+    top: calc(var(--header-height) + 20px);
     align-self: flex-start;
     z-index: 2;
 }
