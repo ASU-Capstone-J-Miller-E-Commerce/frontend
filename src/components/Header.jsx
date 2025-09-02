@@ -7,8 +7,9 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Dialog, IconButton, InputBase, Box, Typography } from "@mui/material";
 import { Search, Close } from "@mui/icons-material";
 import { searchSite } from "../util/requests";
-import { Card } from "./util/Card"; // Import the Card component
+import { Card, MaterialCard } from "./util/Card"; // Import the Card component
 import { SOCIAL_MEDIA_LINKS } from "../util/globalConstants";
+import { showMaterialDialog } from "./dialogs/MaterialDialog";
 
 const options = {
     "Materials": [
@@ -420,6 +421,11 @@ function SearchDialog({ open, onClose, hasScrolled }) {
         
         return { name, link };
     };
+
+    const handleMaterialClick = (material) => {
+        showMaterialDialog(material);
+        onClose();
+    };
     
     return (
         <Dialog
@@ -590,14 +596,28 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                             >
                                 {searchResults.map((item, index) => {
                                     const { name, link } = getItemDetails(item);
+                                    // If material (wood or crystal), use MaterialCard and open dialog
+                                    if (item.commonName || item.crystalName) {
+                                        return (
+                                            <MaterialCard
+                                                key={index}
+                                                title={name}
+                                                images={item.imageUrls}
+                                                material={item}
+                                                onClick={handleMaterialClick}
+                                            />
+                                        );
+                                    }
+                                    // Otherwise, use Card as before
                                     return (
                                         <Card 
                                             key={index}
                                             title={name}
-                                            image={item.imageUrls && item.imageUrls.length > 0 ? item.imageUrls[0] : '/placeholder.png'}
+                                            images={item.imageUrls}
                                             tag={item.cueNumber || item.accessoryNumber || ''}
                                             price={item.price}
                                             linkTo={link}
+                                            onClick={onClose}
                                         />
                                     );
                                 })}
@@ -606,7 +626,7 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                             <Box sx={{ textAlign: 'center', padding: '10px 0' }}>
                                 <Typography 
                                     component={NavLink} 
-                                    to={`/search?query=${encodeURIComponent(searchQuery)}`}
+                                    to={`/collections/search?search=${encodeURIComponent(searchQuery)}`}
                                     onClick={onClose}
                                     sx={{ 
                                         color: 'inherit', 

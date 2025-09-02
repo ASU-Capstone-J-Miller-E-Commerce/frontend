@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 
-export function Card({title, price, tag, linkTo="#", images}) {
+export function Card({title, price, tag, linkTo="#", images, onClick}) {
     const hasPrice = price !== undefined && price !== null && price !== "";
     const hasTag = tag !== undefined && tag !== null && tag !== "";
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -23,7 +23,7 @@ export function Card({title, price, tag, linkTo="#", images}) {
     };
     
     return (
-        <NavLink to={linkTo} className="card-link">
+        <NavLink to={linkTo} className="card-link" onClick={onClick}>
             <div 
                 className="card-wrapper"
                 onMouseEnter={handleMouseEnter}
