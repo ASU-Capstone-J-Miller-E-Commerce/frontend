@@ -578,33 +578,7 @@ function SearchDialog({ open, onClose, handleLinkClick, hasScrolled }) {
                                         md: 'repeat(4, minmax(0, 1fr))'
                                     },
                                     gap: '15px',
-                                    width: '100%',
-                                    '& > div': {
-                                        // Force equal width and proper containment
-                                        minWidth: 0,
-                                        maxWidth: '100%',
-                                        overflow: 'hidden',
-                                        // Set fixed aspect ratio
-                                        aspectRatio: '1 / 1.2',
-                                        // Fix inner styling
-                                        '& .card-wrapper': {
-                                            width: '100%',
-                                            height: '100%',
-                                            boxSizing: 'border-box',
-                                        },
-                                        '& .card-image': {
-                                            width: '100%',
-                                            height: 'auto',
-                                            aspectRatio: '1 / 1',
-                                            overflow: 'hidden'
-                                        },
-                                        '& .card-image img': {
-                                            aspectRatio: '1 / 1',
-                                            objectFit: 'cover',
-                                            width: '100%',
-                                            height: '100%'
-                                        }
-                                    }
+                                    width: '100%'
                                 }}
                             >
                                 {searchResults.map((item, index) => {

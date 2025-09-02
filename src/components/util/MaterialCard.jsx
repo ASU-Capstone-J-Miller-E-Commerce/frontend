@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 
-export function MaterialCard({title, price, tag, material, images, onClick}) {
+export function MaterialCard({title, price, tag, material, image, images, onClick}) {
     const hasPrice = price !== undefined && price !== null && price !== "";
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     
-    // Get image array from images prop or material
-    const imageArray = images || material?.imageUrls || [];
+    // Get image array from images prop, material, or use single image
+    const imageArray = images || material?.imageUrls || (image ? [image] : []);
     const hasMultipleImages = imageArray.length > 1;
     
     const handleClick = () => {
@@ -40,9 +40,6 @@ export function MaterialCard({title, price, tag, material, images, onClick}) {
                     <img 
                         src={imageArray[currentImageIndex]} 
                         alt={title}
-                        style={{
-                            transition: 'opacity 0.3s ease-in-out'
-                        }}
                     />
                 </div>
                 {/* Card Content */}
