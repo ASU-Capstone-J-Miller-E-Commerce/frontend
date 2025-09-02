@@ -227,7 +227,8 @@ export default function Header() {
 
             <SearchDialog 
                 open={searchOpen} 
-                onClose={handleSearchClose} 
+                onClose={handleSearchClose}
+                handleLinkClick={handleLinkClick}
                 hasScrolled={hasScrolled} 
             />
         </header>
@@ -358,7 +359,7 @@ function DrawerNavItem({ openDropdown, text, isDropdown, isOpen, onToggle, optio
     );
 }
 
-function SearchDialog({ open, onClose, hasScrolled }) {
+function SearchDialog({ open, onClose, handleLinkClick, hasScrolled }) {
     const [searchResults, setSearchResults] = useState([]);
     const [nothingFound, setNothingFound] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -382,6 +383,7 @@ function SearchDialog({ open, onClose, hasScrolled }) {
         if (searchQuery.trim()) {
             navigate(`/collections/search?search=${encodeURIComponent(searchQuery)}`);
             onClose();
+            handleLinkClick();
         }
     };
 
@@ -424,8 +426,12 @@ function SearchDialog({ open, onClose, hasScrolled }) {
 
     const handleMaterialClick = (material) => {
         showMaterialDialog(material);
-        onClose();
     };
+
+    const handleProductClick = () => {
+        onLinkClick();
+        onClose();
+    }
     
     return (
         <Dialog
@@ -617,7 +623,7 @@ function SearchDialog({ open, onClose, hasScrolled }) {
                                             tag={item.cueNumber || item.accessoryNumber || ''}
                                             price={item.price}
                                             linkTo={link}
-                                            onClick={onClose}
+                                            onClick={handleProductClick}
                                         />
                                     );
                                 })}
