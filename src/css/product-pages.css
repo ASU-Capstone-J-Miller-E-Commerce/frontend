@@ -36,9 +36,23 @@
     background: none;
     border-bottom: 1px solid #e0e0e0;
     margin: 0;
+    transition: background-color 0.2s ease;
+}
+.section-header i {
+    transition: transform 0.3s ease;
 }
 .section-title {
     flex: 1;
+}
+.section-content-wrapper {
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+}
+.section-content-wrapper.open {
+    transition: max-height 0.3s ease-in-out;
+}
+.section-content-wrapper.closed {
+    transition: max-height 0.3s ease-in-out;
 }
 .section-content {
     margin: 0 0 2px 0;

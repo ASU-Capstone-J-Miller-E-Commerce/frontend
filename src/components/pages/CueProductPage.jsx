@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { DefaultButton } from "../util/Buttons";
 import { getCueByGuid } from "../../util/requests";
@@ -8,6 +8,8 @@ import { NavLink } from "react-router-dom";
 
 function SectionDropdown({ title, children, defaultOpen = false }) {
     const [open, setOpen] = useState(defaultOpen);
+    const contentRef = React.useRef(null);
+    
     return (
         <div className="section-dropdown">
             <h4
@@ -17,7 +19,16 @@ function SectionDropdown({ title, children, defaultOpen = false }) {
                 <span className="section-title">{title}</span>
                 <i className={`fa-solid ${open ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
             </h4>
-            {open && <div className="section-content">{children}</div>}
+            <div 
+                className={`section-content-wrapper ${open ? 'open' : 'closed'}`}
+                style={{
+                    maxHeight: open ? `${contentRef.current?.scrollHeight}px` : '0px'
+                }}
+            >
+                <div className="section-content" ref={contentRef}>
+                    {children}
+                </div>
+            </div>
         </div>
     );
 }
