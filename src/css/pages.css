@@ -479,23 +479,26 @@
 .collection-banner {
     display: flex;
     align-items: center;
-    padding-left: 50px;
     text-align: left;
-    height: 102px;
+    height: fit-content;
+    padding: 6px 0px 6px 50px;
     background-color: var(--miller-dark-grey);
     color: var(--miller-white);
   }
 
-  @media (max-width: 770px) {
-      .collection-banner {
-          height: 85px;
-          padding-left: 20px;
-      }
+@media (max-width: 770px) {
+    .collection-banner {
+        padding: 6px 0px 6px 20px;
+    }
 
-      .collection-banner h1 {
-          font-size: 2.5rem;
-      }
-  }
+    .collection-banner h1 {
+        font-size: 2.5rem;
+    }
+}
+
+.collection-banner h1 {
+    margin: 0;
+}
 
 .collection-wrapper {
     padding: 20px;
