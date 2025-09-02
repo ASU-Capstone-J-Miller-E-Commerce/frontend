@@ -69,7 +69,8 @@ export default function Header() {
             document.body.style.overflow = 'auto';
         }
 
-        if (openDrawer && screenWidth <= 990) {
+        // Only create focus trap if drawer is open, screen is mobile, and search dialog is NOT open
+        if (openDrawer && screenWidth <= 990 && !searchOpen) {
             const trap = createFocusTrap('.main-header', {
                 onActivate: () => document.body.classList.add('trap-is-active'),
                 onDeactivate: () => document.body.classList.remove('trap-is-active'),
@@ -97,7 +98,7 @@ export default function Header() {
             }
             document.removeEventListener('keydown', handleKeyDown);
         };
-    }, [openDrawer, screenWidth]);
+    }, [openDrawer, screenWidth, searchOpen]); // Added searchOpen to dependencies
 
     useEffect(() => {
         const height = headerRef.current?.offsetHeight;
@@ -139,9 +140,15 @@ export default function Header() {
     const handleLinkClick = () => {
         setOpenDrawer(false);
         setOpenDropdown(null);
+        if (focusTrap) {
+            focusTrap.deactivate();
+        }
     };
 
     const handleSearchOpen = () => {
+        if (focusTrap) {
+            focusTrap.deactivate();
+        }
         setSearchOpen(true);
     };
 
