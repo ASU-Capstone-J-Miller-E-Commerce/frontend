@@ -709,7 +709,7 @@ export default function Collection({
                                     }
                                     return (
                                         <li key={index}>
-                                            {collection === 'materials' ? (
+                                            {item.commonName || item.crystalName ? (
                                                 <MaterialCard 
                                                     title={title}
                                                     tag={tag}
