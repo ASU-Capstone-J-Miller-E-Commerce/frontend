@@ -36,7 +36,6 @@ export function _ajax(settings = {}) {
             return response;
         })
         .catch((err) => {
-            console.log(err);
             const response = err.responseJSON ? JSON.parse(err.responseJSON) : err;
             receiveResponse(response);
 

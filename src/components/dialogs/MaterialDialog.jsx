@@ -104,7 +104,6 @@ export const hideMaterialDialog = () => {
 
 export const clearMaterialCache = () => {
     materialCache.clear();
-    console.log('Material cache cleared');
 };
 
 const MaterialDialog = () => {
@@ -123,7 +122,6 @@ const MaterialDialog = () => {
         const cached = materialCache.get(cacheKey);
         
         if (cached && (Date.now() - cached.timestamp) < CACHE_EXPIRY_MS) {
-            console.log('Using cached material data for GUID:', guid);
             return cached.data;
         }
 
