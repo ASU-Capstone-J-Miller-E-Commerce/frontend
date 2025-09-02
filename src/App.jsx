@@ -21,6 +21,7 @@ import PasswordReset from "./components/pages/user/PasswordReset.jsx";
 import ContactUsPage from "./components/pages/ContactUsPage.jsx";
 import FAQPage from "./components/pages/FAQPage.jsx";
 import AboutUsPage from "./components/pages/AboutUsPage.jsx";
+import CartPage from "./components/pages/CartPage.jsx";
 import OrdersPage from "./components/pages/user/OrdersPage.jsx";
 import ReferencesPage from "./components/pages/ReferencesPage.jsx";
 import AdminPage from "./components/pages/user/AdminPage.jsx";
@@ -31,6 +32,7 @@ import MaterialDialog from "./components/dialogs/MaterialDialog.jsx";
 import "./css/fontawesome/fontawesome.css";
 import "./css/fontawesome/brands.css";
 import "./css/fontawesome/solid.css";
+import "./css/cart.css";
 import "react-toastify/dist/ReactToastify.css";
 
 
@@ -121,9 +123,7 @@ function App() {
                     <Route path="/accessories/:guid" element={<AccessoryProductPage />} />
 
                     <Route path="/build-a-cue" element={<BuildACuePage />} />
-
                     
-
                     {/* 
                         User Pages
                     */}
@@ -143,6 +143,9 @@ function App() {
                         </Route>
                         <Route index element={<Navigate to="/" replace />} />
                         <Route path="*" element={<Navigate to="/" replace />} />
+                    </Route>
+                    <Route element={<AuthRoute />}>
+                        <Route path="/cart" element={<CartPage />} />
                     </Route>
 
                     {/* 

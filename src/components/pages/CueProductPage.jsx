@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { DefaultButton } from "../util/Buttons";
-import { getCueByGuid } from "../../util/requests";
+import { getCueByGuid, addToCart } from "../../util/requests";
 import MaterialLink from "../util/MaterialLink";
 import NotFoundPage from "./NotFoundPage";
 import { NavLink } from "react-router-dom";
+import { receiveErrors, receiveLogs } from "../../util/notifications";
 
 function SectionDropdown({ title, children, defaultOpen = false }) {
     const [open, setOpen] = useState(defaultOpen);
@@ -36,10 +38,12 @@ function SectionDropdown({ title, children, defaultOpen = false }) {
 export default function CueProductPage() {
     const { guid } = useParams();
     const navigate = useNavigate();
+    const isAuthenticated = useSelector(state => !!state.user?.authenticated);
     const [cue, setCue] = useState(null);
     const [loading, setLoading] = useState(true);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [error, setError] = useState(null);
+    const [addingToCart, setAddingToCart] = useState(false);
     const [openSections, setOpenSections] = useState({
         specifications: true,
         materials: false,
@@ -79,9 +83,23 @@ export default function CueProductPage() {
         setCurrentImageIndex(index);
     };
 
-    const handlePurchase = () => {
-        // TODO: Implement purchase functionality
-        console.log("Purchase cue:", cue);
+    const handlePurchase = async () => {
+        if (!isAuthenticated) {
+            receiveErrors("Please log in to add items to your cart");
+            navigate("/login");
+            return;
+        }
+
+        setAddingToCart(true);
+        addToCart(cue.guid, 'cue', 1)
+            .then(() => {
+                receiveLogs("Cue added to cart!");
+                setAddingToCart(false);
+            })
+            .catch(() => {
+                receiveErrors("Failed to add cue to cart");
+                setAddingToCart(false);
+            })
     };
 
     if (loading) {
@@ -171,14 +189,15 @@ export default function CueProductPage() {
                     <div className="product-purchase">
                         {isAvailable && hasPrice ? (
                             <DefaultButton 
-                                text="Add to Cart" 
+                                text={addingToCart ? "Adding to Cart..." : "Add to Cart"}
                                 onClick={handlePurchase} 
                                 className="full-width-btn"
+                                disabled={addingToCart}
                             />
                         ) : isAvailable ? (
                             <DefaultButton 
                                 text="Contact for Pricing" 
-                                onClick={() => navigate("/contact")} 
+                                onClick={() => navigate("/pages/contact-us")} 
                                 className="full-width-btn"
                             />
                         ) : cue.status === "Coming Soon" ? (

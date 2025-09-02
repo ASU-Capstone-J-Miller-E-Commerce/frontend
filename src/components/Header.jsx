@@ -229,7 +229,7 @@ export default function Header() {
                     aria-label="Search"
                 />
                 <LoginButton onClick={handleLinkClick} />
-                <button className="fa-solid fa-cart-shopping header-icon" />
+                <NavLink to="/cart" className="fa-solid fa-cart-shopping header-icon cart-icon" onClick={handleLinkClick}/>
             </div>
 
             <SearchDialog 

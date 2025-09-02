@@ -50,6 +50,44 @@ export function test() {
         method: "GET",
     });
 }
+
+// Cart functions
+export function getCart() {
+    return _ajax({
+        url: "/cart",
+        method: "GET",
+    });
+}
+
+export function addToCart(itemGuid, itemType, quantity = 1) {
+    return _ajax({
+        url: "/cart/add",
+        method: "POST",
+        data: { itemGuid, itemType, quantity }
+    });
+}
+
+export function updateCartItem(cartItemId, quantity) {
+    return _ajax({
+        url: `/cart/update/${cartItemId}`,
+        method: "PUT",
+        data: { quantity }
+    });
+}
+
+export function removeFromCart(cartItemId) {
+    return _ajax({
+        url: `/cart/remove/${cartItemId}`,
+        method: "DELETE",
+    });
+}
+
+export function clearCart() {
+    return _ajax({
+        url: "/cart/clear",
+        method: "DELETE",
+    });
+}
 /*==============================================================
 # Collections
 ==============================================================*/
