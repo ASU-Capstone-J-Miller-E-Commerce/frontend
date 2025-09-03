@@ -6,7 +6,7 @@ import { getCueByGuid, addToCart } from "../../util/requests";
 import MaterialLink from "../util/MaterialLink";
 import NotFoundPage from "./NotFoundPage";
 import { NavLink } from "react-router-dom";
-import { receiveErrors, receiveLogs } from "../../util/notifications";
+import { receiveErrors, receiveLogs, receiveResponse } from "../../util/notifications";
 
 function SectionDropdown({ title, children, defaultOpen = false }) {
     const [open, setOpen] = useState(defaultOpen);
@@ -92,12 +92,11 @@ export default function CueProductPage() {
 
         setAddingToCart(true);
         addToCart(cue.guid, 'cue', 1)
-            .then(() => {
-                receiveLogs("Cue added to cart!");
+            .then((res) => {
+                receiveResponse(res);
                 setAddingToCart(false);
             })
             .catch(() => {
-                receiveErrors("Failed to add cue to cart");
                 setAddingToCart(false);
             })
     };
