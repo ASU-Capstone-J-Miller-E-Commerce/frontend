@@ -1,13 +1,23 @@
 import { checkAuth } from "./requests";
-import { updateUser } from "./redux/actionCreators";
+import { updateUser, setCartItems } from "./redux/actionCreators";
 
 export function checkUserAuth() {
     checkAuth()
         .then((response) => {
-            updateUser({
+            const userData = {
                 ...response.data,
                 initialAuthChecked: true,
-            });
+            };
+            
+            // Update user data in Redux
+            updateUser(userData);
+            
+            // Update cart data in Redux if user is authenticated and cart exists
+            if (userData.authenticated && userData.cart) {
+                setCartItems(userData.cart.items || []);
+            } else {
+                setCartItems([]);
+            }
         })
         .catch(error => {
             console.error("Authentication check failed:", error);
@@ -15,5 +25,6 @@ export function checkUserAuth() {
                 authenticated: false, 
                 initialAuthChecked: true, 
             });
+            setCartItems([]);
         });
 };

@@ -1,57 +1,48 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { DefaultButton } from "../util/Buttons";
-import { getCart, updateCartItem, removeFromCart, clearCart } from "../../util/requests";
+import { updateCartItem, removeFromCart, clearCart } from "../../util/requests";
 import { receiveErrors, receiveLogs } from "../../util/notifications";
+import { setCartItems, updateCartItemRedux, removeCartItemRedux, clearCartRedux } from "../../util/redux/actionCreators";
 
 export default function CartPage() {
-    const [cartItems, setCartItems] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [totalItems, setTotalItems] = useState(0);
     const navigate = useNavigate();
+    
+    // Get cart data from Redux
+    const cartItems = useSelector(state => state.cart.items);
+    const totalItems = useSelector(state => state.cart.totalItems);
 
-    useEffect(() => {
-        loadCart();
-    }, []);
-
-    const loadCart = async () => {
-        try {
-            setLoading(true);
-            const response = await getCart();
-            if (response?.success) {
-                setCartItems(response.data.items || []);
-                setTotalItems(response.data.totalItems || 0);
-            } else {
-                receiveErrors("Failed to load cart");
-            }
-        } catch (error) {
-            receiveErrors("Failed to load cart");
-        } finally {
-            setLoading(false);
-        }
-    };
+    // Remove the useEffect and loadCart since we're using Redux
+    // The cart should already be loaded in Redux from the authentication flow
 
     const handleUpdateQuantity = async (cartItemId, newQuantity) => {
         if (newQuantity < 1) return;
         
+        // Optimistically update Redux
+        updateCartItemRedux(cartItemId, newQuantity);
+        
         updateCartItem(cartItemId, newQuantity)
             .then(() => {
-                loadCart();
                 receiveLogs("Cart updated");
             })
             .catch(() => {
                 receiveErrors("Failed to update cart");
+                // Note: Could reload cart here if needed, but relying on Redux state
             });
     };
 
     const handleRemoveItem = async (cartItemId) => {
+        // Optimistically update Redux
+        removeCartItemRedux(cartItemId);
+        
         removeFromCart(cartItemId)
             .then(() => {
-                loadCart();
                 receiveLogs("Item removed from cart");
             })
             .catch(() => {
                 receiveErrors("Failed to remove item");
+                // Note: Could reload cart here if needed, but relying on Redux state
             });
     };
 
@@ -60,14 +51,16 @@ export default function CartPage() {
             return;
         }
 
+        // Optimistically update Redux
+        clearCartRedux();
+
         clearCart()
             .then(() => {
-                setCartItems([]);
-                setTotalItems(0);
                 receiveLogs("Cart cleared");
             })
             .catch(() => {
                 receiveErrors("Failed to clear cart");
+                // Note: Could reload cart here if needed, but relying on Redux state
             });
     };
 
@@ -82,16 +75,7 @@ export default function CartPage() {
         return cartItems.some(item => !item.itemDetails?.price);
     };
 
-    if (loading) {
-        return (
-            <div className="cart-page">
-                <div className="cart-container">
-                    <div className="cart-loading">Loading cart...</div>
-                </div>
-            </div>
-        );
-    }
-
+    // No loading state needed since we're using Redux
     if (cartItems.length === 0) {
         return (
             <div className="cart-page">
