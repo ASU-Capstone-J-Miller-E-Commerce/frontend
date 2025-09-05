@@ -179,6 +179,14 @@ export function userChangePassword(currPw, newPw){
     })
 }
 
+export function contactUs(payload){
+    return _ajax({
+        url: "/email",
+        method: "POST",
+        data: payload
+})
+}
+
 /*==============================================================
 # Products
 ==============================================================*/
