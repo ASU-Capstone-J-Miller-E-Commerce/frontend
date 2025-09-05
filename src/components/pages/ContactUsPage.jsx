@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FormField, FormTextArea } from "../util/Inputs";
 import { useForm } from "react-hook-form";
 import { DefaultButton } from "../util/Buttons";
+import { contactUs } from "../../util/requests";
 
 export default function ContactUsPage() {
     const { register, handleSubmit, watch, formState: { errors }, reset, setFocus } = useForm({
@@ -28,8 +29,18 @@ export default function ContactUsPage() {
 
     const onSubmit = (data) => {
         console.log('Form submitted:', { ...data, attachment });
-        // add API call here
 
+        // add API call here
+        const payload = {
+            subject: data.subject,
+            message: `
+                    <b>Client Name:</b> ${data.name}<br>
+                    <b>Client Email:</b> ${data.email}<br>
+                    <b>Client Phone:</b> ${String(data.phone || '')}<br>
+                    <b>Message:</b><br>${data.comment}
+                    `
+        };
+        contactUs(payload);
 
         // reset form
         reset();
