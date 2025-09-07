@@ -98,7 +98,7 @@ p {
 
 .toast-class {
   margin-top: 65px;
-  font-family: 'bouwsma-uncial', system-ui, Helvetica, Arial, sans-serif !important;
+  font-family: 'VTGoblinHand', system-ui, Helvetica, Arial, sans-serif !important;
   font-size: .8em;
   color: var(--miller-black) !important;
   width: 40vw !important;
