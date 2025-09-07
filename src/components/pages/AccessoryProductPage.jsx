@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { DefaultButton } from "../util/Buttons";
 import { getAccessoryByGuid, addToCart } from "../../util/requests";
-import { setCartItems } from "../../util/redux/actionCreators";
+import { addCartItemRedux } from "../../util/redux/actionCreators";
 import { receiveErrors, receiveLogs, receiveResponse } from "../../util/notifications";
 import NotFoundPage from "./NotFoundPage";
 
@@ -56,10 +56,17 @@ export default function AccessoryProductPage() {
             .then((res) => {
                 receiveResponse(res);
                 
-                // Update Redux with the real cart data from backend
-                if (res && res.data && res.data.items) {
-                    setCartItems(res.data.items);
-                }
+                // Update Redux with the new cart item after successful backend operation
+                const cartItem = {
+                    cartItemId: `temp-${Date.now()}`, // Temporary ID until we get real data
+                    itemGuid: accessory.guid,
+                    itemType: 'accessory',
+                    quantity: quantity,
+                    addedAt: new Date().toISOString(), // Use ISO string for serialization
+                    itemDetails: accessory
+                };
+                
+                addCartItemRedux(cartItem);
                 setAddingToCart(false);
             })
             .catch((error) => {
