@@ -181,7 +181,7 @@ export function userChangePassword(currPw, newPw){
 
 export function contactUs(payload){
     return _ajax({
-        url: "/email",
+        url: "/email/contactus",
         method: "POST",
         data: payload
 })
