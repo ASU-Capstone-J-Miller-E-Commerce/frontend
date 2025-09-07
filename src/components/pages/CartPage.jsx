@@ -207,8 +207,8 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
 
                 {itemDetails.description && (
                     <p className="item-description">
-                        {itemDetails.description.substring(0, 150)}
-                        {itemDetails.description.length > 150 ? "..." : ""}
+                        {itemDetails.description.substring(0, 80)}
+                        {itemDetails.description.length > 80 ? "..." : ""}
                     </p>
                 )}
 
@@ -255,7 +255,8 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
 
                 {itemType === 'cue' && (
                     <div className="quantity-info">
-                        Quantity: 1 (cues are unique)
+                        <div>Quantity: 1</div>
+                        <div>(cues are unique)</div>
                     </div>
                 )}
 
