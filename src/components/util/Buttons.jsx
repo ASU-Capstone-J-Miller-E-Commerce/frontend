@@ -131,7 +131,7 @@ export function CartButton({onClick}) {
             }}
             aria-label={`Shopping cart with ${totalItems} items`}
         >
-            <i className="fa-solid fa-cart-shopping header-icon cart-icon" />
+            <i className="fa-solid fa-cart-shopping cart-icon header-icon" />
             {totalItems > 0 && (
                 <div className="cart-count-badge">
                     <span className="cart-count-text">

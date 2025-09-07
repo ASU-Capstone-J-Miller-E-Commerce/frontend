@@ -53,15 +53,11 @@
     position: relative;
     display: inline-block;
     cursor: pointer;
-    transition: transform 0.1s ease;
+    transition: transform 0.3s ease;
 }
 
 .cart-button-container:hover {
-    transform: scale(1.05);
-}
-
-.cart-button-container:active {
-    transform: scale(0.95);
+    transform: scale(1.15);
 }
 
 .cart-count-badge {

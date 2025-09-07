@@ -209,6 +209,10 @@
     margin-top: 5px;
 }
 
+.cart-icon.header-icon:hover {
+    transform: none;
+}
+
 .status-badge {
     display: inline-block;
     padding: 4px 8px;
