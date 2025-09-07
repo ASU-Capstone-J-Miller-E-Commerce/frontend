@@ -28,18 +28,18 @@ export function addCartItemRedux(item) {
     });
 }
 
-export function updateCartItemRedux(cartItemId, quantity) {
+export function updateCartItemRedux(itemGuid, quantity) {
     store.dispatch({
         type: actionTypes.UPDATE_CART_ITEM,
-        cartItemId,
+        itemGuid,
         quantity
     });
 }
 
-export function removeCartItemRedux(cartItemId) {
+export function removeCartItemRedux(itemGuid) {
     store.dispatch({
         type: actionTypes.REMOVE_CART_ITEM,
-        cartItemId
+        itemGuid
     });
 }
 

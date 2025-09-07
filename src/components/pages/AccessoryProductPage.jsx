@@ -58,7 +58,6 @@ export default function AccessoryProductPage() {
                 
                 // Update Redux with the new cart item after successful backend operation
                 const cartItem = {
-                    cartItemId: `temp-${Date.now()}`, // Temporary ID until we get real data
                     itemGuid: accessory.guid,
                     itemType: 'accessory',
                     quantity: quantity,

@@ -42,7 +42,7 @@ const cartReducer = (state = initialState, action) => {
 
         case actionTypes.UPDATE_CART_ITEM:
             const updatedItems = state.items.map(item => 
-                item.cartItemId === action.cartItemId 
+                item.itemGuid === action.itemGuid 
                     ? { ...item, quantity: action.quantity }
                     : item
             );
@@ -54,7 +54,7 @@ const cartReducer = (state = initialState, action) => {
             };
 
         case actionTypes.REMOVE_CART_ITEM:
-            const filteredItems = state.items.filter(item => item.cartItemId !== action.cartItemId);
+            const filteredItems = state.items.filter(item => item.itemGuid !== action.itemGuid);
             const filteredTotalItems = filteredItems.reduce((sum, item) => sum + item.quantity, 0);
             return {
                 ...state,

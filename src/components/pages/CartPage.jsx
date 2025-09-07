@@ -16,30 +16,26 @@ export default function CartPage() {
     // Remove the useEffect and loadCart since we're using Redux
     // The cart should already be loaded in Redux from the authentication flow
 
-    const handleUpdateQuantity = async (cartItemId, newQuantity) => {
+    const handleUpdateQuantity = async (itemGuid, newQuantity) => {
         if (newQuantity < 1) return;
         
-        updateCartItem(cartItemId, newQuantity)
+        updateCartItem(itemGuid, newQuantity)
             .then((response) => {
                 receiveResponse(response);
-                // Update Redux with cart data from backend
-                if (response && response.data) {
-                    setCartItems(response.data.items);
-                }
+                // Update Redux state
+                updateCartItemRedux(itemGuid, newQuantity);
             })
             .catch(() => {
                 // Errors are already handled by the request system
             });
     };
 
-    const handleRemoveItem = async (cartItemId) => {
-        removeFromCart(cartItemId)
+    const handleRemoveItem = async (itemGuid) => {
+        removeFromCart(itemGuid)
             .then((response) => {
                 receiveResponse(response);
-                // Update Redux with cart data from backend
-                if (response && response.data) {
-                    setCartItems(response.data.items);
-                }
+                // Update Redux state
+                removeCartItemRedux(itemGuid);
             })
             .catch(() => {
                 // Errors are already handled by the request system
@@ -54,10 +50,8 @@ export default function CartPage() {
         clearCart()
             .then((response) => {
                 receiveResponse(response);
-                // Update Redux with cart data from backend
-                if (response && response.data) {
-                    setCartItems(response.data.items);
-                }
+                // Update Redux state
+                clearCartRedux();
             })
             .catch(() => {
                 // Errors are already handled by the request system
@@ -118,7 +112,7 @@ export default function CartPage() {
                     <div className="cart-items">
                         {cartItems.map((item) => (
                             <CartItem
-                                key={item.cartItemId}
+                                key={item.itemGuid}
                                 item={item}
                                 onUpdateQuantity={handleUpdateQuantity}
                                 onRemove={handleRemoveItem}
@@ -169,7 +163,7 @@ export default function CartPage() {
 }
 
 function CartItem({ item, onUpdateQuantity, onRemove }) {
-    const { itemDetails, quantity, cartItemId, itemType } = item;
+    const { itemDetails, quantity, itemGuid, itemType } = item;
     const navigate = useNavigate();
 
     if (!itemDetails) {
@@ -242,7 +236,7 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
                 {itemType === 'accessory' && (
                     <div className="quantity-controls">
                         <button 
-                            onClick={() => onUpdateQuantity(cartItemId, quantity - 1)}
+                            onClick={() => onUpdateQuantity(itemGuid, quantity - 1)}
                             disabled={quantity <= 1}
                             className="quantity-btn"
                         >
@@ -250,7 +244,7 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
                         </button>
                         <span className="quantity">{quantity}</span>
                         <button 
-                            onClick={() => onUpdateQuantity(cartItemId, quantity + 1)}
+                            onClick={() => onUpdateQuantity(itemGuid, quantity + 1)}
                             disabled={quantity >= 5}
                             className="quantity-btn"
                         >
@@ -266,7 +260,7 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
                 )}
 
                 <button 
-                    onClick={() => onRemove(cartItemId)}
+                    onClick={() => onRemove(itemGuid)}
                     className="remove-btn"
                 >
                     <i className="fa-solid fa-trash"></i>

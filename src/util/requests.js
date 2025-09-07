@@ -76,17 +76,17 @@ export function addToCart(itemGuid, itemType, quantity = 1) {
     });
 }
 
-export function updateCartItem(cartItemId, quantity) {
+export function updateCartItem(itemGuid, quantity) {
     return _ajax({
-        url: `/cart/update/${cartItemId}`,
+        url: `/cart/update/${itemGuid}`,
         method: "PUT",
         data: { quantity }
     });
 }
 
-export function removeFromCart(cartItemId) {
+export function removeFromCart(itemGuid) {
     return _ajax({
-        url: `/cart/remove/${cartItemId}`,
+        url: `/cart/remove/${itemGuid}`,
         method: "DELETE",
     });
 }

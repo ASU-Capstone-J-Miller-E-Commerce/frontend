@@ -100,7 +100,6 @@ export default function CueProductPage() {
                 
                 // Update Redux with the new cart item after successful backend operation
                 const cartItem = {
-                    cartItemId: `temp-${Date.now()}`, // Temporary ID until we get real data
                     itemGuid: cue.guid,
                     itemType: 'cue',
                     quantity: 1, // Cues are always quantity 1
