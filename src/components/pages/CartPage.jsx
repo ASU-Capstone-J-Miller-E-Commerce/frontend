@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { DefaultButton } from "../util/Buttons";
@@ -165,6 +165,16 @@ export default function CartPage() {
 function CartItem({ item, onUpdateQuantity, onRemove }) {
     const { itemDetails, quantity, itemGuid, itemType } = item;
     const navigate = useNavigate();
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     if (!itemDetails) {
         return null; // Item no longer exists
@@ -180,6 +190,9 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
 
     const hasPrice = itemDetails.price !== undefined && itemDetails.price !== null && itemDetails.price !== "";
     const isAvailable = itemDetails.status === "Available";
+
+    // Adjust description length based on screen size
+    const descriptionLength = isMobile ? 40 : 80;
 
     return (
         <div className="cart-item">
@@ -207,8 +220,8 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
 
                 {itemDetails.description && (
                     <p className="item-description">
-                        {itemDetails.description.substring(0, 80)}
-                        {itemDetails.description.length > 80 ? "..." : ""}
+                        {itemDetails.description.substring(0, descriptionLength)}
+                        {itemDetails.description.length > descriptionLength ? "..." : ""}
                     </p>
                 )}
 
