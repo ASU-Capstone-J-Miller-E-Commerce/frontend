@@ -21,6 +21,13 @@ export function setCartItems(items) {
     });
 }
 
+export function addCartItemRedux(item) {
+    store.dispatch({
+        type: actionTypes.ADD_CART_ITEM,
+        item
+    });
+}
+
 export function updateCartItemRedux(cartItemId, quantity) {
     store.dispatch({
         type: actionTypes.UPDATE_CART_ITEM,

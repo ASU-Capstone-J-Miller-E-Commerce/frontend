@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import { receiveResponse} from './notifications';
+import { setCartItems } from './redux/actionCreators';
 import { isValidElement } from 'react';
 
 
@@ -58,6 +59,12 @@ export function getCart() {
     return _ajax({
         url: "/cart",
         method: "GET",
+    }).then(response => {
+        // Update Redux store with fresh cart data
+        if (response && response.data) {
+            setCartItems(response.data.items || []);
+        }
+        return response;
     });
 }
 

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { DefaultButton } from "../util/Buttons";
 import { getCueByGuid, addToCart } from "../../util/requests";
+import { setCartItems } from "../../util/redux/actionCreators";
 import MaterialLink from "../util/MaterialLink";
 import NotFoundPage from "./NotFoundPage";
 import { NavLink } from "react-router-dom";
@@ -91,14 +92,21 @@ export default function CueProductPage() {
         }
 
         setAddingToCart(true);
+        
+        // Add to cart on backend first
         addToCart(cue.guid, 'cue', 1)
             .then((res) => {
                 receiveResponse(res);
+                
+                // Update Redux with the real cart data from backend
+                if (res && res.data && res.data.items) {
+                    setCartItems(res.data.items);
+                }
                 setAddingToCart(false);
             })
-            .catch(() => {
+            .catch((error) => {
                 setAddingToCart(false);
-            })
+            });
     };
 
     if (loading) {

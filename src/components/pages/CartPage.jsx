@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { DefaultButton } from "../util/Buttons";
 import { updateCartItem, removeFromCart, clearCart } from "../../util/requests";
-import { receiveErrors, receiveLogs } from "../../util/notifications";
+import { receiveResponse } from "../../util/notifications";
 import { setCartItems, updateCartItemRedux, removeCartItemRedux, clearCartRedux } from "../../util/redux/actionCreators";
 
 export default function CartPage() {
@@ -19,30 +19,30 @@ export default function CartPage() {
     const handleUpdateQuantity = async (cartItemId, newQuantity) => {
         if (newQuantity < 1) return;
         
-        // Optimistically update Redux
-        updateCartItemRedux(cartItemId, newQuantity);
-        
         updateCartItem(cartItemId, newQuantity)
-            .then(() => {
-                receiveLogs("Cart updated");
+            .then((response) => {
+                receiveResponse(response);
+                // Update Redux with cart data from backend
+                if (response && response.data) {
+                    setCartItems(response.data.items);
+                }
             })
             .catch(() => {
-                receiveErrors("Failed to update cart");
-                // Note: Could reload cart here if needed, but relying on Redux state
+                // Errors are already handled by the request system
             });
     };
 
     const handleRemoveItem = async (cartItemId) => {
-        // Optimistically update Redux
-        removeCartItemRedux(cartItemId);
-        
         removeFromCart(cartItemId)
-            .then(() => {
-                receiveLogs("Item removed from cart");
+            .then((response) => {
+                receiveResponse(response);
+                // Update Redux with cart data from backend
+                if (response && response.data) {
+                    setCartItems(response.data.items);
+                }
             })
             .catch(() => {
-                receiveErrors("Failed to remove item");
-                // Note: Could reload cart here if needed, but relying on Redux state
+                // Errors are already handled by the request system
             });
     };
 
@@ -51,16 +51,16 @@ export default function CartPage() {
             return;
         }
 
-        // Optimistically update Redux
-        clearCartRedux();
-
         clearCart()
-            .then(() => {
-                receiveLogs("Cart cleared");
+            .then((response) => {
+                receiveResponse(response);
+                // Update Redux with cart data from backend
+                if (response && response.data) {
+                    setCartItems(response.data.items);
+                }
             })
             .catch(() => {
-                receiveErrors("Failed to clear cart");
-                // Note: Could reload cart here if needed, but relying on Redux state
+                // Errors are already handled by the request system
             });
     };
 
@@ -251,6 +251,7 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
                         <span className="quantity">{quantity}</span>
                         <button 
                             onClick={() => onUpdateQuantity(cartItemId, quantity + 1)}
+                            disabled={quantity >= 5}
                             className="quantity-btn"
                         >
                             +

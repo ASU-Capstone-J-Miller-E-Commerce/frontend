@@ -15,6 +15,31 @@ const cartReducer = (state = initialState, action) => {
                 totalItems
             };
 
+        case actionTypes.ADD_CART_ITEM:
+            const existingItemIndex = state.items.findIndex(
+                item => item.itemGuid === action.item.itemGuid && item.itemType === action.item.itemType
+            );
+            
+            let newItems;
+            if (existingItemIndex > -1) {
+                // Update existing item quantity
+                newItems = state.items.map(item => 
+                    item.itemGuid === action.item.itemGuid && item.itemType === action.item.itemType
+                        ? { ...item, quantity: item.quantity + action.item.quantity }
+                        : item
+                );
+            } else {
+                // Add new item
+                newItems = [...state.items, action.item];
+            }
+            
+            const newTotalItems = newItems.reduce((sum, item) => sum + item.quantity, 0);
+            return {
+                ...state,
+                items: newItems,
+                totalItems: newTotalItems
+            };
+
         case actionTypes.UPDATE_CART_ITEM:
             const updatedItems = state.items.map(item => 
                 item.cartItemId === action.cartItemId 
