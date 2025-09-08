@@ -456,6 +456,36 @@ export function deleteImages(imageUrls) {
 
 
 /*==============================================================
+# Payment
+==============================================================*/
+
+export function createCheckoutSession(cartItems, email, shipping = false) {
+    // Extract cue GUIDs from cart items (cues are always quantity 1)
+    const cueGuids = cartItems
+        .filter(item => item.itemType === 'cue')
+        .map(item => item.itemDetails.guid);
+    
+    // Extract accessory items with quantities
+    const accessoryItems = cartItems
+        .filter(item => item.itemType === 'accessory')
+        .map(item => ({
+            guid: item.itemDetails.guid,
+            quantity: item.quantity
+        }));
+    
+    return _ajax({
+        url: "/order/payment/create-checkout-session",
+        method: "POST",
+        data: { 
+            cueGuids: cueGuids,
+            accessoryItems: accessoryItems,
+            email: email,
+            shipping: shipping
+        }
+    });
+}
+
+/*==============================================================
 # Sitewide Search
 ==============================================================*/
 
