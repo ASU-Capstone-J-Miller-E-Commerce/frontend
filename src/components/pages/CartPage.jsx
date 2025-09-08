@@ -174,7 +174,7 @@ export default function CartPage() {
                             </div>
                             
                             <div className="summary-line total">
-                                <span>Total:</span>
+                                <span>Subtotal:</span>
                                 <span>{hasItemsWithoutPrice() ? "Contact for pricing" : `$${total.toFixed(2)}`}</span>
                             </div>
 
