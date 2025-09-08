@@ -144,7 +144,6 @@ function App() {
                             <Route path="admin" element={<AdminPage />} />
                         </Route>
                         <Route index element={<Navigate to="/" replace />} />
-                        <Route path="*" element={<Navigate to="/" replace />} />
                     </Route>
                     <Route element={<AuthRoute />}>
                         <Route path="/cart" element={<CartPage />} />
