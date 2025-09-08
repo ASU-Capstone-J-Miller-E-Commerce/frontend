@@ -22,6 +22,8 @@ import ContactUsPage from "./components/pages/ContactUsPage.jsx";
 import FAQPage from "./components/pages/FAQPage.jsx";
 import AboutUsPage from "./components/pages/AboutUsPage.jsx";
 import CartPage from "./components/pages/CartPage.jsx";
+import CheckoutSuccessPage from "./components/pages/CheckoutSuccessPage.jsx";
+import CheckoutCancelPage from "./components/pages/CheckoutCancelPage.jsx";
 import OrdersPage from "./components/pages/user/OrdersPage.jsx";
 import ReferencesPage from "./components/pages/ReferencesPage.jsx";
 import AdminPage from "./components/pages/user/AdminPage.jsx";
@@ -146,6 +148,14 @@ function App() {
                     </Route>
                     <Route element={<AuthRoute />}>
                         <Route path="/cart" element={<CartPage />} />
+                    </Route>
+
+                    {/* 
+                        Checkout Pages
+                    */}
+                    <Route path="/checkout">
+                        <Route path="success" element={<CheckoutSuccessPage />} />
+                        <Route path="cancel" element={<CheckoutCancelPage />} />
                     </Route>
 
                     {/* 
