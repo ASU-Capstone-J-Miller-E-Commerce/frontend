@@ -529,10 +529,15 @@
 ==============================================================*/
 
 @media (max-height: 800px) and (min-width: 769px) {
+    .product-container {
+        grid-template-columns: auto 1fr;
+        gap: 30px;
+    }
+    
     .product-gallery {
         max-height: calc(100vh - var(--header-height) - 80px);
         width: 80%;
-        max-width: 550px;
+        max-width: 600px;
         margin-left: auto;
     }
     
@@ -553,10 +558,15 @@
 }
 
 @media (max-height: 700px) and (min-width: 769px) {
+    .product-container {
+        grid-template-columns: auto 1fr;
+        gap: 25px;
+    }
+    
     .product-gallery {
         max-height: calc(100vh - var(--header-height) - 70px);
         width: 70%;
-        max-width: 450px;
+        max-width: 550px;
         margin-left: auto;
         gap: 10px;
     }
