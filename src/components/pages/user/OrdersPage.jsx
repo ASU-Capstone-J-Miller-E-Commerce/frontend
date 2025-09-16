@@ -7,7 +7,7 @@ import { receiveResponse } from "../../../util/notifications";
 export default function OrdersPage() {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
+    const [viewMode, setViewMode] = useState('list'); // 'grid' or 'list'
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -69,8 +69,6 @@ export default function OrdersPage() {
         return (
             <div className="user-content">
                 <div className="orders-page">
-                    <div className="orders-header">
-                    </div>
                     <div className="loading-content">
                         <i className="fa-solid fa-spinner fa-spin"></i>
                         <p>Loading your orders...</p>
@@ -82,26 +80,7 @@ export default function OrdersPage() {
 
     return (
         <div className="user-content">
-            <div className="orders-page">
-                <div className="orders-header">
-                    <div className="view-toggle desktop-only">
-                        <button 
-                            className={`view-toggle-btn ${viewMode === 'grid' ? 'active' : ''}`}
-                            onClick={() => setViewMode('grid')}
-                            title="Grid View"
-                        >
-                            <i className="fa-solid fa-grip"></i>
-                        </button>
-                        <button 
-                            className={`view-toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
-                            onClick={() => setViewMode('list')}
-                            title="List View"
-                        >
-                            <i className="fa-solid fa-list"></i>
-                        </button>
-                    </div>
-                </div>
-                
+            <div className="orders-page">          
                 {orders.length === 0 ? (
                     <div className="no-orders-card">
                         <i className="fa-solid fa-box-open"></i>
@@ -119,9 +98,9 @@ export default function OrdersPage() {
                         {viewMode === 'list' && (
                             <div className="orders-table-header desktop-only">
                                 <div className="col-images"></div>
-                                <div className="col-order">Order</div>
-                                <div className="col-status">Status</div>
-                                <div className="col-total">Total</div>
+                                <h2 className="col-order account-section-title">Order</h2>
+                                <h2 className="col-status account-section-title">Status</h2>
+                                <h2 className="col-total account-section-title">Total</h2>
                             </div>
                         )}
                         {orders.map((order) => (
