@@ -848,17 +848,17 @@
 
 .order-card {
     background-color: var(--miller-white);
-    border-radius: 8px;
+    border-radius: 6px;
     padding: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 6px 0px;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.2s ease;
     border: 1px solid #f0f0f0;
 }
 
 .order-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 10px 0px;
 }
 
 /* List View Styling - Table Layout */
@@ -882,34 +882,22 @@
 
 .order-list-item {
     background-color: var(--miller-white);
-    border-radius: 0;
+    border-radius: 6px;
     padding: 16px 20px;
-    box-shadow: none;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 6px 0px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
     border: none;
-    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 8px;
     display: grid;
     grid-template-columns: 100px 1fr 150px 120px;
     gap: 20px;
     align-items: center;
 }
 
-.order-list-item:first-of-type {
-    border-radius: 0 0 8px 8px;
-}
-
-.order-list-item:last-of-type {
-    border-radius: 0 0 8px 8px;
-    border-bottom: none;
-}
-
-.order-list-item:only-of-type {
-    border-radius: 8px;
-}
-
 .order-list-item:hover {
     background-color: #f8f9fa;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 10px 0px;
     transform: none;
     box-shadow: none;
 }
@@ -1153,9 +1141,9 @@
 
 .no-orders-card {
     background-color: var(--miller-white);
-    border-radius: 8px;
+    border-radius: 6px;
     padding: 40px 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 6px 0px;
     text-align: center;
     border: 1px solid #f0f0f0;
     max-width: 400px;
@@ -1182,8 +1170,8 @@
     text-align: center;
     padding: 40px 20px;
     background-color: var(--miller-white);
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 6px 0px;
     border: 1px solid #f0f0f0;
     max-width: 400px;
     margin: 0 auto;
@@ -1246,9 +1234,9 @@
         
         /* Card styling */
         background-color: var(--miller-white);
-        border-radius: 8px;
+        border-radius: 6px;
         padding: 16px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 6px 0px;
         cursor: pointer;
         transition: all 0.2s ease;
         border: 1px solid #f0f0f0;
