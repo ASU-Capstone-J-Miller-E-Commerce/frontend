@@ -61,6 +61,12 @@ export default function OrdersPage() {
         return iconMap[orderStatus] || 'fa-clock';
     };
 
+    const getTotalImageCount = (order) => {
+        const cueCount = order.orderItems.cueDetails ? Math.min(order.orderItems.cueDetails.length, 4) : 0;
+        const accessoryCount = order.orderItems.accessoryDetails ? Math.min(order.orderItems.accessoryDetails.length, 4 - cueCount) : 0;
+        return cueCount + accessoryCount;
+    };
+
     const handleOrderClick = (orderId) => {
         navigate(`/account/orders/${orderId}`);
     };
@@ -113,8 +119,9 @@ export default function OrdersPage() {
                                     <>
                                         {/* Images Column */}
                                         <div className="col-images">
-                                            <div className="order-images">
-                                                {order.orderItems.cueDetails && order.orderItems.cueDetails.map((cue, index) => (
+                                            <div className={`order-images images-${getTotalImageCount(order)}`}>
+                                                {/* Show up to 4 unique product images */}
+                                                {order.orderItems.cueDetails && order.orderItems.cueDetails.slice(0, 4).map((cue, index) => (
                                                     <div key={index} className="order-item-image">
                                                         {cue.imageUrls && cue.imageUrls.length > 0 ? (
                                                             <img src={cue.imageUrls[0]} alt={cue.name} />
@@ -128,8 +135,8 @@ export default function OrdersPage() {
                                                         )}
                                                     </div>
                                                 ))}
-                                                {order.orderItems.accessoryDetails && order.orderItems.accessoryDetails.map((accessory, index) => (
-                                                    <div key={index} className="order-item-image">
+                                                {order.orderItems.accessoryDetails && order.orderItems.accessoryDetails.slice(0, 4 - (order.orderItems.cueDetails?.length || 0)).map((accessory, index) => (
+                                                    <div key={`acc-${index}`} className="order-item-image">
                                                         {accessory.imageUrls && accessory.imageUrls.length > 0 ? (
                                                             <img src={accessory.imageUrls[0]} alt={accessory.name} />
                                                         ) : (
@@ -180,8 +187,8 @@ export default function OrdersPage() {
                                         </div>
 
                                         {/* Order Images */}
-                                        <div className="order-images">
-                                            {order.orderItems.cueDetails && order.orderItems.cueDetails.map((cue, index) => (
+                                        <div className={`order-images images-${getTotalImageCount(order)}`}>
+                                            {order.orderItems.cueDetails && order.orderItems.cueDetails.slice(0, 4).map((cue, index) => (
                                                 <div key={index} className="order-item-image">
                                                     {cue.imageUrls && cue.imageUrls.length > 0 ? (
                                                         <img src={cue.imageUrls[0]} alt={cue.name} />
@@ -195,8 +202,8 @@ export default function OrdersPage() {
                                                     )}
                                                 </div>
                                             ))}
-                                            {order.orderItems.accessoryDetails && order.orderItems.accessoryDetails.map((accessory, index) => (
-                                                <div key={index} className="order-item-image">
+                                            {order.orderItems.accessoryDetails && order.orderItems.accessoryDetails.slice(0, 4 - (order.orderItems.cueDetails?.length || 0)).map((accessory, index) => (
+                                                <div key={`acc-${index}`} className="order-item-image">
                                                     {accessory.imageUrls && accessory.imageUrls.length > 0 ? (
                                                         <img src={accessory.imageUrls[0]} alt={accessory.name} />
                                                     ) : (

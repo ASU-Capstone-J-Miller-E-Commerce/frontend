@@ -799,21 +799,6 @@
     margin: 0 auto;
 }
 
-.orders-header {
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    min-height: 40px;
-}
-
-.orders-header h1 {
-    font-size: 1.5rem;
-    margin: 0;
-    color: var(--miller-black);
-    text-align: left;
-}
-
 /* Orders Container */
 .orders-container {
     margin-top: 0;
@@ -842,10 +827,6 @@
     
     .orders-page {
         padding: 0;
-    }
-    
-    .orders-header h1 {
-        font-size: 1.1rem;
     }
 }
 
@@ -941,16 +922,56 @@
 }
 
 .col-images .order-images {
-    display: flex;
+    display: grid;
+    width: 80px;
+    height: 80px;
     gap: 4px;
     margin: 0;
-    flex-wrap: nowrap;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* 1 image - full size */
+.col-images .order-images.images-1 {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+}
+
+/* 2 images - side by side */
+.col-images .order-images.images-2 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+}
+
+/* 3 images - 2 on top, 1 on bottom */
+.col-images .order-images.images-3 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+.col-images .order-images.images-3 .order-item-image:nth-child(3) {
+    grid-column: 1 / -1;
+}
+
+/* 4 images - 2x2 grid */
+.col-images .order-images.images-4 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
 }
 
 .col-images .order-item-image {
-    width: 35px;
-    height: 35px;
-    border-radius: 4px;
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+}
+
+.col-images .order-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    aspect-ratio: 1;
 }
 
 .col-order {
@@ -1010,79 +1031,6 @@
     color: var(--miller-black);
 }
 
-/* Remove old list item styling that's no longer needed */
-.order-list-item .order-status {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 0;
-    padding-bottom: 0;
-    border-bottom: none;
-    min-width: 140px;
-    flex-shrink: 0;
-}
-
-.order-list-item .order-date {
-    margin-left: 0;
-    margin-top: 4px;
-    font-size: 0.8rem;
-    color: #999;
-    display: block;
-}
-
-.order-list-item .order-images {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 0;
-    flex-wrap: nowrap;
-    min-width: 80px;
-    flex-shrink: 0;
-}
-
-.order-list-item .order-item-image {
-    width: 40px;
-    height: 40px;
-}
-
-.order-list-item .order-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0;
-    flex: 1;
-    min-width: 0;
-}
-
-.order-list-item .order-details {
-    flex: 1;
-    min-width: 0;
-}
-
-.order-list-item .order-number {
-    margin-bottom: 2px;
-}
-
-.order-list-item .order-summary {
-    font-size: 0.85rem;
-}
-
-.order-list-item .order-total {
-    flex-shrink: 0;
-    margin-left: 20px;
-}
-
-.order-list-item .order-actions {
-    text-align: right;
-    flex-shrink: 0;
-    margin-left: 20px;
-}
-
-.order-list-item .order-actions .btn-secondary {
-    padding: 6px 12px;
-    font-size: 0.9rem;
-    width: auto;
-    min-width: 100px;
-}
 
 .order-card:hover {
     transform: translateY(-2px);
@@ -1114,12 +1062,7 @@
     color: #666;
 }
 
-.order-images {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-}
+
 
 .order-item-image {
     position: relative;
@@ -1127,13 +1070,13 @@
     height: 60px;
     border-radius: 6px;
     overflow: hidden;
-    border: 1px solid #e0e0e0;
 }
 
 .order-item-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    aspect-ratio: 1;
 }
 
 .no-image {
@@ -1287,59 +1230,166 @@
         display: none;
     }
     
-    /* Force all orders to use card layout on mobile */
+    /* Force grid layout on mobile - override list styling */
+    .orders-container.list-view {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    /* Force list items to look like cards on mobile */
     .order-list-item {
-        display: block;
-        padding: 16px;
+        /* Override grid layout */
+        display: flex !important;
+        flex-direction: column;
+        grid-template-columns: none !important;
+        
+        /* Card styling */
+        background-color: var(--miller-white);
         border-radius: 8px;
-        border: 1px solid #f0f0f0;
-        margin-bottom: 16px;
+        padding: 16px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: 1px solid #f0f0f0;
+        margin-bottom: 0; /* gap handled by grid */
+        gap: 12px;
     }
     
     .order-list-item:hover {
-        background-color: var(--miller-white);
         transform: translateY(-2px);
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
     }
     
-    /* Reset column styling for mobile */
-    .col-images,
-    .col-order, 
-    .col-status,
-    .col-total {
-        display: block;
-        text-align: left;
-    }
-    
-    .col-images {
-        margin-bottom: 16px;
-    }
-    
-    .col-images .order-item-image {
-        width: 50px;
-        height: 50px;
-    }
-    
-    .col-order {
-        margin-bottom: 12px;
-    }
-    
-    .col-status {
-        margin-bottom: 12px;
-    }
-    
-    .col-status .order-status {
+    /* Status at the top - order 1 - full width */
+    .order-list-item .col-status {
+        order: 1;
+        display: flex;
         justify-content: flex-start;
-        padding-bottom: 12px;
-        border-bottom: 1px solid #f0f0f0;
+        margin: 0;
+        text-align: left;
+        width: 100%;
     }
     
-    .col-total {
-        text-align: right;
-        margin-top: 16px;
+    .order-list-item .col-status .order-status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        font-size: 1rem;
+        border: none;
+        margin: 0;
+        width: 100%;
+        font-weight: 500;
+    }
+    
+    /* Images in the middle - order 2 - bigger and adaptive grid */
+    .order-list-item .col-images {
+        order: 2;
+        margin: 0;
+        display: flex;
+        justify-content: flex-start;
+    }
+    
+    .order-list-item .col-images .order-images {
+        display: grid;
+        width: 100%;
+        height: 100%;
+        gap: 6px;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    
+    /* 1 image - full size */
+    .order-list-item .col-images .order-images.images-1 {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+    }
+    
+    /* 2 images - side by side */
+    .order-list-item .col-images .order-images.images-2 {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
+    }
+    
+    /* 3 images - 2 on top, 1 on bottom */
+    .order-list-item .col-images .order-images.images-3 {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+    }
+    
+    .order-list-item .col-images .order-images.images-3 .order-item-image:nth-child(3) {
+        grid-column: 1 / -1;
+    }
+    
+    /* 4 images - 2x2 grid */
+    .order-list-item .col-images .order-images.images-4 {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+    }
+    
+    .order-list-item .col-images .order-item-image {
+        width: 100%;
+        height: 100%;
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .order-list-item .col-images .order-item-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        aspect-ratio: 1;
+        border-radius: 8px;
+    }
+    
+    /* Order details below images - order 3 */
+    .order-list-item .col-order {
+        order: 3;
+        margin: 0;
+        text-align: left;
+        width: 100%;
+    }
+    
+    .order-list-item .col-order .order-number,
+    .order-list-item .col-order .order-summary,
+    .order-list-item .col-order .order-date {
+        text-align: left;
+        margin: 4px 0;
+    }
+    
+    .order-list-item .col-order .order-number {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+    
+    .order-list-item .col-order .order-summary {
+        font-size: 0.95rem;
+        color: #666;
+    }
+    
+    .order-list-item .col-order .order-date {
+        font-size: 0.85rem;
+        color: #999;
+    }
+    
+    /* Price at the bottom - order 4 */
+    .order-list-item .col-total {
+        order: 4;
+        text-align: left;
         padding-top: 12px;
         border-top: 1px solid #f0f0f0;
+        margin: 0;
+        width: 100%;
+    }
+    
+    .order-list-item .col-total .total-amount {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--miller-black);
     }
 }
 
