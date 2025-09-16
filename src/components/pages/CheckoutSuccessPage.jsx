@@ -74,7 +74,7 @@ export default function CheckoutSuccessPage() {
                                 <h3>Order Summary</h3>
                                 <div className="detail-row">
                                     <span><strong>Order Number:</strong></span>
-                                    <span>{orderDetails.orderNumber}</span>
+                                    <span>{orderDetails.orderId}</span>
                                 </div>
                                 <div className="detail-row">
                                     <span><strong>Total Amount:</strong></span>
