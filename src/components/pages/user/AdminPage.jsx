@@ -4,7 +4,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, B
 import { set, useForm } from 'react-hook-form';
 import { FormField, FormTextArea, FormSelect, DefaultToggle, FormMultiSelect } from '../../util/Inputs';
 import { DefaultButton } from '../../util/Buttons';
-import { getAdminUsers, createUser, editUser, changePassword, deleteUser, getAdminAccessories, createAccessory, editAccessory, deleteAccessory, getAdminMaterials, createWood, editWood, createCrystal, editCrystal, deleteCrystal, deleteWood, getAdminCues, createCue, editCue, deleteCue, deleteImages } from '../../../util/requests';
+import { getAdminUsers, createUser, editUser, changePassword, deleteUser, getAdminAccessories, createAccessory, editAccessory, deleteAccessory, getAdminMaterials, createWood, editWood, createCrystal, editCrystal, deleteCrystal, deleteWood, getAdminCues, createCue, editCue, deleteCue, deleteImages, getAdminOrders, editOrder } from '../../../util/requests';
 import { receiveResponse } from '../../../util/notifications';
 import { AdminSkeletonLoader } from '../../util/Util';
 import { useSelector } from 'react-redux';
@@ -49,6 +49,7 @@ export default function AdminPage() {
     const [accessoryData, setAccessoryData] = useState(null);
     const [materialData, setMaterialData] = useState(null);
     const [userData, setUserData] = useState(null);
+    const [orderData, setOrderData] = useState(null);
 
     const getData = async (pageOverride = null) => {
         setLoading(true);
@@ -96,6 +97,16 @@ export default function AdminPage() {
                         setLoading(false);
                     });
                 break;
+            case 'Orders':
+                getAdminOrders()
+                    .then((res) => {
+                        setLoading(false);
+                        setOrderData(res.data);
+                    })
+                    .catch((err) => {
+                        setLoading(false);
+                    });
+                break;
             default:
                 setLoading(false);
                 break;
@@ -108,7 +119,8 @@ export default function AdminPage() {
             (adminPage === 'Cues' && cueData === null) ||
             (adminPage === 'Accessories' && accessoryData === null) ||
             (adminPage === 'Materials' && materialData === null) ||
-            (adminPage === 'Users' && userData === null)
+            (adminPage === 'Users' && userData === null) ||
+            (adminPage === 'Orders' && orderData === null)
         ) {
             getData();
         }
@@ -152,12 +164,13 @@ export default function AdminPage() {
         <div>
             <AdminHeader setAdminPage={setAdminPage} adminPage={adminPage} loading={loading} onPlusClick={handleDialogOpen} />
             <div className='user-content'>
-                <AdminContent adminPage={adminPage} loading={loading} onEditClick={handleDialogOpen} onPasswordEditClick={handlePasswordDialogOpen} onDeleteClick={handleDeleteDialogOpen} cueData={cueData || []} accessoryData={accessoryData || []} materialData={materialData || []} userData={userData || []} />
+                <AdminContent adminPage={adminPage} loading={loading} onEditClick={handleDialogOpen} onPasswordEditClick={handlePasswordDialogOpen} onDeleteClick={handleDeleteDialogOpen} cueData={cueData || []} accessoryData={accessoryData || []} materialData={materialData || []} userData={userData || []} orderData={orderData || []} />
             </div>
             {adminPage === 'Cues' && <CueDialog open={dialogOpen} onClose={handleDialogClose} setDialogProps={setDialogPropsHandler} getData={getData} cueData={cueData} materialData={materialData} {...dialogProps} />}
             {adminPage === 'Accessories' && <AccessoryDialog open={dialogOpen} onClose={handleDialogClose} setDialogProps={setDialogPropsHandler} getData={getData} {...dialogProps} />}
             {adminPage === 'Materials' && <MaterialDialog open={dialogOpen} onClose={handleDialogClose} setDialogProps={setDialogPropsHandler} getData={getData} {...dialogProps} />}
             {adminPage === 'Users' && <UserDialog open={dialogOpen} onClose={handleDialogClose} setDialogProps={setDialogPropsHandler} getData={getData} {...dialogProps} />}
+            {adminPage === 'Orders' && <OrderDialog open={dialogOpen} onClose={handleDialogClose} setDialogProps={setDialogPropsHandler} getData={getData} {...dialogProps} />}
             {passwordDialogOpen && <PasswordDialog open={passwordDialogOpen} onClose={handlePasswordDialogClose} getData={getData} {...passwordDialogProps} />}
             {deleteDialogOpen && <DeleteDialog open={deleteDialogOpen} onClose={handleDeleteDialogClose} getData={getData} adminPage={adminPage} {...deleteDialogProps} />}
         </div>
@@ -165,7 +178,7 @@ export default function AdminPage() {
 }
 
 function AdminHeader({ setAdminPage, adminPage, loading, onPlusClick }) {
-    const pages = ['Cues', 'Accessories', 'Materials', 'Users'];
+    const pages = ['Cues', 'Accessories', 'Materials', 'Users', 'Orders'];
 
     const handlePlusClick = () => {
         let title = '';
@@ -204,9 +217,10 @@ function AdminHeader({ setAdminPage, adminPage, loading, onPlusClick }) {
             </ul>
             <div className="admin-header-right">
                 <button
-                    className={`admin-icon-button ${loading ? 'disabled' : ''}`}
-                    disabled={loading}
+                    className={`admin-icon-button ${loading || adminPage === 'Orders' ? 'disabled' : ''}`}
+                    disabled={loading || adminPage === 'Orders'}
                     onClick={handlePlusClick}
+                    title={adminPage === 'Orders' ? 'Orders are created through the payment process' : ''}
                 >
                     <i className="fas fa-plus"></i>
                 </button>
@@ -215,7 +229,7 @@ function AdminHeader({ setAdminPage, adminPage, loading, onPlusClick }) {
     );
 }
 
-function AdminContent({ adminPage, loading, onEditClick, onPasswordEditClick, onDeleteClick, cueData, accessoryData, materialData, userData }) {
+function AdminContent({ adminPage, loading, onEditClick, onPasswordEditClick, onDeleteClick, cueData, accessoryData, materialData, userData, orderData }) {
     if (loading) {
         return <AdminSkeletonLoader />;
     }
@@ -229,6 +243,8 @@ function AdminContent({ adminPage, loading, onEditClick, onPasswordEditClick, on
             return <MaterialsTable data={materialData} onEditClick={onEditClick} onDeleteClick={onDeleteClick} />;
         case 'Users':
             return <UsersTable data={userData} onEditClick={onEditClick} onPasswordEditClick={onPasswordEditClick} onDeleteClick={onDeleteClick} />;
+        case 'Orders':
+            return <OrdersTable data={orderData} onEditClick={onEditClick} />;
         default:
             return null;
     }
@@ -446,6 +462,64 @@ function UsersTable({ data, onEditClick, onPasswordEditClick, onDeleteClick }) {
     return (
         <div>
             <h3 className="admin-page-header">Users</h3>
+            <MaterialReactTable
+                columns={columns}
+                data={data}
+                {...tableProps}
+            />
+        </div>
+    );
+}
+
+function OrdersTable({ data, onEditClick }) {
+    const columns = [
+        {
+            accessorKey: 'orderId',
+            header: 'Order Number',
+            id: 'orderId',
+        },
+        {
+            accessorKey: 'customer',
+            header: 'Customer',
+            id: 'customer',
+        },
+        {
+            header: 'Amount',
+            accessorFn: (row) => row.totalAmount ? `$${row.totalAmount}` : '',
+            id: 'totalAmount',
+        },
+        {
+            header: 'Date',
+            accessorFn: (row) => {
+                if (row.createdAt) {
+                    return new Date(row.createdAt).toLocaleDateString();
+                }
+                return '';
+            },
+            id: 'createdAt',
+        },
+        {
+            accessorKey: 'orderStatus',
+            header: 'Status',
+            id: 'orderStatus',
+        },
+        {
+            id: 'actions4',
+            header: 'Actions',
+            Cell: ({ row }) => (
+                <div className='admin-actions'>
+                    <button
+                        className='fa-solid fa-pencil admin-action-button'
+                        onClick={() => onEditClick({ element: row.original, title: `Edit Order` })}
+                    />
+                </div>
+            ),
+        },
+    ];
+
+    return (
+        <div>
+            <h3 className="admin-page-header">Orders</h3>
             <MaterialReactTable
                 columns={columns}
                 data={data}
@@ -3160,6 +3234,368 @@ function DialogImageSection({ folder = 'general', existingItem, imageUrls = [], 
                 }
             `}</style>
         </>
+    );
+}
+
+function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogProps, element = { 
+    orderId: '', 
+    customer: '', 
+    totalAmount: '', 
+    orderStatus: '', 
+    paymentStatus: '', 
+    shippingAddress: {}, 
+    billingAddress: {}, 
+    expectedDelivery: '', 
+    trackingNumber: '', 
+    shippingCarrier: '', 
+    createdAt: '',
+    orderItems: { cueGuids: [], accessoryGuids: [] },
+    currency: '',
+    paymentMethod: ''
+} }) {
+    const { register, handleSubmit, setValue, watch, reset, control, formState: { errors } } = useForm({
+        defaultValues: element
+    });
+
+    const [loading, setLoading] = useState(false);
+    const title = initialTitle || 'Edit Order';
+
+    // Watch all form values like other dialogs
+    const orderId = watch("orderId");
+    const customer = watch("customer");
+    const totalAmount = watch("totalAmount");
+    const currency = watch("currency");
+    const paymentStatus = watch("paymentStatus");
+    const paymentMethod = watch("paymentMethod");
+    const createdAt = watch("createdAt");
+    const orderStatus = watch("orderStatus");
+    const expectedDelivery = watch("expectedDelivery");
+    const trackingNumber = watch("trackingNumber");
+    const shippingCarrier = watch("shippingCarrier");
+
+    // Helper functions for formatting display values
+    const formatCurrency = (amount) => {
+        if (!amount) return '';
+        // Remove existing $ if present, then add it back
+        const numericAmount = typeof amount === 'string' ? amount.replace('$', '') : amount;
+        return `$${numericAmount}`;
+    };
+
+    useEffect(() => {
+        if (element) {
+            // Format the data for display
+            const formattedElement = {
+                ...element,
+                totalAmount: element.totalAmount ? `$${element.totalAmount}` : '',
+                createdAt: element.createdAt ? new Date(element.createdAt).toLocaleDateString() : '',
+                expectedDelivery: element.expectedDelivery ? new Date(element.expectedDelivery).toISOString().split('T')[0] : ''
+            };
+            reset(formattedElement);
+        }
+    }, [element, reset]);
+
+    const onSubmit = async (data) => {
+        setLoading(true);
+        try {
+            // Only send editable shipping status fields
+            const orderData = {
+                orderStatus: data.orderStatus,
+                expectedDelivery: data.expectedDelivery,
+                trackingNumber: data.trackingNumber,
+                shippingCarrier: data.shippingCarrier,
+                updatedAt: new Date()
+            };
+
+            const response = await editOrder(element._id, orderData);
+            receiveResponse(response);
+            
+            if (response.type === 'success') {
+                onClose();
+                getData();
+            }
+        } catch (error) {
+            console.error('Error updating order:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleCancel = () => {
+        reset(element);
+        onClose();
+    };
+
+    if (!element) {
+        return null;
+    }
+
+    const statusOptions = [
+        { value: 'pending', label: 'Pending' },
+        { value: 'confirmed', label: 'Confirmed' },
+        { value: 'processing', label: 'Processing' },
+        { value: 'shipped', label: 'Shipped' },
+        { value: 'delivered', label: 'Delivered' },
+        { value: 'cancelled', label: 'Cancelled' }
+    ];
+
+    const carrierOptions = [
+        { value: '', label: 'Select Carrier' },
+        { value: 'UPS', label: 'UPS' },
+        { value: 'FedEx', label: 'FedEx' },
+        { value: 'USPS', label: 'USPS' },
+        { value: 'DHL', label: 'DHL' },
+        { value: 'Other', label: 'Other' }
+    ];
+
+    const formatAddress = (address) => {
+        if (!address || typeof address !== 'object') return 'No address provided';
+        
+        const parts = [];
+        if (address.line1) parts.push(address.line1);
+        if (address.line2) parts.push(address.line2);
+        if (address.city) parts.push(address.city);
+        if (address.state) parts.push(address.state);
+        if (address.postal_code) parts.push(address.postal_code);
+        if (address.country) parts.push(address.country);
+        
+        return parts.length > 0 ? parts.join(', ') : 'No address provided';
+    };
+
+    return (
+        <Dialog open={open} onClose={handleCancel} fullScreen>
+            <DialogTitle style={dialogTitleStyle}>
+                {title}
+                <div style={{ float: 'right', display: 'flex' }}>
+                    <button
+                        type="button"
+                        className='fa-solid fa-floppy-disk admin-action-button'
+                        style={{ display: 'inline-block', justifySelf: 'right', fontSize: '1.5rem', marginTop: '-0.05rem', marginRight: '20px' }}
+                        onClick={handleSubmit(onSubmit)}
+                    />
+                    <button
+                        type="button"
+                        className='fa-solid fa-xmark admin-action-button'
+                        style={{ display: 'inline-block', justifySelf: 'right', fontSize: '1.5rem', marginTop: '-0.05rem' }}
+                        onClick={handleCancel}
+                    />
+                </div>
+            </DialogTitle>
+            <DialogContent>
+                <form className="cue-form" onSubmit={handleSubmit(onSubmit)}>
+                    <div className="form-column">
+                        {/* Order Information Section */}
+                        <div>
+                            <h1 className="dialog-header1">Order Information</h1>
+                            <div className="form-column">
+                                <div className="form-row">
+                                    <div className="flex-1">
+                                        <FormField
+                                            title="Order ID"
+                                            disabled={true}
+                                            value={orderId}
+                                            {...register("orderId")}
+                                        />
+                                    </div>
+                                    <div className="flex-1">
+                                        <FormField
+                                            title="Customer Email"
+                                            disabled={true}
+                                            value={customer}
+                                            {...register("customer")}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="form-row">
+                                    <div className="flex-1">
+                                        <FormField
+                                            title="Total Amount"
+                                            disabled={true}
+                                            value={formatCurrency(totalAmount)}
+                                            {...register("totalAmount")}
+                                        />
+                                    </div>
+                                    <div className="flex-1">
+                                        <FormField
+                                            title="Currency"
+                                            disabled={true}
+                                            value={currency}
+                                            {...register("currency")}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="form-row">
+                                    <div className="flex-1">
+                                        <FormField
+                                            title="Payment Status"
+                                            disabled={true}
+                                            value={paymentStatus}
+                                            {...register("paymentStatus")}
+                                        />
+                                    </div>
+                                    <div className="flex-1">
+                                        <FormField
+                                            title="Payment Method"
+                                            disabled={true}
+                                            value={paymentMethod}
+                                            {...register("paymentMethod")}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="form-row">
+                                    <div className="flex-1">
+                                        <FormField
+                                            title="Order Date"
+                                            disabled={true}
+                                            value={createdAt}
+                                            {...register("createdAt")}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Shipping Status Section (Editable) */}
+                        <div>
+                            <h1 className="dialog-header1">Shipping Status (Editable)</h1>
+                            <div className="form-column">
+                                <div className="form-row">
+                                    <div className="flex-1">
+                                        <FormSelect
+                                            title="Order Status*"
+                                            options={statusOptions}
+                                            value={orderStatus}
+                                            {...register("orderStatus", { required: true })}
+                                        />
+                                    </div>
+                                    <div className="flex-1">
+                                        <FormField
+                                            title="Expected Delivery (mm/dd/yyyy)"
+                                            value={expectedDelivery}
+                                            {...register("expectedDelivery")}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="form-row">
+                                    <div className="flex-1">
+                                        <FormField
+                                            title="Tracking Number"
+                                            value={trackingNumber}
+                                            {...register("trackingNumber")}
+                                        />
+                                    </div>
+                                    <div className="flex-1">
+                                        <FormSelect
+                                            title="Shipping Carrier"
+                                            options={carrierOptions}
+                                            value={shippingCarrier}
+                                            {...register("shippingCarrier")}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Address Information Section */}
+                        <div>
+                            <h1 className="dialog-header1">Address Information</h1>
+                            <div className="form-column">
+                                <div className="form-row">
+                                    <div className="flex-1">
+                                        <FormTextArea
+                                            title="Shipping Address"
+                                            disabled={true}
+                                            value={formatAddress(element.shippingAddress?.address || element.shippingAddress)}
+                                            rows={3}
+                                            readOnly
+                                        />
+                                    </div>
+                                    <div className="flex-1">
+                                        <FormTextArea
+                                            title="Billing Address"
+                                            disabled={true}
+                                            value={formatAddress(element.billingAddress)}
+                                            rows={3}
+                                            readOnly
+                                        />
+                                    </div>
+                                </div>
+                                {(element.shippingAddress?.name || element.shippingAddress?.phone) && (
+                                    <div className="form-row">
+                                        {element.shippingAddress?.name && (
+                                            <div className="flex-1">
+                                                <FormField
+                                                    title="Recipient Name"
+                                                    disabled={true}
+                                                    value={element.shippingAddress.name}
+                                                    readOnly
+                                                />
+                                            </div>
+                                        )}
+                                        {element.shippingAddress?.phone && (
+                                            <div className="flex-1">
+                                                <FormField
+                                                    title="Phone Number"
+                                                    disabled={true}
+                                                    value={element.shippingAddress.phone}
+                                                    readOnly
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Order Items Section */}
+                        <div>
+                            <h1 className="dialog-header1">Order Items</h1>
+                            <div className="form-column">
+                                {element.orderItems?.cueGuids?.length > 0 && (
+                                    <div className="form-row">
+                                        <div className="flex-1">
+                                            <FormTextArea
+                                                title={`Cues (${element.orderItems.cueGuids.length})`}
+                                                disabled={true}
+                                                value={element.orderItems.cueGuids.join('\n')}
+                                                rows={Math.min(element.orderItems.cueGuids.length, 5)}
+                                                readOnly
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+                                {element.orderItems?.accessoryGuids?.length > 0 && (
+                                    <div className="form-row">
+                                        <div className="flex-1">
+                                            <FormTextArea
+                                                title={`Accessories (${element.orderItems.accessoryGuids.length})`}
+                                                disabled={true}
+                                                value={element.orderItems.accessoryGuids.map(item => 
+                                                    `${item.guid} (Qty: ${item.quantity})`
+                                                ).join('\n')}
+                                                rows={Math.min(element.orderItems.accessoryGuids.length, 5)}
+                                                readOnly
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+                                {(!element.orderItems?.cueGuids?.length && !element.orderItems?.accessoryGuids?.length) && (
+                                    <div className="form-row">
+                                        <div className="flex-1">
+                                            <FormField
+                                                title="Order Items"
+                                                disabled={true}
+                                                value="No items found"
+                                                readOnly
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </DialogContent>
+        </Dialog>
     );
 }
 

@@ -252,6 +252,13 @@ export function getAdminUsers() {
     });
 }
 
+export function getAdminOrders() {
+    return _ajax({
+        url: "/admin/orders",
+        method: "GET",
+    });
+}
+
 export function createUser(email, firstName, lastName, password) {
     return _ajax({
         url: "/admin/users",
@@ -286,6 +293,14 @@ export function deleteUser(id) {
     return _ajax({
         url: "/admin/users/" + id,
         method: "DELETE",
+    });
+}
+
+export function editOrder(id, orderData) {
+    return _ajax({
+        url: "/admin/orders/" + id,
+        method: "PATCH",
+        data: orderData
     });
 }
 
