@@ -24,7 +24,6 @@ import AboutUsPage from "./components/pages/AboutUsPage.jsx";
 import CartPage from "./components/pages/CartPage.jsx";
 import CheckoutSuccessPage from "./components/pages/CheckoutSuccessPage.jsx";
 import CheckoutCancelPage from "./components/pages/CheckoutCancelPage.jsx";
-import ShippingPage from "./components/pages/ShippingPage.jsx";
 import OrdersPage from "./components/pages/user/OrdersPage.jsx";
 import ReferencesPage from "./components/pages/ReferencesPage.jsx";
 import AdminPage from "./components/pages/user/AdminPage.jsx";
@@ -148,7 +147,6 @@ function App() {
                     </Route>
                     <Route element={<AuthRoute />}>
                         <Route path="/cart" element={<CartPage />} />
-                        <Route path="/shipping" element={<ShippingPage />} />
                     </Route>
 
                     {/* 

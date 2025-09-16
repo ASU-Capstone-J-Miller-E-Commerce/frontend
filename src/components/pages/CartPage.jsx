@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { DefaultButton } from "../util/Buttons";
+import { FormSelect } from "../util/Inputs";
 import { updateCartItem, removeFromCart, clearCart, createCheckoutSession } from "../../util/requests";
 import { receiveResponse } from "../../util/notifications";
 import { setCartItems, updateCartItemRedux, removeCartItemRedux, clearCartRedux } from "../../util/redux/actionCreators";
+import countryList from "react-select-country-list";
 
 export default function CartPage() {
     const navigate = useNavigate();
@@ -17,8 +19,15 @@ export default function CartPage() {
     const user = useSelector(state => state.user);
     const isAuthenticated = !!user?.authenticated;
 
-    // Remove the useEffect and loadCart since we're using Redux
-    // The cart should already be loaded in Redux from the authentication flow
+    // State for country selection
+    const [selectedCountry, setSelectedCountry] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    // Get country options using react-select-country-list
+    const countryOptions = countryList().getData().map(country => ({
+        label: country.label,
+        value: country.value // This gives us the 2-letter country code (e.g., "US", "CA", "GB")
+    }));
 
     const handleUpdateQuantity = async (itemGuid, newQuantity) => {
         if (newQuantity < 1) return;
@@ -62,7 +71,7 @@ export default function CartPage() {
             });
     };
 
-    const handleCheckout = async () => {
+    const handleCheckout = () => {
         if (!isAuthenticated) {
             // Redirect to login if not authenticated
             navigate("/login");
@@ -73,6 +82,14 @@ export default function CartPage() {
             receiveResponse({
                 status: "error",
                 errors: ["User email not found. Please try logging in again."]
+            });
+            return;
+        }
+
+        if (!selectedCountry) {
+            receiveResponse({
+                status: "error",
+                errors: ["Please select a country for shipping."]
             });
             return;
         }
@@ -90,8 +107,27 @@ export default function CartPage() {
             return;
         }
 
-        // Navigate to shipping page instead of directly to Stripe checkout
-        navigate("/shipping");
+        setLoading(true);
+        
+        // Calculate cart total
+        const cartTotal = cartItems.reduce((total, item) => {
+            const price = item.itemDetails?.price || 0;
+            return total + (price * item.quantity);
+        }, 0);
+
+        // Create checkout session with just the country
+        createCheckoutSession(cartItems, user.email, selectedCountry, cartTotal)
+            .then((response) => {
+                receiveResponse(response);
+                
+                if (response && response.data) {
+                    // Redirect to Stripe checkout page
+                    window.location.href = response.data;
+                }
+            })
+            .catch((error) => {
+                setLoading(false);
+            });
     };
 
     const calculateTotal = () => {
@@ -170,6 +206,20 @@ export default function CartPage() {
                                 <span>{hasItemsWithoutPrice() ? "Contact for pricing" : `$${total.toFixed(2)}`}</span>
                             </div>
 
+                            {/* Country Selection */}
+                            {!hasItemsWithoutPrice() && (
+                                <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+                                    <FormSelect
+                                        title="Shipping Country"
+                                        value={selectedCountry}
+                                        onChange={(e) => setSelectedCountry(e.target.value)}
+                                        options={countryOptions}
+                                        displayKey="label"
+                                        valueKey="value"
+                                    />
+                                </div>
+                            )}
+
                             {hasItemsWithoutPrice() ? (
                                 <DefaultButton 
                                     text="Contact for Pricing" 
@@ -178,9 +228,10 @@ export default function CartPage() {
                                 />
                             ) : (
                                 <DefaultButton 
-                                    text="Proceed to Checkout" 
+                                    text={loading ? "Processing..." : "Proceed to Checkout"}
                                     onClick={handleCheckout}
                                     className="full-width-btn"
+                                    disabled={!selectedCountry || loading}
                                 />
                             )}
                             

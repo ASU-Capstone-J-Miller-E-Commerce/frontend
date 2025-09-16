@@ -459,7 +459,7 @@ export function deleteImages(imageUrls) {
 # Payment
 ==============================================================*/
 
-export function createCheckoutSession(cartItems, email, shipping = false) {
+export function createCheckoutSession(cartItems, email, shippingCountry = null, cartTotal = 0) {
     // Extract cue GUIDs from cart items (cues are always quantity 1)
     const cueGuids = cartItems
         .filter(item => item.itemType === 'cue')
@@ -480,7 +480,8 @@ export function createCheckoutSession(cartItems, email, shipping = false) {
             cueGuids: cueGuids,
             accessoryItems: accessoryItems,
             email: email,
-            shipping: shipping
+            shippingCountry: shippingCountry,
+            cartTotal: cartTotal
         }
     });
 }
