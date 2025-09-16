@@ -90,16 +90,8 @@ export default function CartPage() {
             return;
         }
 
-        try {
-            const response = await createCheckoutSession(cartItems, user.email, true);
-            if (response && response.data) {
-                // Redirect to Stripe checkout page
-                window.location.href = response.data;
-            }
-        } catch (error) {
-            // Error is already handled by the request system
-            console.error("Checkout error:", error);
-        }
+        // Navigate to shipping page instead of directly to Stripe checkout
+        navigate("/shipping");
     };
 
     const calculateTotal = () => {
