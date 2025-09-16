@@ -486,6 +486,13 @@ export function createCheckoutSession(cartItems, email, shippingCountry = null, 
     });
 }
 
+export function verifyPaymentSession(sessionId) {
+    return _ajax({
+        url: `/order/payment/verify-session/${sessionId}`,
+        method: "GET",
+    });
+}
+
 /*==============================================================
 # Sitewide Search
 ==============================================================*/
