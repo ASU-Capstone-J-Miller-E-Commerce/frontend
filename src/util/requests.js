@@ -227,6 +227,13 @@ export function userChangePassword(currPw, newPw){
     })
 }
 
+export function getUserOrders() {
+    return _ajax({
+        url: "/user/orders",
+        method: "GET"
+    });
+}
+
 /*==============================================================
 # Products
 ==============================================================*/

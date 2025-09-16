@@ -26,6 +26,7 @@ import CheckoutSuccessPage from "./components/pages/CheckoutSuccessPage.jsx";
 import CheckoutCancelPage from "./components/pages/CheckoutCancelPage.jsx";
 import CheckoutFailurePage from "./components/pages/CheckoutFailurePage.jsx";
 import OrdersPage from "./components/pages/user/OrdersPage.jsx";
+import OrderDetailPage from "./components/pages/user/OrderDetailPage.jsx";
 import ReferencesPage from "./components/pages/ReferencesPage.jsx";
 import AdminPage from "./components/pages/user/AdminPage.jsx";
 
@@ -140,6 +141,7 @@ function App() {
                             <Route path="profile" element={<ProfilePage />} />
                             <Route path="settings" element={<SettingsPage />} />
                             <Route path="orders" element={<OrdersPage />} />
+                            <Route path="orders/:orderId" element={<OrderDetailPage />} />
                         </Route>
                         <Route element={<AdminRoute />}>
                             <Route path="admin" element={<AdminPage />} />
