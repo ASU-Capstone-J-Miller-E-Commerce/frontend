@@ -3456,7 +3456,7 @@ function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogPro
 
                         {/* Shipping Status Section (Editable) */}
                         <div>
-                            <h1 className="dialog-header1">Shipping Status (Editable)</h1>
+                            <h1 className="dialog-header1">Shipping Status</h1>
                             <div className="form-column">
                                 <div className="form-row">
                                     <div className="flex-1">
