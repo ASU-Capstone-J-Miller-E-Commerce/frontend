@@ -896,10 +896,8 @@
 }
 
 .order-list-item:hover {
-    background-color: #f8f9fa;
-    box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 10px 0px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 9px 0px;
     transform: none;
-    box-shadow: none;
 }
 
 /* Column Styling */
@@ -1077,8 +1075,7 @@
     color: #999;
 }
 
-.item-count-badge,
-.quantity-badge {
+.item-count-badge {
     position: absolute;
     top: -6px;
     right: -6px;

@@ -144,9 +144,6 @@ export default function OrdersPage() {
                                                                 <i className="fa-solid fa-image"></i>
                                                             </div>
                                                         )}
-                                                        {accessory.quantity > 1 && (
-                                                            <div className="quantity-badge">{accessory.quantity}</div>
-                                                        )}
                                                     </div>
                                                 ))}
                                             </div>
@@ -210,9 +207,6 @@ export default function OrdersPage() {
                                                         <div className="no-image">
                                                             <i className="fa-solid fa-image"></i>
                                                         </div>
-                                                    )}
-                                                    {accessory.quantity > 1 && (
-                                                        <div className="quantity-badge">{accessory.quantity}</div>
                                                     )}
                                                 </div>
                                             ))}
