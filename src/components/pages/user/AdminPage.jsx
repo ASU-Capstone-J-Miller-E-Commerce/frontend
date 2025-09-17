@@ -3282,7 +3282,7 @@ function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogPro
     };
 
     useEffect(() => {
-        if (element) {
+        if (open && element) {
             // Format the data for display
             const formattedElement = {
                 ...element,
@@ -3292,7 +3292,7 @@ function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogPro
             };
             reset(formattedElement);
         }
-    }, [element, reset]);
+    }, [open, element._id]);
 
     const onSubmit = async (data) => {
         setLoading(true);
