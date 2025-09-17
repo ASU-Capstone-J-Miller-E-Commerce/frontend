@@ -148,7 +148,8 @@ export default function OrderDetailPage() {
                         <div className="order-card order-address-card compact">
                             <div className="contact-info compact">
                                 <div className="contact-details">
-                                    <div>{order.customerName || order.customer}</div>
+                                    <h4>Contact Information</h4>
+                                    <div>{order.customer}</div>
                                     {order.customerEmail && <div>{order.customerEmail}</div>}
                                 </div>
                             </div>

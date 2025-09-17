@@ -1,6 +1,13 @@
+/* Unified h4 styling for order details page */
+.order-details-main h4 {
+    margin: 0;
+    color: var(--miller-dark-grey);
+    font-size: 1.2rem;
+}
+
 .order-detail-page.compact {
     padding: 18px 0 18px 0;
-    max-width: 900px;
+    max-width: 1200px;
 }
 .order-detail-header.compact {
     display: flex;
@@ -55,10 +62,6 @@
 .status-info.compact i {
     font-size: 1.5rem;
 }
-.tracking-info.compact h4 {
-    margin-bottom: 2px;
-    font-size: 0.97rem;
-}
 .tracking-info.compact p {
     font-size: 0.93rem;
     margin-bottom: 0;
@@ -72,12 +75,6 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
-}
-.contact-info.compact h4 {
-    margin-bottom: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #222;
 }
 .contact-details {
     font-size: 0.97rem;
@@ -127,11 +124,7 @@
 .items-list.compact {
     gap: 10px;
 }
-.item-category.compact h4 {
-    font-size: 0.97rem;
-    margin-bottom: 2px;
-}
-.item-category.compact ul {
+.items-list.compact ul {
     gap: 7px;
 }
 .order-item.compact {
@@ -268,7 +261,7 @@
     gap: 24px;
 }
 .order-detail-right {
-    flex: 1.5;
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -309,9 +302,6 @@
     font-size: 2.2rem;
     color: #2d7cff;
 }
-.tracking-info h4 {
-    margin-bottom: 6px;
-}
 .tracking-info p {
     margin-bottom: 2px;
     font-size: 0.98rem;
@@ -329,9 +319,6 @@
     flex: 1 1 220px;
     min-width: 180px;
     box-shadow: 0 1px 6px rgba(0,0,0,0.04);
-}
-.address-card h4 {
-    margin-bottom: 8px;
 }
 .address {
     font-size: 0.98rem;
@@ -391,14 +378,10 @@
     flex-direction: column;
     gap: 18px;
 }
-.item-category {
+.items-list {
     margin-bottom: 0;
 }
-.item-category h4 {
-    margin-bottom: 6px;
-    font-size: 1.08rem;
-}
-.item-category ul {
+.items-list ul {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -703,13 +686,6 @@
     margin-bottom: 0;
 }
 
-.item-category h4 {
-    margin: 0 0 10px 0;
-    font-size: 1.1rem;
-    color: var(--miller-dark);
-    font-weight: 600;
-}
-
 .item-category ul {
     margin: 0;
     padding-left: 20px;
@@ -841,10 +817,6 @@
     .detail-row span:last-child {
         text-align: left;
         margin-left: 10px;
-    }
-    
-    .item-category h4 {
-        font-size: 1rem;
     }
     
     .item-category ul,
