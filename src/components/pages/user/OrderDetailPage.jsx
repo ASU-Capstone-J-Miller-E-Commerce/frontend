@@ -66,12 +66,10 @@ export default function OrderDetailPage() {
     if (loading) {
         return (
             <div className="user-content">
-                <AccountSection title="Order Details">
-                    <div className="loading-content">
-                        <i className="fa-solid fa-spinner fa-spin"></i>
-                        <p>Loading order details...</p>
-                    </div>
-                </AccountSection>
+                <div className="order-detail-loading">
+                    <i className="fa-solid fa-spinner fa-spin"></i>
+                    <p>Loading order details...</p>
+                </div>
             </div>
         );
     }
@@ -79,219 +77,165 @@ export default function OrderDetailPage() {
     if (!order) {
         return (
             <div className="user-content">
-                <AccountSection title="Order Details">
-                    <div className="error-content">
-                        <i className="fa-solid fa-exclamation-triangle"></i>
-                        <h3>Order not found</h3>
-                        <p>The order you're looking for could not be found.</p>
-                        <DefaultButton 
-                            text="Back to Orders" 
-                            onClick={() => navigate('/account/orders')}
-                        />
-                    </div>
-                </AccountSection>
+                <div className="order-detail-error">
+                    <i className="fa-solid fa-exclamation-triangle"></i>
+                    <h3>Order not found</h3>
+                    <p>The order you're looking for could not be found.</p>
+                    <DefaultButton 
+                        text="Back to Orders" 
+                        onClick={() => navigate('/account/orders')}
+                    />
+                </div>
             </div>
         );
     }
 
+    // Merge cues and accessories into a single list
+    const allItems = [
+        ...(order.orderItems.cueDetails || []).map(cue => ({
+            ...cue,
+            type: 'cue',
+            quantity: 1
+        })),
+        ...(order.orderItems.accessoryDetails || []).map(acc => ({
+            ...acc,
+            type: 'accessory',
+            quantity: acc.quantity
+        }))
+    ];
+
     return (
         <div className="user-content">
-            <AccountSection title={
-                <div className="order-detail-header">
+            <div className="order-detail-page compact">
+                <div className="order-detail-header compact">
                     <button 
-                        className="btn-back"
+                        className="btn-back compact"
                         onClick={() => navigate('/account/orders')}
                     >
                         <i className="fa-solid fa-arrow-left"></i>
-                        <span>Order {order.orderId}</span>
                     </button>
+                    <div className="order-id-block">
+                        <span className="order-id">{order.orderId}</span>
+                        <span className="order-confirm-date">Confirmed {formatDate(order.createdAt)}</span>
+                    </div>
                 </div>
-            }>
-                <div className="order-detail-content">
-                    {/* Order Status */}
-                    <div className="order-status-section">
-                        <div className="status-info">
-                            <i className={`fa-solid ${getStatusIcon(order.orderStatus)}`}></i>
-                            <div>
-                                <h3>{getStatusDisplay(order.orderStatus)}</h3>
-                                <p>Confirmed {formatDate(order.createdAt)}</p>
+                <div className="order-detail-main compact">
+                    {/* Left Column */}
+                    <div className="order-detail-left compact">
+                        {/* Status Card */}
+                        <div className="order-card order-status-card compact">
+                            <div className="status-info compact">
+                                <i className={`fa-solid ${getStatusIcon(order.orderStatus)}`}></i>
+                                <div>
+                                    <h3>{getStatusDisplay(order.orderStatus)}</h3>
+                                </div>
+                            </div>
+                            {order.trackingNumber && (
+                                <div className="tracking-info compact">
+                                    <h4>Tracking Information</h4>
+                                    <p><strong>Tracking Number:</strong> {order.trackingNumber}</p>
+                                    {order.shippingCarrier && (
+                                        <p><strong>Carrier:</strong> {order.shippingCarrier}</p>
+                                    )}
+                                    {order.expectedDelivery && (
+                                        <p><strong>Expected Delivery:</strong> {formatDate(order.expectedDelivery)}</p>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Contact + Addresses Card */}
+                        <div className="order-card order-address-card compact">
+                            <div className="contact-info compact">
+                                <div className="contact-details">
+                                    <div>{order.customerName || order.customer}</div>
+                                    {order.customerEmail && <div>{order.customerEmail}</div>}
+                                </div>
+                            </div>
+                            <div className="address-group compact">
+                                {/* Shipping Address */}
+                                {order.shippingAddress && order.shippingAddress.address && (
+                                    <div className="address-card compact">
+                                        <h4>Shipping Address</h4>
+                                        <div className="address compact">
+                                            {order.shippingAddress.name && <div><strong>{order.shippingAddress.name}</strong></div>}
+                                            <div>{order.shippingAddress.address.line1}</div>
+                                            {order.shippingAddress.address.line2 && (
+                                                <div>{order.shippingAddress.address.line2}</div>
+                                            )}
+                                            <div>
+                                                {order.shippingAddress.address.city}, {order.shippingAddress.address.state} {order.shippingAddress.address.postal_code}
+                                            </div>
+                                            <div>{order.shippingAddress.address.country}</div>
+                                            {order.shippingAddress.phone && (
+                                                <div>{order.shippingAddress.phone}</div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Billing Address */}
+                                {order.billingAddress && (
+                                    <div className="address-card compact">
+                                        <h4>Billing Address</h4>
+                                        <div className="address compact">
+                                            <div>{order.billingAddress.line1}</div>
+                                            {order.billingAddress.line2 && (
+                                                <div>{order.billingAddress.line2}</div>
+                                            )}
+                                            <div>
+                                                {order.billingAddress.city}, {order.billingAddress.state} {order.billingAddress.postal_code}
+                                            </div>
+                                            <div>{order.billingAddress.country}</div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
-                        
-                        {order.trackingNumber && (
-                            <div className="tracking-info">
-                                <h4>Tracking Information</h4>
-                                <p><strong>Tracking Number:</strong> {order.trackingNumber}</p>
-                                {order.shippingCarrier && (
-                                    <p><strong>Carrier:</strong> {order.shippingCarrier}</p>
-                                )}
-                                {order.expectedDelivery && (
-                                    <p><strong>Expected Delivery:</strong> {formatDate(order.expectedDelivery)}</p>
-                                )}
-                            </div>
-                        )}
                     </div>
 
-                    {/* Order Items */}
-                    <div className="order-items-section">
-                        <h3>Items Ordered</h3>
-                        
-                        {/* Cues */}
-                        {order.orderItems.cueDetails && order.orderItems.cueDetails.length > 0 && (
-                            <div className="item-category">
-                                <h4>Cues ({order.orderItems.cueDetails.length})</h4>
-                                <div className="items-list">
-                                    {order.orderItems.cueDetails.map((cue, index) => (
-                                        <div key={index} className="order-item">
-                                            <div className="item-image">
-                                                {cue.imageUrls && cue.imageUrls.length > 0 ? (
-                                                    <img src={cue.imageUrls[0]} alt={cue.name} />
-                                                ) : (
-                                                    <div className="no-image">
-                                                        <i className="fa-solid fa-image"></i>
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className="item-details">
-                                                <h5>{cue.name}</h5>
-                                                <p>Cue #{cue.cueNumber}</p>
-                                                <p className="item-price">${cue.price?.toFixed(2)}</p>
-                                            </div>
-                                            <div className="item-quantity">
-                                                <span>Quantity: 1</span>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
+                    {/* Right Column: Order Items */}
+                    <div className="order-detail-right compact">
+                        <div className="order-card order-items-card compact">
+                            <h3>Items Ordered</h3>
+                            <div className="items-list compact">
+                                {allItems.length > 0 ? (
+                                    <ul>
+                                        {allItems.map((item, index) => (
+                                            <li key={index} className="order-item compact">
+                                                <div className="item-image compact">
+                                                    {item.imageUrls && item.imageUrls.length > 0 ? (
+                                                        <img src={item.imageUrls[0]} alt={item.name} />
+                                                    ) : (
+                                                        <div className="no-image compact">
+                                                            <i className="fa-solid fa-image"></i>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="item-details compact">
+                                                    <h5>{item.name}</h5>
+                                                    <p>{item.type === 'cue' ? `Cue #${item.cueNumber}` : `Accessory #${item.accessoryNumber}`}</p>
+                                                    <p className="item-price compact">${item.price?.toFixed(2)}</p>
+                                                </div>
+                                                <div className="item-quantity compact">
+                                                    <span>Quantity: {item.quantity}</span>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <div>No items found.</div>
+                                )}
                             </div>
-                        )}
-
-                        {/* Accessories */}
-                        {order.orderItems.accessoryDetails && order.orderItems.accessoryDetails.length > 0 && (
-                            <div className="item-category">
-                                <h4>Accessories</h4>
-                                <div className="items-list">
-                                    {order.orderItems.accessoryDetails.map((accessory, index) => (
-                                        <div key={index} className="order-item">
-                                            <div className="item-image">
-                                                {accessory.imageUrls && accessory.imageUrls.length > 0 ? (
-                                                    <img src={accessory.imageUrls[0]} alt={accessory.name} />
-                                                ) : (
-                                                    <div className="no-image">
-                                                        <i className="fa-solid fa-image"></i>
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className="item-details">
-                                                <h5>{accessory.name}</h5>
-                                                <p>Accessory #{accessory.accessoryNumber}</p>
-                                                <p className="item-price">${accessory.price?.toFixed(2)}</p>
-                                            </div>
-                                            <div className="item-quantity">
-                                                <span>Quantity: {accessory.quantity}</span>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Order Summary */}
-                    <div className="order-summary-section">
-                        <h3>Order Summary</h3>
-                        <div className="summary-details">
-                            <div className="summary-row">
-                                <span><strong>Order Number:</strong></span>
-                                <span>{order.orderId}</span>
-                            </div>
-                            <div className="summary-row">
-                                <span><strong>Order Date:</strong></span>
-                                <span>{formatDate(order.createdAt)}</span>
-                            </div>
-                            <div className="summary-row">
-                                <span><strong>Payment Status:</strong></span>
-                                <span className="payment-status">{order.paymentStatus}</span>
-                            </div>
-                            <div className="summary-row">
-                                <span><strong>Payment Method:</strong></span>
-                                <span>{order.paymentMethod}</span>
-                            </div>
-                            <div className="summary-row total">
+                            {/* Total Amount Below Items */}
+                            <div className="order-total-amount compact">
                                 <span><strong>Total Amount:</strong></span>
                                 <span><strong>${order.totalAmount.toFixed(2)} {order.currency.toUpperCase()}</strong></span>
                             </div>
                         </div>
                     </div>
-
-                    {/* Addresses */}
-                    <div className="addresses-section">
-                        <div className="address-group">
-                            {/* Shipping Address */}
-                            {order.shippingAddress && order.shippingAddress.address && (
-                                <div className="address-card">
-                                    <h4>Shipping Address</h4>
-                                    <div className="address">
-                                        {order.shippingAddress.name && <div><strong>{order.shippingAddress.name}</strong></div>}
-                                        <div>{order.shippingAddress.address.line1}</div>
-                                        {order.shippingAddress.address.line2 && (
-                                            <div>{order.shippingAddress.address.line2}</div>
-                                        )}
-                                        <div>
-                                            {order.shippingAddress.address.city}, {order.shippingAddress.address.state} {order.shippingAddress.address.postal_code}
-                                        </div>
-                                        <div>{order.shippingAddress.address.country}</div>
-                                        {order.shippingAddress.phone && (
-                                            <div>Phone: {order.shippingAddress.phone}</div>
-                                        )}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Billing Address */}
-                            {order.billingAddress && (
-                                <div className="address-card">
-                                    <h4>Billing Address</h4>
-                                    <div className="address">
-                                        <div>{order.billingAddress.line1}</div>
-                                        {order.billingAddress.line2 && (
-                                            <div>{order.billingAddress.line2}</div>
-                                        )}
-                                        <div>
-                                            {order.billingAddress.city}, {order.billingAddress.state} {order.billingAddress.postal_code}
-                                        </div>
-                                        <div>{order.billingAddress.country}</div>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Next Steps */}
-                    <div className="next-steps-section">
-                        <h3>What's Next?</h3>
-                        <ul>
-                            <li>You will receive a confirmation email shortly</li>
-                            <li>Your items will be prepared for shipment</li>
-                            <li>You'll receive tracking information once shipped</li>
-                            <li>For questions, contact us with your order number</li>
-                        </ul>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="order-actions">
-                        <DefaultButton 
-                            text="Back to Orders" 
-                            onClick={() => navigate('/account/orders')}
-                            className="secondary"
-                        />
-                        <DefaultButton 
-                            text="Continue Shopping" 
-                            onClick={() => navigate('/collections/cues')}
-                        />
-                    </div>
                 </div>
-            </AccountSection>
+            </div>
         </div>
     );
 }
