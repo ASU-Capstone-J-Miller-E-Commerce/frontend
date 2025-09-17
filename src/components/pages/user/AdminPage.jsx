@@ -3253,6 +3253,7 @@ function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogPro
     currency: '',
     paymentMethod: ''
 } }) {
+    console.log(element)
     const { register, handleSubmit, setValue, watch, reset, control, formState: { errors } } = useForm({
         defaultValues: element
     });
@@ -3272,6 +3273,8 @@ function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogPro
     const expectedDelivery = watch("expectedDelivery");
     const trackingNumber = watch("trackingNumber");
     const shippingCarrier = watch("shippingCarrier");
+    const shippingAddress = watch("shippingAddress");
+    const billingAddress = watch("billingAddress");
 
     // Helper functions for formatting display values
     const formatCurrency = (amount) => {
@@ -3283,12 +3286,18 @@ function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogPro
 
     useEffect(() => {
         if (open && element) {
+            // Format the addresses
+            const formattedShippingAddress = formatAddress(element.shippingAddress?.address || element.shippingAddress);
+            const formattedBillingAddress = formatAddress(element.billingAddress);
+            
             // Format the data for display
             const formattedElement = {
                 ...element,
                 totalAmount: element.totalAmount ? `$${element.totalAmount}` : '',
                 createdAt: element.createdAt ? new Date(element.createdAt).toLocaleDateString() : '',
-                expectedDelivery: element.expectedDelivery ? new Date(element.expectedDelivery).toISOString().split('T')[0] : ''
+                expectedDelivery: element.expectedDelivery ? new Date(element.expectedDelivery).toISOString().split('T')[0] : '',
+                shippingAddress: formattedShippingAddress,
+                billingAddress: formattedBillingAddress
             };
             reset(formattedElement);
         }
@@ -3353,12 +3362,20 @@ function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogPro
         const parts = [];
         if (address.line1) parts.push(address.line1);
         if (address.line2) parts.push(address.line2);
-        if (address.city) parts.push(address.city);
-        if (address.state) parts.push(address.state);
-        if (address.postal_code) parts.push(address.postal_code);
+        
+        // City, State ZIP format on one line
+        const cityStateZip = [];
+        if (address.city) cityStateZip.push(address.city);
+        if (address.state) cityStateZip.push(address.state);
+        if (address.postal_code) cityStateZip.push(address.postal_code);
+        
+        if (cityStateZip.length > 0) {
+            parts.push(cityStateZip.join(', '));
+        }
+        
         if (address.country) parts.push(address.country);
         
-        return parts.length > 0 ? parts.join(', ') : 'No address provided';
+        return parts.length > 0 ? parts.join('\n') : 'No address provided';
     };
 
     return (
@@ -3504,18 +3521,20 @@ function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogPro
                                         <FormTextArea
                                             title="Shipping Address"
                                             disabled={true}
-                                            value={formatAddress(element.shippingAddress?.address || element.shippingAddress)}
-                                            rows={3}
+                                            value={shippingAddress}
+                                            rows={4}
                                             readOnly
+                                            {...register("shippingAddress")}
                                         />
                                     </div>
                                     <div className="flex-1">
                                         <FormTextArea
                                             title="Billing Address"
                                             disabled={true}
-                                            value={formatAddress(element.billingAddress)}
-                                            rows={3}
+                                            value={billingAddress}
+                                            rows={4}
                                             readOnly
+                                            {...register("billingAddress")}
                                         />
                                     </div>
                                 </div>
