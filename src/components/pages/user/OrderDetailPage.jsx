@@ -34,8 +34,6 @@ export default function OrderDetailPage() {
             year: 'numeric',
             month: 'long',
             day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
         });
     };
 
@@ -115,7 +113,7 @@ export default function OrderDetailPage() {
                         <i className="fa-solid fa-arrow-left"></i>
                     </button>
                     <div className="order-id-block">
-                        <span className="order-id">{order.orderId}</span>
+                        <span className="order-id">Order {order.orderId}</span>
                         <span className="order-confirm-date">Confirmed {formatDate(order.createdAt)}</span>
                     </div>
                 </div>
