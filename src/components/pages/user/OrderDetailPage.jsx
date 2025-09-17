@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import AccountSection from "../../sections/AccountSection";
 import { DefaultButton } from "../../util/Buttons";
-import { getUserOrders } from "../../../util/requests";
+import { getUserOrderById } from "../../../util/requests";
 import { receiveResponse } from "../../../util/notifications";
 
 export default function OrderDetailPage() {
@@ -12,28 +12,22 @@ export default function OrderDetailPage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        loadOrderDetail();
-    }, [orderId]);
-
-    const loadOrderDetail = () => {
         setLoading(true);
-        getUserOrders()
-            .then((response) => {
-                const foundOrder = response.data.find(o => o.orderId === orderId);
-                if (foundOrder) {
-                    setOrder(foundOrder);
+        getUserOrderById(orderId)
+            .then(response => {
+                if (response.status === "success" && response.data) {
+                    setOrder(response.data);
                 } else {
-                    navigate('/account/orders');
+                    setOrder(null);
                 }
                 setLoading(false);
             })
-            .catch((error) => {
-                console.error('Error loading order:', error);
-                receiveResponse(error);
-                navigate('/account/orders');
+            .catch(err => {
+                setOrder(null);
                 setLoading(false);
             });
-    };
+    }, [orderId]);
+
 
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('en-US', {

@@ -234,6 +234,13 @@ export function getUserOrders() {
     });
 }
 
+export function getUserOrderById(orderId) {
+    return _ajax({
+        url: `/user/orders/${orderId}`,
+        method: "GET"
+    });
+}
+
 /*==============================================================
 # Products
 ==============================================================*/
