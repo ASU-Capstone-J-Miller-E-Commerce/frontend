@@ -1,5 +1,5 @@
 /* Unified h4 styling for order details page */
-.order-details-main h4 {
+.order-detail-page h4 {
     margin: 0;
     color: var(--miller-dark-grey);
     font-size: 1.2rem;
@@ -2743,12 +2743,6 @@
 }
 
 .contact-icon i {
-    font-size: 1.2rem;
-}
-
-.contact-details h4 {
-    margin: 0 0 0.5rem 0;
-    color: var(--miller-dark-grey);
     font-size: 1.2rem;
 }
 

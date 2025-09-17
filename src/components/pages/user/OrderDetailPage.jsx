@@ -198,7 +198,7 @@ export default function OrderDetailPage() {
                     {/* Right Column: Order Items */}
                     <div className="order-detail-right compact">
                         <div className="order-card order-items-card compact">
-                            <h3>Items Ordered</h3>
+                            <h4>Items Ordered</h4>
                             <div className="items-list compact">
                                 {allItems.length > 0 ? (
                                     <ul>
