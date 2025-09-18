@@ -208,7 +208,7 @@ export default function CartPage() {
 
                             {/* Country Selection */}
                             {!hasItemsWithoutPrice() && (
-                                <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+                                <div style={{ marginTop: '1.6rem', marginBottom: '.1rem' }}>
                                     <FormSelect
                                         title="Shipping Country"
                                         value={selectedCountry}
@@ -230,17 +230,16 @@ export default function CartPage() {
                                 <DefaultButton 
                                     text={loading ? "Processing..." : "Proceed to Checkout"}
                                     onClick={handleCheckout}
-                                    className="full-width-btn"
+                                    className={`full-width-btn${!selectedCountry ? ' disabled' : ''}`}
                                     disabled={!selectedCountry || loading}
                                 />
                             )}
-                            
-                            <button 
-                                className="continue-shopping-btn"
+
+                            <DefaultButton
+                                text="Continue Shopping"
                                 onClick={() => navigate("/collections/cues")}
-                            >
-                                Continue Shopping
-                            </button>
+                                className="continue-shopping-btn full-width-btn"
+                            />
                         </div>
                     </div>
                 </div>
