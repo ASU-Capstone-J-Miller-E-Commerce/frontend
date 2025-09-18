@@ -96,7 +96,7 @@
     gap: 10px;
 }
 .address-card.compact {
-    padding: 7px 8px;
+    padding: 12px 14px;
     border-radius: 7px;
     min-width: 120px;
     gap: 2px;
@@ -193,6 +193,9 @@
         padding: 7px 5px;
         border-radius: 7px;
         gap: 4px;
+    }
+    .contact-info.compact {
+        padding: 5px 4px;
     }
     .address-card.compact {
         padding: 5px 4px;
@@ -502,7 +505,6 @@
         box-shadow: 0 1px 6px rgba(0,0,0,0.07);
     }
     .address-card {
-        padding: 10px 8px;
         border-radius: 7px;
         min-width: 120px;
     }

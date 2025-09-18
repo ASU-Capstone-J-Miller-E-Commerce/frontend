@@ -131,10 +131,10 @@ export default function OrderDetailPage() {
                             {order.trackingNumber && (
                                 <div className="tracking-info compact">
                                     <h4>Tracking Information</h4>
-                                    <p><strong>Tracking Number:</strong> {order.trackingNumber}</p>
                                     {order.shippingCarrier && (
                                         <p><strong>Carrier:</strong> {order.shippingCarrier}</p>
                                     )}
+                                    <p><strong>Tracking Number:</strong> {order.trackingNumber}</p>
                                     {order.expectedDelivery && (
                                         <p><strong>Expected Delivery:</strong> {formatDate(order.expectedDelivery)}</p>
                                     )}
