@@ -3251,7 +3251,9 @@ function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogPro
     createdAt: '',
     orderItems: { cueGuids: [], accessoryGuids: [] },
     currency: '',
-    paymentMethod: ''
+    paymentMethod: '',
+    cueDetailsText: '',
+    accessoryDetailsText: ''
 } }) {
     console.log(element)
     const { register, handleSubmit, setValue, watch, reset, control, formState: { errors } } = useForm({
@@ -3275,7 +3277,9 @@ function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogPro
     const shippingCarrier = watch("shippingCarrier");
     const shippingAddress = watch("shippingAddress");
     const billingAddress = watch("billingAddress");
-
+    const cueDetailsText = watch("cueDetailsText");
+    const accessoryDetailsText = watch("accessoryDetailsText");
+    console.log(cueDetailsText)
     // Helper functions for formatting display values
     const formatCurrency = (amount) => {
         if (!amount) return '';
@@ -3289,7 +3293,19 @@ function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogPro
             // Format the addresses
             const formattedShippingAddress = formatAddress(element.shippingAddress?.address || element.shippingAddress);
             const formattedBillingAddress = formatAddress(element.billingAddress);
-            
+
+            // Format cue details text
+            let cueDetailsText = '';
+            if (Array.isArray(element.cueDetails) && element.cueDetails.length > 0) {
+                cueDetailsText = element.cueDetails.map(cue => `${cue.name} - $${cue.price ?? ''}`).join('\n');
+            }
+
+            // Format accessory details text
+            let accessoryDetailsText = '';
+            if (Array.isArray(element.accessoryDetails) && element.accessoryDetails.length > 0) {
+                accessoryDetailsText = element.accessoryDetails.map(acc => `${acc.name} x${acc.quantity ?? ''} - $${acc.price ?? ''}`).join('\n');
+            }
+
             // Format the data for display
             const formattedElement = {
                 ...element,
@@ -3297,7 +3313,9 @@ function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogPro
                 createdAt: element.createdAt ? new Date(element.createdAt).toLocaleDateString() : '',
                 expectedDelivery: element.expectedDelivery ? new Date(element.expectedDelivery).toISOString().split('T')[0] : '',
                 shippingAddress: formattedShippingAddress,
-                billingAddress: formattedBillingAddress
+                billingAddress: formattedBillingAddress,
+                cueDetailsText,
+                accessoryDetailsText
             };
             reset(formattedElement);
         }
@@ -3569,35 +3587,35 @@ function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogPro
                         <div>
                             <h1 className="dialog-header1">Order Items</h1>
                             <div className="form-column">
-                                {element.orderItems?.cueGuids?.length > 0 && (
+                                {cueDetailsText && (
                                     <div className="form-row">
                                         <div className="flex-1">
                                             <FormTextArea
-                                                title={`Cues (${element.orderItems.cueGuids.length})`}
+                                                title={`Cues (${element.cueDetails?.length ?? 0})`}
                                                 disabled={true}
-                                                value={element.orderItems.cueGuids.join('\n')}
-                                                rows={Math.min(element.orderItems.cueGuids.length, 5)}
+                                                value={cueDetailsText}
+                                                rows={Math.min(element.cueDetails?.length ?? 0, 5)}
                                                 readOnly
+                                                {...register('cueDetailsText')}
                                             />
                                         </div>
                                     </div>
                                 )}
-                                {element.orderItems?.accessoryGuids?.length > 0 && (
+                                {accessoryDetailsText && (
                                     <div className="form-row">
                                         <div className="flex-1">
                                             <FormTextArea
-                                                title={`Accessories (${element.orderItems.accessoryGuids.length})`}
+                                                title={`Accessories (${element.accessoryDetails?.length ?? 0})`}
                                                 disabled={true}
-                                                value={element.orderItems.accessoryGuids.map(item => 
-                                                    `${item.guid} (Qty: ${item.quantity})`
-                                                ).join('\n')}
-                                                rows={Math.min(element.orderItems.accessoryGuids.length, 5)}
+                                                value={accessoryDetailsText}
+                                                rows={Math.min(element.accessoryDetails?.length ?? 0, 5)}
                                                 readOnly
+                                                {...register('accessoryDetailsText')}
                                             />
                                         </div>
                                     </div>
                                 )}
-                                {(!element.orderItems?.cueGuids?.length && !element.orderItems?.accessoryGuids?.length) && (
+                                {(!cueDetailsText && !accessoryDetailsText) && (
                                     <div className="form-row">
                                         <div className="flex-1">
                                             <FormField
