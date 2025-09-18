@@ -202,11 +202,11 @@ export default function OrderDetailPage() {
                                     <ul>
                                         {allItems.map((item, index) => (
                                             <li key={index} className="order-item compact">
-                                                <div className="item-image compact">
+                                                <div className="item-image compact large">
                                                     {item.imageUrls && item.imageUrls.length > 0 ? (
                                                         <img src={item.imageUrls[0]} alt={item.name} />
                                                     ) : (
-                                                        <div className="no-image compact">
+                                                        <div className="no-image compact large">
                                                             <i className="fa-solid fa-image"></i>
                                                         </div>
                                                     )}
