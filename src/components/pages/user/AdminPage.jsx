@@ -492,15 +492,29 @@ function OrdersTable({ data, onEditClick }) {
             header: 'Date',
             accessorFn: (row) => {
                 if (row.createdAt) {
-                    return new Date(row.createdAt).toLocaleDateString();
+                    const dateObj = new Date(row.createdAt);
+                    // Format: MM/DD/YYYY, HH:MM AM/PM
+                    return dateObj.toLocaleString(undefined, {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true
+                    });
                 }
                 return '';
             },
             id: 'createdAt',
         },
         {
-            accessorKey: 'orderStatus',
             header: 'Status',
+            accessorFn: (row) => {
+                if (row.orderStatus && typeof row.orderStatus === 'string') {
+                    return row.orderStatus.charAt(0).toUpperCase() + row.orderStatus.slice(1);
+                }
+                return row.orderStatus || '';
+            },
             id: 'orderStatus',
         },
         {
