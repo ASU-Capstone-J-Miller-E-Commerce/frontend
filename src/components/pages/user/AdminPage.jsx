@@ -3242,7 +3242,7 @@ function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogPro
     customer: '', 
     totalAmount: '', 
     orderStatus: '', 
-    paymentStatus: '', 
+    paymentStatus: 'confirmed', 
     shippingAddress: {}, 
     billingAddress: {}, 
     expectedDelivery: '', 
@@ -3255,7 +3255,6 @@ function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogPro
     cueDetailsText: '',
     accessoryDetailsText: ''
 } }) {
-    console.log(element)
     const { register, handleSubmit, setValue, watch, reset, control, formState: { errors } } = useForm({
         defaultValues: element
     });
@@ -3279,7 +3278,7 @@ function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogPro
     const billingAddress = watch("billingAddress");
     const cueDetailsText = watch("cueDetailsText");
     const accessoryDetailsText = watch("accessoryDetailsText");
-    console.log(cueDetailsText)
+
     // Helper functions for formatting display values
     const formatCurrency = (amount) => {
         if (!amount) return '';
@@ -3369,7 +3368,7 @@ function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogPro
         { value: '', label: 'Select Carrier' },
         { value: 'UPS', label: 'UPS' },
         { value: 'FedEx', label: 'FedEx' },
-        { value: 'USPS', label: 'USPS' },
+        { value: 'USPS Express', label: 'USPS' },
         { value: 'DHL', label: 'DHL' },
         { value: 'Other', label: 'Other' }
     ];
@@ -3519,12 +3518,9 @@ function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogPro
                                         />
                                     </div>
                                     <div className="flex-1">
-                                        <FormSelect
-                                            title="Shipping Carrier"
-                                            options={carrierOptions}
-                                            value={shippingCarrier}
-                                            {...register("shippingCarrier")}
-                                        />
+                                        {shippingCarrier && (
+                                            "Shipping Carrier:" + shippingCarrier
+                                        )}
                                     </div>
                                 </div>
                             </div>
