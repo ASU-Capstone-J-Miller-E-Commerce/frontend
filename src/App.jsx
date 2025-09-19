@@ -165,6 +165,15 @@ function App() {
                     </Route>
 
                     {/* 
+                        Checkout Pages
+                    */}
+                    <Route path="/checkout">
+                        <Route path="success" element={<CheckoutSuccessPage />} />
+                        <Route path="cancel" element={<CheckoutCancelPage />} />
+                        <Route path="failure" element={<CheckoutFailurePage />} />
+                    </Route>
+
+                    {/* 
                         Other Pages
                     */}
                     <Route path="/pages">
