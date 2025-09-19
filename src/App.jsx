@@ -150,15 +150,18 @@ function App() {
                     </Route>
                     <Route element={<AuthRoute />}>
                         <Route path="/cart" element={<CartPage />} />
+
                     </Route>
 
                     {/* 
                         Checkout Pages
                     */}
-                    <Route path="/checkout">
-                        <Route path="success" element={<CheckoutSuccessPage />} />
-                        <Route path="cancel" element={<CheckoutCancelPage />} />
-                        <Route path="failure" element={<CheckoutFailurePage />} />
+                    <Route element={<AuthRoute />}>
+                        <Route path="/checkout">
+                            <Route path="success" element={<CheckoutSuccessPage />} />
+                            <Route path="cancel" element={<CheckoutCancelPage />} />
+                            <Route path="failure" element={<CheckoutFailurePage />} />
+                        </Route>
                     </Route>
 
                     {/* 
