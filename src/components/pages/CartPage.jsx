@@ -174,7 +174,7 @@ export default function CartPage() {
                             <p>Add some cues or accessories to get started!</p>
                             <DefaultButton 
                                 text="Shop Cues" 
-                                onClick={() => navigate("/collections/cues")}
+                                onClick={() => navigate("/collections/cues?available=true")}
                             />
                         </div>
                     </div>
@@ -257,7 +257,7 @@ export default function CartPage() {
 
                             <DefaultButton
                                 text="Continue Shopping"
-                                onClick={() => navigate("/collections/cues")}
+                                onClick={() => navigate("/collections/cues?available=true")}
                                 className="continue-shopping-btn full-width-btn"
                             />
                         </div>

@@ -64,6 +64,26 @@ option {
   border: 1px solid #c9c9c9;
 }
 
+@media (max-width: 600px) {
+  input.form-field-input,
+  select.form-field-input,
+  option,
+  .form-field-input,
+  .multi-select-input {
+    font-size: 15px;
+    padding: 16px 8px 4px 8px;
+    min-height: 36px;
+  }
+  select.form-field-input {
+    height: 40px;
+    padding: 12px 6px 0px 8px;
+  }
+  option {
+    font-size: 15px;
+    padding: 8px 6px;
+  }
+}
+
 button {
   border-radius: 3px;
   border: 1px solid transparent;
