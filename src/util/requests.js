@@ -98,6 +98,18 @@ export function clearCart() {
     });
 }
 
+export function getAllowedShippingCountries() {
+    return _ajax({
+        url: "/order/payment/shipping-countries",
+        method: "GET"
+    }).then(response => {
+        if (response && Array.isArray(response.data)) {
+            return response.data;
+        }
+        return [];
+    });
+}
+
 /*==============================================================
 # Collections
 ==============================================================*/
