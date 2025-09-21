@@ -3,6 +3,7 @@ import { FormField, FormTextArea } from "../util/Inputs";
 import { useForm } from "react-hook-form";
 import { DefaultButton } from "../util/Buttons";
 import { contactUs } from "../../util/requests";
+import { receiveResponse } from "../../util/notifications";
 
 export default function ContactUsPage() {
     const { register, handleSubmit, watch, formState: { errors }, reset, setFocus } = useForm({
@@ -28,9 +29,6 @@ export default function ContactUsPage() {
     };
 
     const onSubmit = (data) => {
-        console.log('Form submitted:', { ...data, attachment });
-
-        // add API call here
         const payload = {
             subject: data.subject,
             message: `
@@ -40,13 +38,15 @@ export default function ContactUsPage() {
                     <b>Message:</b><br>${data.comment}
                     `
         };
-        contactUs(payload);
-
-        // reset form
-        reset();
-        setAttachment(null);
-        const fileInput = document.querySelector('input[type="file"]');
-        if (fileInput) fileInput.value = '';
+        contactUs(payload)
+            .then(response => {
+                // reset form
+                receiveResponse(response);
+                reset();
+                setAttachment(null);
+                const fileInput = document.querySelector('input[type="file"]');
+                if (fileInput) fileInput.value = '';
+            })
     };
 
     const name = watch("name");

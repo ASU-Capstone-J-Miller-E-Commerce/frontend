@@ -104,3 +104,41 @@ export function DrawerLoginButton({onClick}) {
         </NavLink>
     );
 }
+
+/*==============================================================
+# Cart
+==============================================================*/
+export function CartButton({onClick}) {
+    const navigate = useNavigate();
+    const totalItems = useSelector(state => state.cart?.totalItems || 0);
+
+    const handleClick = () => {
+        onClick && onClick();
+        navigate('/cart');
+    };
+
+    return (
+        <div 
+            className="cart-button-container" 
+            onClick={handleClick}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleClick();
+                }
+            }}
+            aria-label={`Shopping cart with ${totalItems} items`}
+        >
+            <i className="fa-solid fa-cart-shopping cart-icon header-icon" />
+            {totalItems > 0 && (
+                <div className="cart-count-badge">
+                    <span className="cart-count-text">
+                        {totalItems > 99 ? '99+' : totalItems}
+                    </span>
+                </div>
+            )}
+        </div>
+    );
+}

@@ -64,6 +64,26 @@ option {
   border: 1px solid #c9c9c9;
 }
 
+@media (max-width: 600px) {
+  input.form-field-input,
+  select.form-field-input,
+  option,
+  .form-field-input,
+  .multi-select-input {
+    font-size: 15px;
+    padding: 16px 8px 4px 8px;
+    min-height: 36px;
+  }
+  select.form-field-input {
+    height: 40px;
+    padding: 12px 6px 0px 8px;
+  }
+  option {
+    font-size: 15px;
+    padding: 8px 6px;
+  }
+}
+
 button {
   border-radius: 3px;
   border: 1px solid transparent;
@@ -98,7 +118,7 @@ p {
 
 .toast-class {
   margin-top: 65px;
-  font-family: 'bouwsma-uncial', system-ui, Helvetica, Arial, sans-serif !important;
+  font-family: 'VTGoblinHand', system-ui, Helvetica, Arial, sans-serif !important;
   font-size: .8em;
   color: var(--miller-black) !important;
   width: 40vw !important;
@@ -367,6 +387,7 @@ select.form-field-input::-ms-expand {
 
   display: flex;
   justify-self: end;
+  align-items: center;
 }
 .header-icon,
 .drawer-login-icon {
@@ -377,6 +398,19 @@ select.form-field-input::-ms-expand {
   transition: transform 0.3s ease;
   background: transparent;
   border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  position: relative;
+}
+/* Ensure FontAwesome ::before pseudo-elements are properly aligned */
+.header-icon::before {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }
 .header-icon.fa-bars {
   font-size: 1.2em;
@@ -386,6 +420,15 @@ select.form-field-input::-ms-expand {
 }
 .header-icon:hover {
   transform: scale(1.25);
+  color: var(--miller-white);
+}
+/* Ensure NavLinks in header icons behave like buttons */
+a.header-icon {
+  cursor: pointer;
+}
+a.header-icon:visited,
+a.header-icon:active {
+  color: var(--miller-white);
 }
 @media (max-width: 750px) {
   .header-icon.fa-user {

@@ -524,3 +524,177 @@
         grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
     }
 }
+
+/* Quantity Selector Styles */
+.quantity-section {
+    margin-bottom: 20px;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.quantity-controls label {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.quantity-input-wrapper {
+    display: flex;
+    align-items: center;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    overflow: hidden;
+    background: white;
+}
+
+.quantity-btn {
+    background: #f8f9fa;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    color: #495057;
+    transition: background-color 0.2s ease;
+    min-width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quantity-btn:hover:not(:disabled) {
+    background: #e9ecef;
+}
+
+.quantity-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.quantity-input {
+    border: none;
+    outline: none;
+    padding: 8px 12px;
+    text-align: center;
+    font-size: 16px;
+    width: 60px;
+    height: 40px;
+    background: white;
+    appearance: textfield; /* Standard property */
+    -moz-appearance: textfield; /* Firefox */
+}
+
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.quantity-disclaimer {
+    color: #6c757d;
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+.quantity-disclaimer small {
+    font-size: inherit;
+}
+
+@media (max-width: 768px) {
+    .quantity-controls {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .quantity-input-wrapper {
+        width: 140px;
+    }
+}
+
+/* Quantity Selector Styles */
+.quantity-section {
+    margin-bottom: 20px;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.quantity-controls label {
+    font-weight: 600;
+    color: #333;
+    min-width: 70px;
+}
+
+.quantity-input-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    background: white;
+}
+
+.quantity-btn {
+    background: #f8f9fa;
+    border: none;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    color: #666;
+    transition: all 0.2s ease;
+}
+
+.quantity-btn:hover:not(:disabled) {
+    background: #e9ecef;
+    color: #333;
+}
+
+.quantity-btn:disabled {
+    background: #f5f5f5;
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+.quantity-input {
+    border: none;
+    width: 50px;
+    height: 35px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    outline: none;
+    appearance: textfield; /* Remove spinner */
+    -moz-appearance: textfield; /* Remove spinner in Firefox */
+}
+
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.quantity-disclaimer {
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+}
+
+.quantity-disclaimer small {
+    font-size: 12px;
+}

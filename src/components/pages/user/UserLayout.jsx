@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { logout } from "../../../util/requests";
-import { updateUser } from "../../../util/redux/actionCreators";
+import { updateUser, clearCartRedux } from "../../../util/redux/actionCreators";
 import { receiveResponse } from "../../../util/notifications";
 
 export default function UserLayout() {
@@ -21,6 +21,7 @@ export default function UserLayout() {
                     lastName: null,
                     role: null
                 });
+                clearCartRedux();
                 navigate('/');
             })
     };

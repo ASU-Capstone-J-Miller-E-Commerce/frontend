@@ -8,6 +8,7 @@ import { FormField } from "../../util/Inputs";
 import { useSelector } from "react-redux";
 import { DefaultButton } from "../../util/Buttons";
 import { checkUserAuth } from "../../../util/functions";
+import { userToggleNotifications } from "../../../util/requests";
 
 import {generate2FA} from "../../../util/requests"
 import {verify2FA} from "../../../util/requests"
@@ -45,6 +46,20 @@ export default function SettingsPage() {
             .always(() => {
                 setLoading(false);
             });
+    }
+
+    const onToggle = (data) => {
+        if (loading) return;
+        setLoading(true);
+        userToggleNotifications()
+            .then((res) => {
+                receiveResponse(res);
+                checkUserAuth();
+            })
+            .always(() => {
+                setLoading(false);
+            });
+
     }
 
     const onSubmit = (data) => {
@@ -97,7 +112,14 @@ export default function SettingsPage() {
                     <p>No 2FA</p>
                 )}
             </AccountSection>
-            <AccountSection title="Notifications"/>
+            <AccountSection title="Notifications" onEdit={ onToggle }>
+                {userData.emailNotos ? (
+                    <p>You currently have email notifications enabled!</p>
+                ) : (
+               
+                    <p>You currently have email notifications disabled!</p>
+                )}
+            </AccountSection>
 
            {/* Modal */}
            <Dialog 

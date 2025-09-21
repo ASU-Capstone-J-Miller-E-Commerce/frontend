@@ -12,6 +12,37 @@
     width: fit-content;
 }
 
+.default-button.disabled,
+.default-button:disabled {
+    background-color: #bdbdbd;
+    color: #888;
+    cursor: not-allowed;
+    opacity: 0.7;
+    box-shadow: none;
+    border: none;
+}
+
+.full-width-btn {
+    width: 100%;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.continue-shopping-btn {
+    background-color: var(--miller-dark-grey);
+    color: var(--miller-white);
+    font-weight: 600;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: background 0.2s, color 0.2s;
+}
+.continue-shopping-btn:hover:not(:disabled) {
+    background-color: var(--miller-black);
+    color: var(--miller-white);
+}
+
 .default-button:hover {
     background-color: var(--miller-dark-grey);
 }
@@ -44,4 +75,50 @@
     transform: scale(0);
     transition: transform 0.6s, opacity 0.8s;
     opacity: 1;
+}
+
+/*==============================================================
+# Cart Button
+==============================================================*/
+.cart-button-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.cart-button-container:hover {
+    transform: scale(1.15);
+}
+
+.cart-count-badge {
+    position: absolute;
+    bottom: 1px;
+    right: 1px;
+    background-color: var(--miller-dark-grey);
+    color: var(--miller-white);
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--miller-white);
+}
+
+.cart-count-text {
+    font-size: 9px;
+    font-weight: 700;
+    font-family: Arial, sans-serif;
+    line-height: 1;
+    color: var(--miller-white);
+    text-align: center;
+    display: block;
+    width: 100%;
+    padding-top: 2px;
+}
+
+.cart-count-badge:empty {
+    display: none;
 }

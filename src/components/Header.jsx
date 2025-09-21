@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useOutsideClick } from "../util/hooks";
 import logo from "../images/white_logo.jpg";
 import { createFocusTrap } from "focus-trap";
-import { DrawerLoginButton, LoginButton } from "./util/Buttons";
+import { DrawerLoginButton, LoginButton, CartButton } from "./util/Buttons";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Dialog, IconButton, InputBase, Box, Typography } from "@mui/material";
 import { Search, Close } from "@mui/icons-material";
@@ -229,7 +229,7 @@ export default function Header() {
                     aria-label="Search"
                 />
                 <LoginButton onClick={handleLinkClick} />
-                <button className="fa-solid fa-cart-shopping header-icon" />
+                <CartButton onClick={handleLinkClick} />
             </div>
 
             <SearchDialog 

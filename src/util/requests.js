@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import { receiveResponse} from './notifications';
+import { setCartItems } from './redux/actionCreators';
 import { isValidElement } from 'react';
 
 
@@ -50,6 +51,65 @@ export function test() {
         method: "GET",
     });
 }
+
+/*==============================================================
+# Cart
+==============================================================*/
+export function getCart() {
+    return _ajax({
+        url: "/cart",
+        method: "GET",
+    }).then(response => {
+        // Update Redux store with fresh cart data
+        if (response && response.data) {
+            setCartItems(response.data.items || []);
+        }
+        return response;
+    });
+}
+
+export function addToCart(itemGuid, itemType, quantity = 1) {
+    return _ajax({
+        url: "/cart/add",
+        method: "POST",
+        data: { itemGuid, itemType, quantity }
+    });
+}
+
+export function updateCartItem(itemGuid, quantity) {
+    return _ajax({
+        url: `/cart/update/${itemGuid}`,
+        method: "PUT",
+        data: { quantity }
+    });
+}
+
+export function removeFromCart(itemGuid) {
+    return _ajax({
+        url: `/cart/remove/${itemGuid}`,
+        method: "DELETE",
+    });
+}
+
+export function clearCart() {
+    return _ajax({
+        url: "/cart/clear",
+        method: "DELETE",
+    });
+}
+
+export function getAllowedShippingCountries() {
+    return _ajax({
+        url: "/order/payment/shipping-countries",
+        method: "GET"
+    }).then(response => {
+        if (response && Array.isArray(response.data)) {
+            return response.data;
+        }
+        return [];
+    });
+}
+
 /*==============================================================
 # Collections
 ==============================================================*/
@@ -179,6 +239,27 @@ export function userChangePassword(currPw, newPw){
     })
 }
 
+export function userToggleNotifications(){
+    return _ajax({
+        url: "/user/toggleNotifications",
+        method: "PUT"
+    })
+}
+
+export function getUserOrders() {
+    return _ajax({
+        url: "/user/orders",
+        method: "GET"
+    });
+}
+
+export function getUserOrderById(orderId) {
+    return _ajax({
+        url: `/user/orders/${orderId}`,
+        method: "GET"
+    });
+}
+
 export function contactUs(payload){
     return _ajax({
         url: "/email/contactus",
@@ -191,6 +272,78 @@ export function contactUs(payload){
 # Products
 ==============================================================*/
 
+/*==============================================================
+# Emailer
+==============================================================*/
+export function emailContactUs(subject, message, attachments) {
+    const formData = new FormData();
+    if (subject) formData.append("subject", subject);
+    if (message) formData.append("message", message);
+
+    if (attachments && attachments.length) {
+        attachments.forEach((file, idx) => {
+            formData.append("attachments", file); 
+        });
+    }
+
+    return _ajax({
+        url: "/email/contactus",
+        method: "POST",
+        data: formData,
+    });
+}
+
+export function emailResetPassword( email ) {
+    return _ajax({
+        url: "/email/resetPassword",
+        method: "POST",
+        data: { email }
+    });
+}
+
+export function emailNotification(subject, message, attachments) {
+    const formData = new FormData();
+    if (subject) formData.append("subject", subject);
+    if (message) formData.append("message", message);
+
+    if (attachments && attachments.length) {
+        attachments.forEach((file, idx) => {
+            formData.append("attachments", file); 
+        });
+    }
+
+    return _ajax({
+        url: "/email/notification",
+        method: "POST",
+        data: formData,
+    });
+}
+
+export function emailAnnouncement(subject, message, attachments) {
+    const formData = new FormData();
+    if (subject) formData.append("subject", subject);
+    if (message) formData.append("message", message);
+
+    if (attachments && attachments.length) {
+        attachments.forEach((file, idx) => {
+            formData.append("attachments", file); 
+        });
+    }
+
+    return _ajax({
+        url: "/email/announcement",
+        method: "POST",
+        data: formData,
+    });
+}
+
+export function emailOrderConfirm( email, userOrder  ) {
+    return _ajax({
+        url: "/email/orderconfirm",
+        method: "POST",
+        data: { email, userOrder  }
+    });
+}
 
 /*==============================================================
 # Admin
@@ -201,6 +354,13 @@ export function contactUs(payload){
 export function getAdminUsers() {
     return _ajax({
         url: "/admin/users",
+        method: "GET",
+    });
+}
+
+export function getAdminOrders() {
+    return _ajax({
+        url: "/admin/orders",
         method: "GET",
     });
 }
@@ -239,6 +399,14 @@ export function deleteUser(id) {
     return _ajax({
         url: "/admin/users/" + id,
         method: "DELETE",
+    });
+}
+
+export function editOrder(id, orderData) {
+    return _ajax({
+        url: "/admin/orders/" + id,
+        method: "PATCH",
+        data: orderData
     });
 }
 
@@ -414,6 +582,44 @@ export function deleteImages(imageUrls) {
     });
 }
 
+
+/*==============================================================
+# Payment
+==============================================================*/
+
+export function createCheckoutSession(cartItems, email, shippingCountry = null, cartTotal = 0) {
+    // Extract cue GUIDs from cart items (cues are always quantity 1)
+    const cueGuids = cartItems
+        .filter(item => item.itemType === 'cue')
+        .map(item => item.itemDetails.guid);
+    
+    // Extract accessory items with quantities
+    const accessoryItems = cartItems
+        .filter(item => item.itemType === 'accessory')
+        .map(item => ({
+            guid: item.itemDetails.guid,
+            quantity: item.quantity
+        }));
+    
+    return _ajax({
+        url: "/order/payment/create-checkout-session",
+        method: "POST",
+        data: { 
+            cueGuids: cueGuids,
+            accessoryItems: accessoryItems,
+            email: email,
+            shippingCountry: shippingCountry,
+            cartTotal: cartTotal
+        }
+    });
+}
+
+export function verifyPaymentSession(sessionId) {
+    return _ajax({
+        url: `/order/payment/verify-session/${sessionId}`,
+        method: "GET",
+    });
+}
 
 /*==============================================================
 # Sitewide Search

@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { DefaultButton } from "../util/Buttons";
-import { getAccessoryByGuid } from "../../util/requests";
+import { getAccessoryByGuid, addToCart } from "../../util/requests";
+import { addCartItemRedux } from "../../util/redux/actionCreators";
+import { receiveErrors, receiveLogs, receiveResponse } from "../../util/notifications";
 import NotFoundPage from "./NotFoundPage";
 
 export default function AccessoryProductPage() {
     const { guid } = useParams();
     const navigate = useNavigate();
+    const isAuthenticated = useSelector(state => !!state.user?.authenticated);
     const [accessory, setAccessory] = useState(null);
     const [loading, setLoading] = useState(true);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [error, setError] = useState(null);
+    const [quantity, setQuantity] = useState(1);
+    const [addingToCart, setAddingToCart] = useState(false);
 
     useEffect(() => {
         if (guid) {
@@ -36,9 +42,35 @@ export default function AccessoryProductPage() {
         setCurrentImageIndex(index);
     };
 
-    const handlePurchase = () => {
-        // TODO: Implement purchase functionality
-        console.log("Purchase accessory:", accessory);
+    const handlePurchase = async () => {
+        if (!isAuthenticated) {
+            receiveErrors("Please log in to add items to your cart");
+            navigate("/login");
+            return;
+        }
+
+        setAddingToCart(true);
+        
+        // Add to cart on backend first
+        addToCart(accessory.guid, 'accessory', quantity)
+            .then((res) => {
+                receiveResponse(res);
+                
+                // Update Redux with the new cart item after successful backend operation
+                const cartItem = {
+                    itemGuid: accessory.guid,
+                    itemType: 'accessory',
+                    quantity: quantity,
+                    addedAt: new Date().toISOString(), // Use ISO string for serialization
+                    itemDetails: accessory
+                };
+                
+                addCartItemRedux(cartItem);
+                setAddingToCart(false);
+            })
+            .catch((error) => {
+                setAddingToCart(false);
+            });
     };
 
     if (loading) {
@@ -124,11 +156,52 @@ export default function AccessoryProductPage() {
                     {/* Purchase Section */}
                     <div className="product-purchase">
                         {isAvailable && hasPrice ? (
-                            <DefaultButton
-                                text="Add to Cart"
-                                onClick={handlePurchase}
-                                className="full-width-btn"
-                            />
+                            <>
+                                <div className="quantity-section">
+                                    <div className="quantity-controls">
+                                        <label htmlFor="quantity">Quantity:</label>
+                                        <div className="quantity-input-wrapper">
+                                            <button 
+                                                type="button"
+                                                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                                                disabled={quantity <= 1}
+                                                className="quantity-btn"
+                                            >
+                                                -
+                                            </button>
+                                            <input 
+                                                id="quantity"
+                                                type="number" 
+                                                min="1" 
+                                                max="5"
+                                                value={quantity}
+                                                onChange={(e) => {
+                                                    const value = Math.min(5, Math.max(1, parseInt(e.target.value) || 1));
+                                                    setQuantity(value);
+                                                }}
+                                                className="quantity-input"
+                                            />
+                                            <button 
+                                                type="button"
+                                                onClick={() => setQuantity(Math.min(5, quantity + 1))}
+                                                disabled={quantity >= 5}
+                                                className="quantity-btn"
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="quantity-disclaimer">
+                                        <small>* Maximum quantity of 5 per item</small>
+                                    </div>
+                                </div>
+                                <DefaultButton
+                                    text={addingToCart ? "Adding..." : "Add to Cart"}
+                                    onClick={handlePurchase}
+                                    disabled={addingToCart}
+                                    className="full-width-btn"
+                                />
+                            </>
                         ) : isAvailable ? (
                             <DefaultButton 
                                 text="Contact for Pricing" 
