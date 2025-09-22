@@ -13,12 +13,13 @@ export default function CreateAccountPage () {
             email: "",
             password: "",
             firstName: "",
-            lastName: ""
+            lastName: "",
+            emailNotos: true
         }
     });
 
     const onSubmit = data => {
-        registerUser(data.email, data.password, data.firstName, data.lastName)
+        registerUser(data.email, data.password, data.firstName, data.lastName, data.emailNotos)
             .then((res) => {
                 receiveResponse(res);
                 navigate("/login");
@@ -29,6 +30,7 @@ export default function CreateAccountPage () {
     const password = watch("password");
     const firstName = watch("firstName");
     const lastName = watch("lastName");
+    const emailNotos = watch("emailNotos");
 
     return (
         <section className="form-content">
@@ -106,6 +108,20 @@ export default function CreateAccountPage () {
                             }
                         })}
                     />
+
+                    {/* Promotional Email Opt-in Checkbox */}
+                    <div className="form-row email-notos-row">
+                        <label htmlFor="emailNotos" className="email-notos-label">
+                            <input
+                                id="emailNotos"
+                                type="checkbox"
+                                className="email-notos-checkbox"
+                                {...register("emailNotos")}
+                                checked={!!emailNotos}
+                            />
+                            <span className="email-notos-text">I want to receive promotional emails and offers</span>
+                        </label>
+                    </div>
 
                     {/* ACTIONS */}
                     <div className="login-actions">

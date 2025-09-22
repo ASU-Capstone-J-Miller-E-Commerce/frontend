@@ -181,11 +181,11 @@ export function logout() {
     });
 }
 
-export function registerUser(email, password, fName, lName){
+export function registerUser(email, password, fName, lName, emailNotos) {
     return _ajax({
         url: "/account/register",
         method: "POST",
-        data: {email, password, fName, lName}    
+        data: {email, password, fName, lName, emailNotos}    
     });
 }
 
