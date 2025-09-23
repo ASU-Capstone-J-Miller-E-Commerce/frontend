@@ -4,7 +4,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, B
 import { set, useForm } from 'react-hook-form';
 import { FormField, FormTextArea, FormSelect, DefaultToggle, FormMultiSelect } from '../../util/Inputs';
 import { DefaultButton } from '../../util/Buttons';
-import { getAdminUsers, createUser, editUser, changePassword, deleteUser, getAdminAccessories, createAccessory, editAccessory, deleteAccessory, getAdminMaterials, createWood, editWood, createCrystal, editCrystal, deleteCrystal, deleteWood, getAdminCues, createCue, editCue, deleteCue, deleteImages, getAdminOrders, editOrder } from '../../../util/requests';
+import { getAdminUsers, createUser, editUser, changePassword, deleteUser, getAdminAccessories, createAccessory, editAccessory, deleteAccessory, getAdminMaterials, createWood, editWood, createCrystal, editCrystal, deleteCrystal, deleteWood, getAdminCues, createCue, editCue, deleteCue, deleteImages, getAdminOrders, editOrder, sendAnnouncement } from '../../../util/requests';
 import { receiveResponse } from '../../../util/notifications';
 import { AdminSkeletonLoader } from '../../util/Util';
 import { useSelector } from 'react-redux';
@@ -178,7 +178,7 @@ export default function AdminPage() {
 }
 
 function AdminHeader({ setAdminPage, adminPage, loading, onPlusClick }) {
-    const pages = ['Cues', 'Accessories', 'Materials', 'Users', 'Orders'];
+    const pages = ['Cues', 'Accessories', 'Materials', 'Users', 'Orders', 'Email'];
 
     const handlePlusClick = () => {
         let title = '';
@@ -245,6 +245,8 @@ function AdminContent({ adminPage, loading, onEditClick, onPasswordEditClick, on
             return <UsersTable data={userData} onEditClick={onEditClick} onPasswordEditClick={onPasswordEditClick} onDeleteClick={onDeleteClick} />;
         case 'Orders':
             return <OrdersTable data={orderData} onEditClick={onEditClick} />;
+        case 'Email':
+            return <EmailTab />;
         default:
             return null;
     }
@@ -3681,3 +3683,44 @@ const dialogTitleStyle = {
 const dialogContentStyle = {
     marginTop: '24px'
 };
+
+// EmailTab: Placeholder file uploader and upload button for sending emails to everyone
+function EmailTab() {
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [uploading, setUploading] = useState(false);
+
+    const handleFileChange = (e) => {
+        setSelectedFile(e.target.files[0]);
+    };
+
+    const handleUpload = () => {
+        setUploading(true);
+        const subject = selectedFile ? selectedFile.name : 'Announcement';
+        const message = 'This is a test announcement.';
+        const attachments = selectedFile ? [selectedFile] : [];
+            sendAnnouncement(subject, message, attachments)
+                .then((res) => {
+                    setUploading(false);
+                    receiveResponse(res);
+                })
+                .catch(() => {
+                    setUploading(false);
+                });
+    };
+
+    return (
+        <div>
+            <h3 className="admin-page-header">Email</h3>
+            <input type="file" onChange={handleFileChange} style={{ marginBottom: '1rem', display: 'block' }} />
+            <button
+                className="admin-button"
+                onClick={handleUpload}
+                disabled={!selectedFile || uploading}
+                style={{ marginTop: '0.5rem', display: 'inline-block' }}
+            >
+                {uploading ? 'Uploading...' : 'Upload & Send Email'}
+            </button>
+            {selectedFile && <div style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>Selected file: {selectedFile.name}</div>}
+        </div>
+    );
+}

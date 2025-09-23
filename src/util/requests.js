@@ -349,7 +349,21 @@ export function emailOrderConfirm( email, userOrder  ) {
 # Admin
 ==============================================================*/
 
-// admin users sections
+export function sendAnnouncement(subject, message, attachments) {
+    const formData = new FormData();
+    if (subject) formData.append("subject", subject);
+    if (message) formData.append("message", message);
+    if (attachments && attachments.length) {
+        attachments.forEach((file) => {
+            formData.append("attachments", file);
+        });
+    }
+    return _ajax({
+        url: "/email/announcement",
+        method: "POST",
+        data: formData,
+    });
+}
 
 export function getAdminUsers() {
     return _ajax({
