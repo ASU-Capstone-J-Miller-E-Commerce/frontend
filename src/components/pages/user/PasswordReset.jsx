@@ -19,7 +19,6 @@ export default function PasswordReset () {
                 // reset form
                 receiveResponse(response);
                 reset();
-                setAttachment(null);
         });
     };
 
