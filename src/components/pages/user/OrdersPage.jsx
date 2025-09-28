@@ -94,7 +94,7 @@ export default function OrdersPage() {
                         <p>When you place your first order, it will appear here.</p>
                         <button 
                             className="btn-primary"
-                            onClick={() => navigate('/collections/cues')}
+                            onClick={() => navigate('/collections/cues?available=true')}
                         >
                             Start Shopping
                         </button>

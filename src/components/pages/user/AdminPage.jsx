@@ -1172,7 +1172,7 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
                                 <div className="form-row">
                                     <div className="flex-1">
                                         <FormField
-                                            title="Price"
+                                            title="Price (USD)"
                                             type="number"
                                             value={price}
                                             {...register("price")}
@@ -2038,7 +2038,7 @@ function AccessoryDialog({ open, onClose, title: initialTitle, getData, setDialo
                             })}
                         />
                         <FormField
-                            title="Price*"
+                            title="Price* (USD)"
                             type="number"
                             value={price}
                             error={errors.price && errors.price.message}
