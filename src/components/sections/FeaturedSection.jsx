@@ -1,10 +1,45 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import { Card } from "../util/Card";
-import { DefaultButton } from "../util/Buttons";
 
 import cue from "../../images/cue.jpg"
 
 export default function FeaturedSection () {
+    // Mock featured cues data - in a real app this would come from props or an API
+    const featuredCues = [
+        {
+            id: "cue-1",
+            title: "Handcrafted Maple Cue",
+            price: 450.00,
+            tag: "FEATURED",
+            image: cue,
+            linkTo: "/cues/cue-1"
+        },
+        {
+            id: "cue-2", 
+            title: "Premium Ebony Cue",
+            price: 650.00,
+            tag: "PREMIUM",
+            image: cue,
+            linkTo: "/cues/cue-2"
+        },
+        {
+            id: "cue-3",
+            title: "Custom Inlay Design",
+            price: 820.00,
+            tag: "CUSTOM",
+            image: cue,
+            linkTo: "/cues/cue-3"
+        },
+        {
+            id: "cue-4",
+            title: "Competition Series",
+            price: 380.00,
+            tag: "SPORT",
+            image: cue,
+            linkTo: "/cues/cue-4"
+        }
+    ];
 
     return (
         <section className="featured-section">
@@ -18,25 +53,25 @@ export default function FeaturedSection () {
             {/* Featured Items */}
             <div className="featured-listing">
                 <ul>
-                    <li>
-                        <Card image={cue} title={"Pool Cue"} price={500.00}/>
-                    </li>
-                    <li>
-                        <Card image={cue} title={"Pool Cue"} price={500.00} />
-                    </li>
-                    <li>
-                        <Card image={cue} title={"Pool Cue"} price={500.00} />
-                    </li>
-                    <li>
-                        <Card image={cue} title={"Pool Cue"} price={500.00} />
-                    </li>
+                    {featuredCues.map((cue) => (
+                        <li key={cue.id}>
+                            <Card 
+                                image={cue.image} 
+                                title={cue.title} 
+                                price={cue.price}
+                                tag={cue.tag}
+                                linkTo={cue.linkTo}
+                            />
+                        </li>
+                    ))}
                 </ul>
             </div>
 
             {/* View All */}
-            <div style={{alignItems: "center", display: "flex", justifyContent: "center"}}>
-                <DefaultButton text="View All" />
-                
+            <div className="featured-cta">
+                <NavLink to="/collections/cues" className="featured-view-all-button">
+                    View All Cues
+                </NavLink>
             </div>
         </section>
     );

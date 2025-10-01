@@ -1,0 +1,456 @@
+/*==============================================================
+# Homepage Specific Styling
+==============================================================*/
+
+/* Homepage layout optimization */
+.homepage-content {
+    margin: 0;
+    padding: 0;
+}
+
+/*==============================================================
+# Shop Now Section
+==============================================================*/
+.shop-now-section {
+    padding: 48px 0;
+}
+
+.shop-now-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: stretch;
+    background-color: white;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.shop-now-image {
+    flex: 1;
+    display: flex;
+}
+
+.shop-now-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.shop-now-content {
+    flex: 1;
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: var(--miller-dark-grey);
+    color: white;
+}
+
+.shop-now-title {
+    font-size: 32px;
+    font-weight: 400;
+    margin: 0 0 20px 0;
+    color: white;
+    letter-spacing: 2px;
+}
+
+.shop-now-subtitle {
+    font-size: 16px;
+    margin: 0 0 32px 0;
+    color: #bdc3c7;
+    line-height: 1.6;
+}
+
+.shop-now-button {
+    display: inline-block;
+    padding: 14px 32px;
+    background-color: white;
+    color: var(--miller-dark-grey);
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    text-align: center;
+    align-self: flex-start;
+}
+
+.shop-now-button:hover {
+    background-color: #ecf0f1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/*==============================================================
+# Materials Section
+==============================================================*/
+.materials-section {
+    padding: 48px 0;
+}
+
+.materials-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: stretch;
+    background-color: white;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.materials-image {
+    flex: 1;
+    display: flex;
+}
+
+.materials-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.materials-content {
+    flex: 1;
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: var(--miller-dark-grey);
+    color: white;
+}
+
+.materials-title {
+    font-size: 32px;
+    font-weight: 400;
+    margin: 0 0 20px 0;
+    color: white;
+    letter-spacing: 2px;
+}
+
+.materials-subtitle {
+    font-size: 16px;
+    margin: 0 0 32px 0;
+    color: #bdc3c7;
+    line-height: 1.6;
+}
+
+.materials-button {
+    display: inline-block;
+    padding: 14px 32px;
+    background-color: white;
+    color: var(--miller-dark-grey);
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    text-align: center;
+    align-self: flex-start;
+}
+
+.materials-button:hover {
+    background-color: #ecf0f1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/*==============================================================
+# Testimonials Section
+==============================================================*/
+.testimonials-section {
+    padding: 48px 0;
+}
+
+.testimonials-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.testimonials-title {
+    font-size: 32px;
+    font-weight: 400;
+    margin: 0 0 48px 0;
+    color: #333;
+    letter-spacing: 2px;
+}
+
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 32px;
+    justify-items: center;
+}
+
+.testimonial-card {
+    background: white;
+    padding: 32px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    text-align: center;
+}
+
+.testimonial-stars {
+    margin-bottom: 16px;
+}
+
+.testimonial-stars i {
+    font-size: 18px;
+    margin: 0 2px;
+}
+
+.star-filled {
+    color: #333;
+}
+
+.star-empty {
+    color: #ddd;
+}
+
+.testimonial-name {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 16px 0;
+    color: #333;
+}
+
+.testimonial-text {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #666;
+    margin: 0;
+    font-style: italic;
+}
+
+/*==============================================================
+# Improved Featured Section Styling
+==============================================================*/
+.featured-section {
+    padding: 48px 0;
+    background-color: white;
+}
+
+.featured-header-wrapper {
+    padding: 0 20px;
+    margin-bottom: 32px;
+    text-align: center;
+}
+
+.featured-header-title {
+    margin: 0 0 16px 0;
+    font-size: 28px;
+    font-weight: 400;
+    color: #333;
+}
+
+.featured-cta {
+    margin-top: 32px;
+    text-align: center;
+}
+
+.featured-view-all-button {
+    display: inline-block;
+    padding: 12px 28px;
+    background-color: transparent;
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    border: 2px solid #333;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.featured-view-all-button:hover {
+    background-color: #333;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/*==============================================================
+# Mobile Responsiveness
+==============================================================*/
+@media (max-width: 768px) {
+    /* Shop Now Section Mobile */
+    .shop-now-section {
+        padding: 32px 0;
+    }
+    
+    .shop-now-container {
+        flex-direction: column;
+    }
+    
+    .shop-now-image {
+        width: 100%;
+        min-height: 250px;
+    }
+    
+    .shop-now-content {
+        padding: 32px 24px;
+    }
+    
+    .shop-now-title {
+        font-size: 24px;
+        margin-bottom: 16px;
+        letter-spacing: 1px;
+    }
+    
+    .shop-now-subtitle {
+        font-size: 15px;
+        margin-bottom: 24px;
+    }
+    
+    .shop-now-button {
+        padding: 12px 24px;
+        font-size: 15px;
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    /* Materials Section Mobile */
+    .materials-section {
+        padding: 32px 0;
+    }
+    
+    .materials-container {
+        flex-direction: column;
+    }
+    
+    .materials-image {
+        width: 100%;
+        min-height: 250px;
+    }
+    
+    .materials-content {
+        padding: 32px 24px;
+    }
+    
+    .materials-title {
+        font-size: 24px;
+        margin-bottom: 16px;
+        letter-spacing: 1px;
+    }
+    
+    .materials-subtitle {
+        font-size: 15px;
+        margin-bottom: 24px;
+    }
+    
+    .materials-button {
+        padding: 12px 24px;
+        font-size: 15px;
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    /* Featured Section Mobile */
+    .featured-section {
+        padding: 32px 0;
+    }
+    
+    .featured-header-wrapper {
+        padding: 0 16px;
+        margin-bottom: 24px;
+    }
+    
+    .featured-header-title {
+        font-size: 22px;
+    }
+    
+    .featured-listing {
+        padding: 0 16px;
+    }
+    
+    .featured-cta {
+        margin-top: 24px;
+    }
+    
+    .featured-view-all-button {
+        padding: 10px 20px;
+        font-size: 15px;
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    /* Testimonials Section Mobile */
+    .testimonials-section {
+        padding: 32px 0;
+    }
+    
+    .testimonials-container {
+        padding: 0 16px;
+    }
+    
+    .testimonials-title {
+        font-size: 24px;
+        margin-bottom: 32px;
+        letter-spacing: 1px;
+    }
+    
+    .testimonials-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    
+    .testimonial-card {
+        padding: 24px;
+        max-width: 100%;
+    }
+    
+    .testimonial-stars i {
+        font-size: 16px;
+    }
+    
+    .testimonial-name {
+        font-size: 18px;
+    }
+    
+    .testimonial-text {
+        font-size: 15px;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    /* Tablet optimizations */
+    .shop-now-content,
+    .materials-content {
+        padding: 40px;
+    }
+    
+    .shop-now-title,
+    .materials-title {
+        font-size: 28px;
+    }
+    
+    .testimonials-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+    
+    .testimonials-container {
+        padding: 0 40px;
+    }
+}
+
+@media (min-width: 1025px) {
+    /* Desktop optimizations */
+    .featured-header-wrapper {
+        padding: 0 50px;
+    }
+    
+    .testimonials-container {
+        padding: 0 50px;
+    }
+    
+    .testimonials-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Enhanced visual hierarchy */
