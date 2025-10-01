@@ -1,8 +1,10 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { DefaultButton } from "../util/Buttons";
 import cue from "../../images/cue.jpg"
 
 export default function MaterialsSection() {
+    const navigate = useNavigate();
 
     return (
         <section className="materials-section">
@@ -25,9 +27,11 @@ export default function MaterialsSection() {
                     <p className="materials-subtitle">
                         Explore our carefully curated selection of exotic woods and semi-precious crystals, each chosen for their unique beauty and exceptional quality.
                     </p>
-                    <NavLink to="/collections/materials" className="materials-button">
-                        View Materials
-                    </NavLink>
+                    <DefaultButton 
+                        text="View Materials" 
+                        onClick={() => navigate('/collections/materials')}
+                        className="materials-button-custom"
+                    />
                 </div>
             </div>
         </section>

@@ -12,7 +12,7 @@
 # Shop Now Section
 ==============================================================*/
 .shop-now-section {
-    padding: 48px 0;
+    padding: 40px 0;
 }
 
 .shop-now-container {
@@ -87,7 +87,7 @@
 # Materials Section
 ==============================================================*/
 .materials-section {
-    padding: 48px 0;
+    padding: 40px 0;
 }
 
 .materials-container {
@@ -159,10 +159,65 @@
 }
 
 /*==============================================================
+# Custom Button Styles for DefaultButton Components
+==============================================================*/
+.featured-button-custom {
+    padding: 14px 32px !important;
+    background-color: transparent !important;
+    color: #333 !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    border: 2px solid #333 !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer !important;
+    text-align: center !important;
+    align-self: flex-start !important;
+}
+
+.featured-button-custom:hover {
+    background-color: #333 !important;
+    color: white !important;
+}
+
+.shop-now-button-custom {
+    padding: 14px 32px !important;
+    background-color: white !important;
+    color: var(--miller-dark-grey) !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer !important;
+    border: none !important;
+    text-align: center !important;
+    align-self: flex-start !important;
+}
+
+.shop-now-button-custom:hover {
+    background-color: #ecf0f1 !important;
+}
+
+.materials-button-custom {
+    padding: 14px 32px !important;
+    background-color: white !important;
+    color: var(--miller-dark-grey) !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer !important;
+    border: none !important;
+    text-align: center !important;
+    align-self: flex-start !important;
+}
+
+.materials-button-custom:hover {
+    background-color: #ecf0f1 !important;
+}
+
+/*==============================================================
 # Testimonials Section
 ==============================================================*/
 .testimonials-section {
-    padding: 48px 0;
+    padding: 40px 0;
 }
 
 .testimonials-container {
@@ -175,7 +230,7 @@
 .testimonials-title {
     font-size: 32px;
     font-weight: 400;
-    margin: 0 0 48px 0;
+    margin: 0 0 32px 0;
     color: #333;
     letter-spacing: 2px;
 }
@@ -231,46 +286,26 @@
 # Improved Featured Section Styling
 ==============================================================*/
 .featured-section {
-    padding: 48px 0;
+    padding: 40px 0;
     background-color: white;
 }
 
 .featured-header-wrapper {
     padding: 0 20px;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
     text-align: center;
 }
 
 .featured-header-title {
-    margin: 0 0 16px 0;
+    margin: 0 0 0 0;
     font-size: 28px;
     font-weight: 400;
     color: #333;
 }
 
 .featured-cta {
-    margin-top: 32px;
+    margin-top: 10px;
     text-align: center;
-}
-
-.featured-view-all-button {
-    display: inline-block;
-    padding: 12px 28px;
-    background-color: transparent;
-    color: #333;
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: 500;
-    border: 2px solid #333;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.featured-view-all-button:hover {
-    background-color: #333;
-    color: white;
-    transform: translateY(-2px);
 }
 
 /*==============================================================
@@ -313,6 +348,13 @@
         max-width: 280px;
     }
     
+    .shop-now-button-custom {
+        padding: 12px 24px !important;
+        font-size: 15px !important;
+        width: 100% !important;
+        max-width: 280px !important;
+    }
+    
     /* Materials Section Mobile */
     .materials-section {
         padding: 32px 0;
@@ -349,6 +391,13 @@
         max-width: 280px;
     }
     
+    .materials-button-custom {
+        padding: 12px 24px !important;
+        font-size: 15px !important;
+        width: 100% !important;
+        max-width: 280px !important;
+    }
+    
     /* Featured Section Mobile */
     .featured-section {
         padding: 32px 0;
@@ -368,14 +417,14 @@
     }
     
     .featured-cta {
-        margin-top: 24px;
+        margin-top: 16px;
     }
     
-    .featured-view-all-button {
-        padding: 10px 20px;
-        font-size: 15px;
-        width: 100%;
-        max-width: 280px;
+    .featured-button-custom {
+        padding: 12px 24px !important;
+        font-size: 15px !important;
+        width: 100% !important;
+        max-width: 280px !important;
     }
     
     /* Testimonials Section Mobile */
@@ -389,7 +438,7 @@
     
     .testimonials-title {
         font-size: 24px;
-        margin-bottom: 32px;
+        margin-bottom: 24px;
         letter-spacing: 1px;
     }
     

@@ -1,8 +1,10 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { DefaultButton } from "../util/Buttons";
 import cue from "../../images/cue.jpg"
 
 export default function ShopNowSection () {
+    const navigate = useNavigate();
 
     return (
         <section className="shop-now-section">
@@ -25,9 +27,11 @@ export default function ShopNowSection () {
                     <p className="shop-now-subtitle">
                         Hand-crafted pool cues proudly Made in America. Virtually every piece of each cue is carefully crafted in-house to ensure the highest standards.
                     </p>
-                    <NavLink to="/collections/cues" className="shop-now-button">
-                        Shop Now
-                    </NavLink>
+                    <DefaultButton 
+                        text="Shop Now" 
+                        onClick={() => navigate('/collections/cues')}
+                        className="shop-now-button-custom"
+                    />
                 </div>
             </div>
         </section>

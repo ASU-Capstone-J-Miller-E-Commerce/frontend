@@ -1,10 +1,13 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Card } from "../util/Card";
+import { DefaultButton } from "../util/Buttons";
 
 import cue from "../../images/cue.jpg"
 
 export default function FeaturedSection () {
+    const navigate = useNavigate();
+    
     // Mock featured cues data - in a real app this would come from props or an API
     const featuredCues = [
         {
@@ -69,9 +72,11 @@ export default function FeaturedSection () {
 
             {/* View All */}
             <div className="featured-cta">
-                <NavLink to="/collections/cues" className="featured-view-all-button">
-                    View All Cues
-                </NavLink>
+                <DefaultButton 
+                    text="View All Cues" 
+                    onClick={() => navigate('/collections/cues')}
+                    className="featured-button-custom"
+                />
             </div>
         </section>
     );
