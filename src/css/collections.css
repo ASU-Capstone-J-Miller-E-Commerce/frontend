@@ -389,3 +389,97 @@
     font-family: 'bouwsma-uncial', system-ui, Helvetica, Arial, sans-serif;
     color: #333;
 }
+
+/* Skeleton loader styles */
+.skeleton-card {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.skeleton-card-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    min-width: 0;
+}
+
+.skeleton-card-image {
+    width: 100%;
+    aspect-ratio: 2048 / 2048;
+    background-color: #f0f0f0;
+    position: relative;
+    overflow: hidden;
+}
+
+.skeleton-card-content {
+    padding: 13px 0px;
+    display: flex;
+    flex-direction: column;
+    min-height: 40px;
+    justify-content: space-between;
+}
+
+@media (min-width: 750px) {
+    .skeleton-card-content {
+        padding: 17px 0px;
+    }
+}
+
+.skeleton-title {
+    height: 14px;
+    width: 80%;
+    background-color: #f0f0f0;
+    margin-bottom: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.skeleton-price {
+    height: 17px;
+    width: 40%;
+    background-color: #f0f0f0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Shimmer animation */
+.skeleton-shimmer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.4) 50%,
+        transparent 100%
+    );
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Ensure skeleton cards respect the same grid layout */
+.skeleton-card {
+    cursor: default;
+}
+
+.skeleton-card-wrapper {
+    transition: none;
+}
+
+.skeleton-card-wrapper:hover {
+    box-shadow: none;
+    transform: none;
+}

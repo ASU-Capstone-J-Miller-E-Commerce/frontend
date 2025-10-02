@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "../util/Card";
+import { SkeletonCard } from "../util/SkeletonCard";
 import { DefaultButton } from "../util/Buttons";
 import { getFeaturedCues } from "../../util/requests";
-import { receiveResponse } from "../../util/notifications";
 
-import cue from "../../images/cue.jpg"
-
-export default function FeaturedSection () {
+export default function FeaturedSection() {
     const navigate = useNavigate();
     const [featuredCues, setFeaturedCues] = useState([]);
     const [loading, setLoading] = useState(true);
-    
+
     useEffect(() => {
         setLoading(true);
         getFeaturedCues()
@@ -26,8 +24,8 @@ export default function FeaturedSection () {
             });
     }, []);
 
-    // Don't render section if no featured cues
-    if (loading || !featuredCues || featuredCues.length === 0) {
+    // Don't render section if no featured cues and not loading
+    if (!loading && (!featuredCues || featuredCues.length === 0)) {
         return null;
     }
 
@@ -43,25 +41,33 @@ export default function FeaturedSection () {
             {/* Featured Items */}
             <div className="featured-listing">
                 <ul>
-                    {featuredCues.map((cueItem) => (
-                        <li key={cueItem.guid}>
-                            <Card 
-                                image={cueItem.imageUrls && cueItem.imageUrls.length > 0 ? cueItem.imageUrls[0] : cue}
-                                images={cueItem.imageUrls}
-                                title={cueItem.name}
-                                price={cueItem.price}
-                                tag={cueItem.cueNumber}
-                                linkTo={`/cues/${cueItem.guid}`}
-                            />
-                        </li>
-                    ))}
+                    {loading ? (
+                        // Show 4 skeleton cards while loading
+                        Array.from({ length: 4 }, (_, index) => (
+                            <li key={`skeleton-${index}`}>
+                                <SkeletonCard />
+                            </li>
+                        ))
+                    ) : (
+                        featuredCues.map((cueItem) => (
+                            <li key={cueItem.guid}>
+                                <Card
+                                    image={cueItem.imageUrls[0]}
+                                    images={cueItem.imageUrls}
+                                    title={cueItem.name}
+                                    price={cueItem.price}
+                                    tag={cueItem.cueNumber}
+                                    linkTo={`/cues/${cueItem.guid}`}
+                                />
+                            </li>
+                        ))
+                    )}
                 </ul>
             </div>
 
-            {/* View All */}
             <div className="featured-cta">
-                <DefaultButton 
-                    text="View All" 
+                <DefaultButton
+                    text="View All"
                     onClick={() => navigate('/collections/cues')}
                     className="featured-button-custom"
                 />
