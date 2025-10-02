@@ -510,8 +510,8 @@ function SearchDialog({ open, onClose, handleLinkClick, hasScrolled }) {
                             width: {
                                 xs: '90%',
                                 sm: '70%',
-                                md: '50%',
-                                lg: '40%'
+                                md: '60%',
+                                lg: '60%'
                             },
                             maxWidth: '1000px',
                             boxSizing: 'border-box',
@@ -576,8 +576,8 @@ function SearchDialog({ open, onClose, handleLinkClick, hasScrolled }) {
                                 width: {
                                     xs: '90%',
                                     sm: '70%',
-                                    md: '50%',
-                                    lg: '40%'
+                                    md: '60%',
+                                    lg: '60%'
                                 },
                                 maxWidth: '1000px',
                                 padding: '20px 0',
@@ -661,8 +661,8 @@ function SearchDialog({ open, onClose, handleLinkClick, hasScrolled }) {
                                 width: {
                                     xs: '90%',
                                     sm: '70%',
-                                    md: '50%',
-                                    lg: '40%'
+                                    md: '60%',
+                                    lg: '60%'
                                 },
                                 maxWidth: '800px',
                                 padding: '20px 0',
