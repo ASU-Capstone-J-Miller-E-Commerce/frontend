@@ -111,10 +111,11 @@ export function DrawerLoginButton({onClick}) {
 export function CartButton({onClick}) {
     const navigate = useNavigate();
     const totalItems = useSelector(state => state.cart?.totalItems || 0);
+    const isAuthenticated = useSelector(state => !!state.user?.authenticated);
 
     const handleClick = () => {
         onClick && onClick();
-        navigate('/cart');
+        navigate(isAuthenticated ? '/cart' : '/login');
     };
 
     return (
