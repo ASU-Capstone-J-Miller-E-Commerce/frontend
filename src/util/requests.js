@@ -6,7 +6,7 @@ import { isValidElement } from 'react';
 
 export function _ajax(settings = {}) {
     // Add base URL
-    settings.url = `http://138.197.209.23${settings.url}`;
+    settings.url = `http://localhost:4000${settings.url}`;
 
     // Special handling for FormData (file uploads)
     if (settings.data instanceof FormData) {
