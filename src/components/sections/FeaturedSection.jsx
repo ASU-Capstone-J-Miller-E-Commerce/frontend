@@ -50,7 +50,7 @@ export default function FeaturedSection () {
                                 images={cueItem.imageUrls}
                                 title={cueItem.name}
                                 price={cueItem.price}
-                                tag="FEATURED"
+                                tag={cueItem.cueNumber}
                                 linkTo={`/cues/${cueItem.guid}`}
                             />
                         </li>
