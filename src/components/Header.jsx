@@ -506,7 +506,7 @@ function SearchDialog({ open, onClose, handleLinkClick, hasScrolled }) {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            gap: 2, // Add gap between input box and close button
+                            gap: 0, // Add gap between input box and close button
                             width: {
                                 xs: '90%',
                                 sm: '70%',
@@ -549,10 +549,7 @@ function SearchDialog({ open, onClose, handleLinkClick, hasScrolled }) {
                             sx={{ 
                                 color: 'white', 
                                 fontSize: '2.1rem',
-                                padding: '12px 0px',
-                                '&:hover': {
-                                    backgroundColor: 'rgba(255, 255, 255, 0.1)'
-                                }
+                                padding: '12px 12px',
                             }}
                             aria-label="Close search"
                         >
