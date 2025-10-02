@@ -12,7 +12,7 @@
 # Shop Now Section
 ==============================================================*/
 .shop-now-section {
-    padding: 40px 0;
+    padding: 40px 20px; /* Changed from 40px 0 to add default horizontal padding */
 }
 
 .shop-now-container {
@@ -87,7 +87,7 @@
 # Materials Section
 ==============================================================*/
 .materials-section {
-    padding: 40px 0;
+    padding: 40px 20px; /* Changed from 40px 0 to add default horizontal padding */
 }
 
 .materials-container {
@@ -221,7 +221,7 @@
 }
 
 .testimonials-container {
-    max-width: 1200px;
+    max-width: 1080px;
     margin: 0 auto;
     padding: 0 20px;
     text-align: center;
@@ -314,7 +314,7 @@
 @media (max-width: 768px) {
     /* Shop Now Section Mobile */
     .shop-now-section {
-        padding: 32px 0;
+        padding: 32px 10px;
     }
     
     .shop-now-container {
@@ -357,7 +357,7 @@
     
     /* Materials Section Mobile */
     .materials-section {
-        padding: 32px 0;
+        padding: 32px 10px;
     }
     
     .materials-container {
@@ -404,7 +404,7 @@
     }
     
     .featured-header-wrapper {
-        padding: 0 16px;
+        padding: 0 15px;
         margin-bottom: 24px;
     }
     
@@ -429,7 +429,7 @@
     }
     
     .testimonials-container {
-        padding: 0 16px;
+        padding: 0 15px;
     }
     
     .testimonials-title {
@@ -462,7 +462,6 @@
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
-    /* Tablet optimizations */
     .shop-now-content,
     .materials-content {
         padding: 40px;
@@ -495,6 +494,15 @@
     
     .testimonials-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+    
+    /* Shop Now and Materials sections desktop padding */
+    .shop-now-section {
+        padding: 40px 50px; /* Desktop padding */
+    }
+    
+    .materials-section {
+        padding: 40px 50px; /* Desktop padding */
     }
 }
 
