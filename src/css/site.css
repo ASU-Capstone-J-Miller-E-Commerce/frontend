@@ -244,6 +244,9 @@ select.form-field-input::-ms-expand {
   color: var(--miller-white);
   cursor: pointer;
 }
+.drawer-nav-text button {
+    color: var(--miller-white);
+}
 .drawer-nav-text:hover {
   background-color: rgb(109, 109, 109);
   color: var(--miller-white);
