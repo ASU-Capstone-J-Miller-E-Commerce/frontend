@@ -505,9 +505,8 @@ function SearchDialog({ open, onClose, handleLinkClick, hasScrolled }) {
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
-                            backgroundColor: 'white',
-                            borderRadius: '4px',
-                            padding: '5px 10px',
+                            justifyContent: 'center',
+                            gap: 2, // Add gap between input box and close button
                             width: {
                                 xs: '90%',
                                 sm: '70%',
@@ -518,27 +517,46 @@ function SearchDialog({ open, onClose, handleLinkClick, hasScrolled }) {
                             boxSizing: 'border-box',
                         }}
                     >
-                        <Search sx={{ color: 'black', marginRight: 1, flexShrink: 0 }} />
-                        <InputBase
-                            placeholder="Search..."
-                            inputRef={searchInputRef}
-                            fullWidth
-                            onChange={handleSearchInput}
+                        <Box
                             sx={{
-                                color: 'black',
+                                display: 'flex',
+                                alignItems: 'center',
+                                backgroundColor: 'white',
+                                borderRadius: 0,
+                                padding: '5px 10px',
                                 flexGrow: 1,
-                                '& .MuiInputBase-input': {
-                                    fontSize: '1.2rem',
-                                    fontFamily: "'VTGoblinHand', system-ui, Helvetica, Arial, sans-serif"
-                                }
+                                boxSizing: 'border-box',
                             }}
-                        />
+                        >
+                            <Search sx={{ color: 'black', marginRight: 1, flexShrink: 0 }} />
+                            <InputBase
+                                placeholder="Search..."
+                                inputRef={searchInputRef}
+                                fullWidth
+                                onChange={handleSearchInput}
+                                sx={{
+                                    color: 'black',
+                                    flexGrow: 1,
+                                    '& .MuiInputBase-input': {
+                                        fontSize: '1.2rem',
+                                        fontFamily: "'VTGoblinHand', system-ui, Helvetica, Arial, sans-serif"
+                                    }
+                                }}
+                            />
+                        </Box>
                         <IconButton 
                             onClick={onClose} 
-                            sx={{ color: 'black', flexShrink: 0 }}
+                            sx={{ 
+                                color: 'white', 
+                                fontSize: '2.1rem',
+                                padding: '12px 0px',
+                                '&:hover': {
+                                    backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                                }
+                            }}
                             aria-label="Close search"
                         >
-                            <Close />
+                            <Close sx={{ fontSize: '2.2rem' }} />
                         </IconButton>
                     </Box>
                 </Box>
