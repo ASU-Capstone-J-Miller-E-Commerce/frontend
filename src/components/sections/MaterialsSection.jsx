@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { DefaultButton } from "../util/Buttons";
-import cue from "../../images/cue.jpg"
+import cue from "../../images/materials.jpg"
 
 export default function MaterialsSection() {
     const navigate = useNavigate();
