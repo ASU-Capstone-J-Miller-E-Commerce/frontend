@@ -37,9 +37,20 @@ export function _ajax(settings = {}) {
             return response;
         })
         .catch((err) => {
-            const response = err.responseJSON ? JSON.parse(err.responseJSON) : err;
+            let response;
+            
+            // Handle network errors (connection refused, timeout, etc.)
+            if (!err.responseJSON) {
+                response = {
+                    errors: [`Internal server error. Please try again later.`],
+                };
+            } else {
+                // Handle server errors with JSON response
+                response = err.responseJSON ? JSON.parse(err.responseJSON) : err;
+            }
+            
+            // Automatically display errors/logs notifications from response
             receiveResponse(response);
-
             return Promise.reject(response);
         });
 }
