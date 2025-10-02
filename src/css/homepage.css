@@ -163,11 +163,11 @@
 ==============================================================*/
 .featured-button-custom {
     padding: 14px 32px !important;
-    background-color: transparent !important;
-    color: #333 !important;
+    background-color: var(--miller-black) !important;
+    color: white !important;
     font-size: 16px !important;
     font-weight: 500 !important;
-    border: 2px solid #333 !important;
+    border: 2px solid var(--miller-black) !important;
     transition: all 0.3s ease !important;
     cursor: pointer !important;
     text-align: center !important;
@@ -175,7 +175,7 @@
 }
 
 .featured-button-custom:hover {
-    background-color: #333 !important;
+    background-color: var(--miller-dark-grey) !important;
     color: white !important;
 }
 
@@ -217,7 +217,7 @@
 # Testimonials Section
 ==============================================================*/
 .testimonials-section {
-    padding: 40px 0;
+    padding: 10px 0;
 }
 
 .testimonials-container {
@@ -230,7 +230,7 @@
 .testimonials-title {
     font-size: 32px;
     font-weight: 400;
-    margin: 0 0 32px 0;
+    margin: 0 0 20px 0;
     color: #333;
     letter-spacing: 2px;
 }
@@ -286,13 +286,13 @@
 # Improved Featured Section Styling
 ==============================================================*/
 .featured-section {
-    padding: 15px 0;
+    padding: 40px 0 15px 0;
     background-color: white;
 }
 
 .featured-header-wrapper {
     padding: 0 20px;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     text-align: center;
 }
 
@@ -410,10 +410,6 @@
     
     .featured-header-title {
         font-size: 22px;
-    }
-    
-    .featured-listing {
-        padding: 0 16px;
     }
     
     .featured-cta {

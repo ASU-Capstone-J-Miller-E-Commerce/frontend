@@ -73,7 +73,7 @@ export default function FeaturedSection () {
             {/* View All */}
             <div className="featured-cta">
                 <DefaultButton 
-                    text="View All Cues" 
+                    text="View All" 
                     onClick={() => navigate('/collections/cues')}
                     className="featured-button-custom"
                 />

@@ -12,7 +12,7 @@ export default function TestimonialsSection () {
             id: 2,
             name: "Sarah Chen",
             rating: 5,
-            text: "The attention to detail is amazing. From the beautiful wood grain to the perfect weight distribution, this cue exceeded all my expectations. Highly recommend!"
+            text: "From the beautiful wood grain to the perfect weight distribution, this cue exceeded all my expectations."
         }
     ];
 
