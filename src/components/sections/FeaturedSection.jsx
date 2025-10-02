@@ -1,48 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "../util/Card";
 import { DefaultButton } from "../util/Buttons";
+import { getFeaturedCues } from "../../util/requests";
+import { receiveResponse } from "../../util/notifications";
 
 import cue from "../../images/cue.jpg"
 
 export default function FeaturedSection () {
     const navigate = useNavigate();
+    const [featuredCues, setFeaturedCues] = useState([]);
+    const [loading, setLoading] = useState(true);
     
-    // Mock featured cues data - in a real app this would come from props or an API
-    const featuredCues = [
-        {
-            id: "cue-1",
-            title: "Handcrafted Maple Cue",
-            price: 450.00,
-            tag: "FEATURED",
-            image: cue,
-            linkTo: "/cues/cue-1"
-        },
-        {
-            id: "cue-2", 
-            title: "Premium Ebony Cue",
-            price: 650.00,
-            tag: "PREMIUM",
-            image: cue,
-            linkTo: "/cues/cue-2"
-        },
-        {
-            id: "cue-3",
-            title: "Custom Inlay Design",
-            price: 820.00,
-            tag: "CUSTOM",
-            image: cue,
-            linkTo: "/cues/cue-3"
-        },
-        {
-            id: "cue-4",
-            title: "Competition Series",
-            price: 380.00,
-            tag: "SPORT",
-            image: cue,
-            linkTo: "/cues/cue-4"
-        }
-    ];
+    useEffect(() => {
+        setLoading(true);
+        getFeaturedCues()
+            .then((response) => {
+                if (response && response.data) {
+                    setFeaturedCues(response.data);
+                }
+                setLoading(false);
+            })
+            .catch((err) => {
+                setLoading(false);
+            });
+    }, []);
+
+    // Don't render section if no featured cues
+    if (loading || !featuredCues || featuredCues.length === 0) {
+        return null;
+    }
 
     return (
         <section className="featured-section">
@@ -56,14 +43,15 @@ export default function FeaturedSection () {
             {/* Featured Items */}
             <div className="featured-listing">
                 <ul>
-                    {featuredCues.map((cue) => (
-                        <li key={cue.id}>
+                    {featuredCues.map((cueItem) => (
+                        <li key={cueItem.guid}>
                             <Card 
-                                image={cue.image} 
-                                title={cue.title} 
-                                price={cue.price}
-                                tag={cue.tag}
-                                linkTo={cue.linkTo}
+                                image={cueItem.imageUrls && cueItem.imageUrls.length > 0 ? cueItem.imageUrls[0] : cue}
+                                images={cueItem.imageUrls}
+                                title={cueItem.name}
+                                price={cueItem.price}
+                                tag="FEATURED"
+                                linkTo={`/cues/${cueItem.guid}`}
                             />
                         </li>
                     ))}

@@ -275,6 +275,11 @@ function CuesTable({ data, onEditClick, onDeleteClick }) {
             id: 'cueStatus',
         },
         {
+            header: 'Featured',
+            accessorFn: (row) => row.featured ? 'Yes' : 'No',
+            id: 'cueFeatured',
+        },
+        {
             id: 'actions1',
             header: 'Actions',
             Cell: ({ row }) => (
@@ -572,6 +577,7 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
     buttLength: '',
     buttCapMaterial: 'Juma',
     status: '',
+    featured: false,
     forearmInlayQuantity: '',
     forearmInlaySize: '',
     forearmInlayMaterial: '',
@@ -614,6 +620,7 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
     const [isCustomFerruleMaterial, setIsCustomFerruleMaterial] = useState(false);
     const [isCustomJointCollarMaterial, setIsCustomJointCollarMaterial] = useState(false);
     const [isCustomButtCapMaterial, setIsCustomButtCapMaterial] = useState(false);
+    const [featured, setFeatured] = useState(false);
 
     useEffect(() => {
         setLocalTitle(title);
@@ -654,6 +661,7 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
             reset(element);
             setButtType(element.isFullSplice || false);
             setIncludeWrap(!!element.handleWrapType || !!element.handleWrapColor);
+            setFeatured(element.featured || false);
 
             // Check all forearm inlay related fields
             setIncludeForearmInlay(
@@ -798,6 +806,7 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
     const onSubmit = (data) => {
         data.isFullSplice = buttType;
         data.includeWrap = includeWrap;
+        data.featured = featured;
         if (existingCue) {
             editCue(data._id, data)
                 .then((res) => {
@@ -1205,17 +1214,29 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
                                     value={notes}
                                     {...register("notes")}
                                 />
-                                <FormSelect
-                                    title="Status*"
-                                    value={status}
-                                    error={errors.status && errors.status.message}
-                                    options={STATUS_OPTIONS_CUE}
-                                    displayKey="label"
-                                    valueKey="label"
-                                    {...register("status", {
-                                        required: "Status is required"
-                                    })}
-                                />
+                                <div className="form-row">
+                                    <div className="flex-1">
+                                        <FormSelect
+                                            title="Status*"
+                                            value={status}
+                                            error={errors.status && errors.status.message}
+                                            options={STATUS_OPTIONS_CUE}
+                                            displayKey="label"
+                                            valueKey="label"
+                                            {...register("status", {
+                                                required: "Status is required"
+                                            })}
+                                        />
+                                    </div>
+                                    <div className="flex-1">
+                                        <DefaultToggle 
+                                            titleOn={"Featured"} 
+                                            titleOff={"Not Featured"} 
+                                            onChange={setFeatured} 
+                                            value={featured} 
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div>
@@ -3168,7 +3189,7 @@ function DialogImageSection({ folder = 'general', existingItem, imageUrls = [], 
                                 sx={{
                                     overflow: 'hidden',
                                     borderRadius: '4px',
-                                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
                                     cursor: 'grab',
                                     transition: 'all 0.2s ease',
                                     '&.image-over': {

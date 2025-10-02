@@ -131,6 +131,13 @@ export function getCueCollection() {
     });
 }
 
+export function getFeaturedCues() {
+    return _ajax({
+        url: "/cues/featured",
+        method: "GET",
+    });
+}
+
 export function getAccessoryCollection() {
     return _ajax({
         url: "/accessories",
