@@ -8,14 +8,15 @@ import { receiveResponse } from "../../util/notifications";
 import { setCartItems, updateCartItemRedux, removeCartItemRedux, clearCartRedux } from "../../util/redux/actionCreators";
 import countryList from "react-select-country-list";
 import { getAllowedShippingCountries } from "../../util/requests";
+import FeaturedSection from "../sections/FeaturedSection";
 
 export default function CartPage() {
     const navigate = useNavigate();
-    
+
     // Get cart data from Redux
     const cartItems = useSelector(state => state.cart.items);
     const totalItems = useSelector(state => state.cart.totalItems);
-    
+
     // Get user data from Redux
     const user = useSelector(state => state.user);
     const isAuthenticated = !!user?.authenticated;
@@ -51,7 +52,7 @@ export default function CartPage() {
 
     const handleUpdateQuantity = async (itemGuid, newQuantity) => {
         if (newQuantity < 1) return;
-        
+
         updateCartItem(itemGuid, newQuantity)
             .then((response) => {
                 receiveResponse(response);
@@ -115,20 +116,20 @@ export default function CartPage() {
         }
 
         // Check if there are any items that can be purchased through Stripe
-        const purchasableItems = cartItems.filter(item => 
+        const purchasableItems = cartItems.filter(item =>
             item.itemDetails?.price && item.itemDetails?.status === "Available"
         );
-        
+
         if (purchasableItems.length === 0) {
             receiveResponse({
-                status: "error", 
+                status: "error",
                 errors: ["No purchasable items in cart. Items must have prices and be available for checkout."]
             });
             return;
         }
 
         setLoading(true);
-        
+
         // Calculate cart total
         const cartTotal = cartItems.reduce((total, item) => {
             const price = item.itemDetails?.price || 0;
@@ -139,7 +140,7 @@ export default function CartPage() {
         createCheckoutSession(cartItems, user.email, selectedCountry, cartTotal)
             .then((response) => {
                 receiveResponse(response);
-                
+
                 if (response && response.data) {
                     // Redirect to Stripe checkout page
                     window.location.href = response.data;
@@ -172,8 +173,8 @@ export default function CartPage() {
                             <i className="fa-solid fa-cart-shopping"></i>
                             <h2>Your cart is empty</h2>
                             <p>Add some cues or accessories to get started!</p>
-                            <DefaultButton 
-                                text="Shop Cues" 
+                            <DefaultButton
+                                text="Shop Cues"
                                 onClick={() => navigate("/collections/cues?available=true")}
                             />
                         </div>
@@ -186,85 +187,88 @@ export default function CartPage() {
     const total = calculateTotal();
 
     return (
-        <div className="cart-page">
-            <div className="cart-container">
-                <div className="cart-header">
-                    <h1>Your Cart ({totalItems} item{totalItems !== 1 ? 's' : ''})</h1>
-                    {cartItems.length > 0 && (
-                        <button 
-                            className="clear-cart-btn"
-                            onClick={handleClearCart}
-                        >
-                            Clear Cart
-                        </button>
-                    )}
-                </div>
-
-                <div className="cart-content">
-                    <div className="cart-items">
-                        {cartItems.map((item) => (
-                            <CartItem
-                                key={item.itemGuid}
-                                item={item}
-                                onUpdateQuantity={handleUpdateQuantity}
-                                onRemove={handleRemoveItem}
-                            />
-                        ))}
+        <>
+            <div className="cart-page">
+                <div className="cart-container">
+                    <div className="cart-header">
+                        <h1>Your Cart ({totalItems} item{totalItems !== 1 ? 's' : ''})</h1>
+                        {cartItems.length > 0 && (
+                            <button
+                                className="clear-cart-btn"
+                                onClick={handleClearCart}
+                            >
+                                Clear Cart
+                            </button>
+                        )}
                     </div>
 
-                    <div className="cart-summary">
-                        <div className="summary-content">
-                            <h3>Order Summary</h3>
-                            
-                            <div className="summary-line">
-                                <span>Items ({totalItems}):</span>
-                                <span>{hasItemsWithoutPrice() ? "Contact for pricing" : `$${total.toFixed(2)}`}</span>
-                            </div>
-                            
-                            <div className="summary-line total">
-                                <span>Subtotal:</span>
-                                <span>{hasItemsWithoutPrice() ? "Contact for pricing" : `$${total.toFixed(2)}`}</span>
-                            </div>
+                    <div className="cart-content">
+                        <div className="cart-items">
+                            {cartItems.map((item) => (
+                                <CartItem
+                                    key={item.itemGuid}
+                                    item={item}
+                                    onUpdateQuantity={handleUpdateQuantity}
+                                    onRemove={handleRemoveItem}
+                                />
+                            ))}
+                        </div>
 
-                            {/* Country Selection */}
-                            {!hasItemsWithoutPrice() && (
-                                <div style={{ marginTop: '1.6rem', marginBottom: '.1rem' }}>
-                                    <FormSelect
-                                        title="Shipping Country"
-                                        value={selectedCountry}
-                                        onChange={(e) => setSelectedCountry(e.target.value)}
-                                        options={countryOptions}
-                                        displayKey="label"
-                                        valueKey="value"
-                                    />
+                        <div className="cart-summary">
+                            <div className="summary-content">
+                                <h3>Order Summary</h3>
+
+                                <div className="summary-line">
+                                    <span>Items ({totalItems}):</span>
+                                    <span>{hasItemsWithoutPrice() ? "Contact for pricing" : `$${total.toFixed(2)}`}</span>
                                 </div>
-                            )}
 
-                            {hasItemsWithoutPrice() ? (
-                                <DefaultButton 
-                                    text="Contact for Pricing" 
-                                    onClick={() => navigate("/pages/contact-us")}
-                                    className="full-width-btn"
-                                />
-                            ) : (
-                                <DefaultButton 
-                                    text={loading ? "Processing..." : "Proceed to Checkout"}
-                                    onClick={handleCheckout}
-                                    className={`full-width-btn${!selectedCountry ? ' disabled' : ''}`}
-                                    disabled={!selectedCountry || loading}
-                                />
-                            )}
+                                <div className="summary-line total">
+                                    <span>Subtotal:</span>
+                                    <span>{hasItemsWithoutPrice() ? "Contact for pricing" : `$${total.toFixed(2)}`}</span>
+                                </div>
 
-                            <DefaultButton
-                                text="Continue Shopping"
-                                onClick={() => navigate("/collections/cues?available=true")}
-                                className="continue-shopping-btn full-width-btn"
-                            />
+                                {/* Country Selection */}
+                                {!hasItemsWithoutPrice() && (
+                                    <div style={{ marginTop: '1.6rem', marginBottom: '.1rem' }}>
+                                        <FormSelect
+                                            title="Shipping Country"
+                                            value={selectedCountry}
+                                            onChange={(e) => setSelectedCountry(e.target.value)}
+                                            options={countryOptions}
+                                            displayKey="label"
+                                            valueKey="value"
+                                        />
+                                    </div>
+                                )}
+
+                                {hasItemsWithoutPrice() ? (
+                                    <DefaultButton
+                                        text="Contact for Pricing"
+                                        onClick={() => navigate("/pages/contact-us")}
+                                        className="full-width-btn"
+                                    />
+                                ) : (
+                                    <DefaultButton
+                                        text={loading ? "Processing..." : "Proceed to Checkout"}
+                                        onClick={handleCheckout}
+                                        className={`full-width-btn${!selectedCountry ? ' disabled' : ''}`}
+                                        disabled={!selectedCountry || loading}
+                                    />
+                                )}
+
+                                <DefaultButton
+                                    text="Continue Shopping"
+                                    onClick={() => navigate("/collections/cues?available=true")}
+                                    className="continue-shopping-btn full-width-btn"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+            
+        </>
     );
 }
 
@@ -286,12 +290,12 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
         return null; // Item no longer exists
     }
 
-    const itemUrl = itemType === 'cue' 
-        ? `/cues/${itemDetails.guid}` 
+    const itemUrl = itemType === 'cue'
+        ? `/cues/${itemDetails.guid}`
         : `/accessories/${itemDetails.guid}`;
 
-    const itemNumber = itemType === 'cue' 
-        ? itemDetails.cueNumber 
+    const itemNumber = itemType === 'cue'
+        ? itemDetails.cueNumber
         : itemDetails.accessoryNumber;
 
     const hasPrice = itemDetails.price !== undefined && itemDetails.price !== null && itemDetails.price !== "";
@@ -304,8 +308,8 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
         <div className="cart-item">
             <div className="item-image">
                 {itemDetails.imageUrls && itemDetails.imageUrls.length > 0 ? (
-                    <img 
-                        src={itemDetails.imageUrls[0]} 
+                    <img
+                        src={itemDetails.imageUrls[0]}
                         alt={itemDetails.name}
                         onClick={() => navigate(itemUrl)}
                     />
@@ -354,7 +358,7 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
 
                 {itemType === 'accessory' && (
                     <div className="quantity-controls">
-                        <button 
+                        <button
                             onClick={() => onUpdateQuantity(itemGuid, quantity - 1)}
                             disabled={quantity <= 1}
                             className="quantity-btn"
@@ -362,7 +366,7 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
                             -
                         </button>
                         <span className="quantity">{quantity}</span>
-                        <button 
+                        <button
                             onClick={() => onUpdateQuantity(itemGuid, quantity + 1)}
                             disabled={quantity >= 5}
                             className="quantity-btn"
@@ -379,7 +383,7 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
                     </div>
                 )}
 
-                <button 
+                <button
                     onClick={() => onRemove(itemGuid)}
                     className="remove-btn"
                 >
