@@ -651,148 +651,152 @@ export default function CollectionsPage() {
         
         switch (collection) {
             case "cues":
-                getCueCollection()
-                    .then((res) => {
-                        const data = [...res.data];
+            // Set filter and sort options immediately
+            setSortOptions([
+                { value: "newest", label: "Date: Newest First" },
+                { value: "oldest", label: "Date: Oldest First" },
+                { value: "price-asc", label: "Price: Low to High" },
+                { value: "price-desc", label: "Price: High to Low" },
+                { value: "alphabet-a-z", label: "Alphabetical: A-Z" },
+                { value: "alphabet-z-a", label: "Alphabetical: Z-A" },
+            ]);
+            
+            getCueCollection()
+                .then((res) => {
+                    const data = [...res.data];
 
-                        const lowestPrice = data.length ? 
-                        Math.min(...data.map(item => (item.price !== undefined && item.price !== null) ? item.price : Infinity)) : 
-                        0;
+                    const lowestPrice = data.length ? 
+                    Math.min(...data.map(item => (item.price !== undefined && item.price !== null) ? item.price : Infinity)) : 
+                    0;
+                
+                    const highestPrice = data.length ? 
+                    Math.max(...data.map(item => (item.price !== undefined && item.price !== null) ? item.price : 0)) : 
+                    10000;
                     
-                        const highestPrice = data.length ? 
-                        Math.max(...data.map(item => (item.price !== undefined && item.price !== null) ? item.price : 0)) : 
-                        10000;
+                    setFilterOptions([
+                        {
+                            title: "Price",
+                            type: "priceRange",
+                            min: lowestPrice,
+                            max: highestPrice,
+                            paramPrefix: "price"
+                        },
+                        {
+                            title: "Availability",
+                            type: "checkbox",
+                            options: [
+                                { label: "Available", value: "available" },
+                                { label: "Upcoming", value: "upcoming" },
+                                { label: "Sold", value: "sold" }
+                            ]
+                        },
+                        {
+                            title: "Features",
+                            type: "checkbox",
+                            isExclusivePair: true,
+                            options: [
+                                { label: "Inlays", value: "inlays" },
+                                { label: "No Inlays", value: "no_inlays", oppositeOf: "inlays" },
+                                { label: "Points", value: "points" },
+                                { label: "No Points", value: "no_points", oppositeOf: "points" },
+                                { label: "Wrap", value: "wrap" },
+                                { label: "No Wrap", value: "no_wrap", oppositeOf: "wrap" },
+                                { label: "Standard Butt", value: "standard_butt" },
+                                { label: "Full Splice Butt", value: "full_splice_butt", oppositeOf: "standard_butt" },
+                            ]
+                        },
+                    ]);
+                    
+                    setData(data);
+                    setFilteredData(data);
+                })
+                .always(() => setLoading(false)); // End loading when done
+            break;
+            
+        case "accessories":
+            // Set sort options immediately
+            setSortOptions([
+                { value: "newest", label: "Date: Newest First" },
+                { value: "oldest", label: "Date: Oldest First" },
+                { value: "price-asc", label: "Price: Low to High" },
+                { value: "price-desc", label: "Price: High to Low" },
+                { value: "alphabet-a-z", label: "Alphabetical: A-Z" },
+                { value: "alphabet-z-a", label: "Alphabetical: Z-A" },
+            ]);
+            
+            getAccessoryCollection()
+                .then((res) => {
+                    const data = [...res.data];
+
+                    const lowestPrice = data.length ? 
+                    Math.min(...data.map(item => (item.price !== undefined && item.price !== null) ? item.price : Infinity)) : 
+                    0;
+
+                    const highestPrice = data.length ? 
+                    Math.max(...data.map(item => (item.price !== undefined && item.price !== null) ? item.price : 0)) : 
+                    500;
                         
-                        setFilterOptions([
-                            {
-                                title: "Price",
-                                type: "priceRange",
-                                min: lowestPrice,
-                                max: highestPrice,
-                                paramPrefix: "price"
-                            },
-                            {
-                                title: "Availability",
-                                type: "checkbox",
-                                options: [
-                                    { label: "Available", value: "available" },
-                                    { label: "Upcoming", value: "upcoming" },
-                                    { label: "Sold", value: "sold" }
-                                ]
-                            },
-                            {
-                                title: "Features",
-                                type: "checkbox",
-                                isExclusivePair: true,
-                                options: [
-                                    { label: "Inlays", value: "inlays" },
-                                    { label: "No Inlays", value: "no_inlays", oppositeOf: "inlays" },
-                                    { label: "Points", value: "points" },
-                                    { label: "No Points", value: "no_points", oppositeOf: "points" },
-                                    { label: "Wrap", value: "wrap" },
-                                    { label: "No Wrap", value: "no_wrap", oppositeOf: "wrap" },
-                                    { label: "Standard Butt", value: "standard_butt" },
-                                    { label: "Full Splice Butt", value: "full_splice_butt", oppositeOf: "standard_butt" },
-                                ]
-                            },
-                        ]);
-
-                        setSortOptions([
-                            { value: "newest", label: "Date: Newest First" },
-                            { value: "oldest", label: "Date: Oldest First" },
-                            { value: "price-asc", label: "Price: Low to High" },
-                            { value: "price-desc", label: "Price: High to Low" },
-                            { value: "alphabet-a-z", label: "Alphabetical: A-Z" },
-                            { value: "alphabet-z-a", label: "Alphabetical: Z-A" },
-                        ]);
-                        
-                        setData(data);
-                        setFilteredData(data);
-                    })
-                    .always(() => setLoading(false)); // End loading when done
-                break;
-                
-            case "accessories":
-                getAccessoryCollection()
-                    .then((res) => {
-                        const data = [...res.data];
-
-                        const lowestPrice = data.length ? 
-                        Math.min(...data.map(item => (item.price !== undefined && item.price !== null) ? item.price : Infinity)) : 
-                        0;
-
-                        const highestPrice = data.length ? 
-                        Math.max(...data.map(item => (item.price !== undefined && item.price !== null) ? item.price : 0)) : 
-                        500;
-                            
-                        setFilterOptions([
-                            {
-                                title: "Price",
-                                type: "priceRange",
-                                min: lowestPrice,
-                                max: highestPrice,
-                                paramPrefix: "price"
-                            },
-                        ]);
-
-                        setSortOptions([
-                            { value: "newest", label: "Date: Newest First" },
-                            { value: "oldest", label: "Date: Oldest First" },
-                            { value: "price-asc", label: "Price: Low to High" },
-                            { value: "price-desc", label: "Price: High to Low" },
-                            { value: "alphabet-a-z", label: "Alphabetical: A-Z" },
-                            { value: "alphabet-z-a", label: "Alphabetical: Z-A" },
-                        ]);
-                        
-                        setData(data);
-                        setFilteredData(data);
-                    })
-                    .always(() => setLoading(false)); // End loading when done
-                break;
-                
-            case "materials":
-                setFilterOptions([
-                    {
-                        title: "Material Type",
-                        type: "checkbox",
-                        options: [
-                            { label: "Wood", value: "wood" },
-                            { label: "Stones/Crystals", value: "crystal" },
-                        ]
-                    },
-                    {
-                        title: "Tier",
-                        type: "checkbox",
-                        options: [
-                            { label: "Tier 1", value: "Tier 1" },
-                            { label: "Tier 2", value: "Tier 2" },
-                            { label: "Tier 3", value: "Tier 3" },
-                            { label: "Tier 4", value: "Tier 4" },
-                        ]
-                    },
-                    {
-                        title: "Color",
-                        type: "checkbox",
-                        options: COLOR_OPTIONS
-                    },
-
-                ]);
-                setSortOptions([
-                    { value: "newest", label: "Date: Newest First" },
-                    { value: "oldest", label: "Date: Oldest First" },
-                    { value: "alphabet-a-z", label: "Alphabetical: A-Z" },
-                    { value: "alphabet-z-a", label: "Alphabetical: Z-A" },
-                ]);
-                getMaterialCollection()
-                    .then((res) => {
-                        const data = [...res.data];
-                        setData(data);
-                        setFilteredData(data);
-                    })
-                    .always(() => setLoading(false)); // End loading when done
-                break;
-        }
-    }, [collection]);
+                    setFilterOptions([
+                        {
+                            title: "Price",
+                            type: "priceRange",
+                            min: lowestPrice,
+                            max: highestPrice,
+                            paramPrefix: "price"
+                        },
+                    ]);
+                    
+                    setData(data);
+                    setFilteredData(data);
+                })
+                .always(() => setLoading(false)); // End loading when done
+            break;
+            
+        case "materials":
+            // Set filter and sort options immediately
+            setFilterOptions([
+                {
+                    title: "Material Type",
+                    type: "checkbox",
+                    options: [
+                        { label: "Wood", value: "wood" },
+                        { label: "Stones/Crystals", value: "crystal" },
+                    ]
+                },
+                {
+                    title: "Tier",
+                    type: "checkbox",
+                    options: [
+                        { label: "Tier 1", value: "Tier 1" },
+                        { label: "Tier 2", value: "Tier 2" },
+                        { label: "Tier 3", value: "Tier 3" },
+                        { label: "Tier 4", value: "Tier 4" },
+                    ]
+                },
+                {
+                    title: "Color",
+                    type: "checkbox",
+                    options: COLOR_OPTIONS
+                },
+            ]);
+            
+            setSortOptions([
+                { value: "newest", label: "Date: Newest First" },
+                { value: "oldest", label: "Date: Oldest First" },
+                { value: "alphabet-a-z", label: "Alphabetical: A-Z" },
+                { value: "alphabet-z-a", label: "Alphabetical: Z-A" },
+            ]);
+            
+            getMaterialCollection()
+                .then((res) => {
+                    const data = [...res.data];
+                    setData(data);
+                    setFilteredData(data);
+                })
+                .always(() => setLoading(false)); // End loading when done
+            break;
+    }
+}, [collection]);
     
     // Handle filter changes
     const handleFilterChange = (filterKey, value) => {

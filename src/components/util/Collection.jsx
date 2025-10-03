@@ -1,6 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Card, MaterialCard } from "./Card";
-import { SkeletonCard } from "./SkeletonCard";
 import { NavLink } from "react-router-dom";
 import { Dialog, Slide, DialogActions } from "@mui/material";
 import { DefaultButton } from "./Buttons";
@@ -687,14 +686,7 @@ export default function Collection({
                     {/* Product listing - same for both mobile and desktop */}
                     <div className="collection-listing">
                         {loading ? (
-                            <ul>
-                                {/* Show 8 skeleton cards while loading */}
-                                {Array.from({ length: 8 }, (_, index) => (
-                                    <li key={`skeleton-${index}`}>
-                                        <SkeletonCard />
-                                    </li>
-                                ))}
-                            </ul>
+                            null
                         ) : currentItems.length > 0 ? (
                             <ul>
                                 {currentItems.map((item, index) => {
