@@ -332,13 +332,13 @@ function DrawerNavItem({ openDropdown, text, isDropdown, isOpen, onToggle, optio
             >
                 {isLeft ?
                 <>
-                    <button className="fa-solid fa-arrow-left" tabIndex={-1} />
+                    <button className="fa-solid fa-arrow-left drawer-arrow" tabIndex={-1} />
                     {text}
                 </>
                 :
                 <>
                     {text}
-                    {!link && <button className="fa-solid fa-arrow-right" tabIndex={-1} />}
+                    {!link && <button className="fa-solid fa-arrow-right drawer-arrow" tabIndex={-1} />}
                 </>
                 }
                 
