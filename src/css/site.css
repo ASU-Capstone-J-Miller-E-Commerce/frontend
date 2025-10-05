@@ -180,8 +180,9 @@ select.form-field-input::-ms-expand {
 
   display: grid;
   grid-template-areas: "drawer heading icons";
-  grid-template-columns: 1fr 6fr 1fr;
+  grid-template-columns: 1fr 2fr 1fr;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 6px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
+  position: relative;
 }
 
 @media (min-width: 990px) {
@@ -362,7 +363,6 @@ select.form-field-input::-ms-expand {
 
 .header-heading {
   grid-area: heading;
-
   margin: 0;
   justify-self: center;
   cursor: pointer;
@@ -445,6 +445,7 @@ a.header-icon:active {
 @media (min-width: 990px) {
   .main-header {
     grid-template-areas: "heading navigation icons";
+    grid-template-columns: 1fr 6fr 1fr;
     padding: 6px 50px;
   }
 
@@ -454,6 +455,14 @@ a.header-icon:active {
 
   .header-navigation {
     display: block;
+  }
+  
+  .header-heading {
+    justify-self: left;
+  }
+  
+  .header-navigation {
+    justify-self: center;
   }
 }
 
