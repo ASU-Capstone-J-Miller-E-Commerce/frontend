@@ -741,18 +741,18 @@ export default function Collection({
                         ) : (
                             <div className="empty-collection-message">
                                         {isSearchCollection ? (<div>
-                                            <p>No products found for "{searchQuery}". Try a different search term. For additional information or requests visit the <NavLink to="/pages/contact" className="inline-link">contact us page</NavLink>.</p>
+                                            <p>No products found for "{searchQuery}". Try a different search term. For additional information or requests visit the <NavLink to="/pages/contact-us" className="inline-link">contact us page</NavLink>.</p>
                                             </div>
                                 ) : Object.keys(activeFilters).length === 0 && !searchQuery ? (
                                     <div>
                                         <p>
-                                            There are currently no products in this collection, for additional information or requests visit the <NavLink to="/pages/contact" className="inline-link">contact us page</NavLink>.
+                                            There are currently no products in this collection, for additional information or requests visit the <NavLink to="/pages/contact-us" className="inline-link">contact us page</NavLink>.
                                         </p>
                                     </div>
                                 ) : (
                                     <div>
                                         <p>
-                                            No products found that match your current filters. For additional information or requests visit the <NavLink to="/pages/contact" className="inline-link">contact us page</NavLink>.
+                                            No products found that match your current filters. For additional information or requests visit the <NavLink to="/pages/contact-us" className="inline-link">contact us page</NavLink>.
                                         </p>
                                     </div>
                                 )}

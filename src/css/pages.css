@@ -943,7 +943,7 @@
         max-width: calc(100vw - 10px);
     }
     
-    .checkout-result-container h1 {
+    .checkout-result_container h1 {
         font-size: 1.5rem;
     }
     
@@ -2802,17 +2802,43 @@
     background-color: #f8f9fa;
     cursor: pointer;
     transition: border-color 0.2s ease;
+    color: var(--miller-black); /* Add this line */
 }
 
 .file-upload-input:hover {
     border-color: var(--miller-dark-grey);
 }
 
-.file-selected {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-    color: #28a745;
-    font-weight: bold;
+/* Style the file input placeholder text */
+.file-upload-input::file-selector-button {
+    background-color: var(--miller-dark-grey);
+    color: var(--miller-white) !important;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 0.75rem;
+    font-family: inherit;
+}
+
+.file-upload-input::file-selector-button:hover {
+    background-color: var(--miller-black);
+}
+
+/* For WebKit browsers */
+.file-upload-input::-webkit-file-upload-button {
+    background-color: var(--miller-dark-grey);
+    color: var(--miller-black);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 0.75rem;
+    font-family: inherit;
+}
+
+.file-upload-input::-webkit-file-upload-button:hover {
+    background-color: var(--miller-black);
 }
 
 .file-upload-help {
