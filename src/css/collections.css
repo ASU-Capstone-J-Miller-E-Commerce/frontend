@@ -276,9 +276,9 @@
 .dialog-filter-container {
     padding: 20px;
     overflow-y: auto;
-    max-height: calc(100vh - 64px); /* Subtract the AppBar height */
+    max-height: calc(100dvh - 64px); /* Subtract the AppBar height */
     font-family: 'VTGoblinHand', system-ui, Helvetica, Arial, sans-serif;
-    height: calc(100vh - 130px); /* Account for header and footer */
+    height: calc(100dvh - 130px); /* Account for header and footer */
 }
 
 /* Ensure filter dropdowns are visible in dialog */

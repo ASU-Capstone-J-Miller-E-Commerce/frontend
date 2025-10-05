@@ -67,7 +67,7 @@
 ==============================================================*/
 
 .product-page {
-    min-height: calc(100vh - var(--header-height));
+    min-height: calc(100dvh - var(--header-height));
     background-color: #fafafa;
     padding: 20px 0;
 }

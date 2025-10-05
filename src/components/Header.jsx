@@ -460,7 +460,7 @@ function SearchDialog({ open, onClose, handleLinkClick, hasScrolled }) {
                     height: searchResults.length > 0 || nothingFound ? 'auto' : 'auto', // Let black background adjust to content
                     minHeight: hasScrolled ? '70px' : '100px',
                     // Use 95vh to take up almost the entire viewport while leaving a small margin
-                    maxHeight: searchResults.length > 0 || nothingFound ? '100vh' : 'auto',
+                    maxHeight: searchResults.length > 0 || nothingFound ? '100dvh' : 'auto',
                     // Always maintain scroll capability
                     overflowY: searchResults.length > 0 || nothingFound ? 'auto' : 'hidden',
                     overflowX: 'hidden', // Prevent horizontal scrolling

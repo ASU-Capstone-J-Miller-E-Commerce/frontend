@@ -242,7 +242,7 @@ const MaterialDialog = () => {
             PaperProps={{
                 sx: {
                     borderRadius: isMobile ? 0 : 2,
-                    maxHeight: isMobile ? '100vh' : '95vh',
+                    maxHeight: isMobile ? '100dvh' : '95vh',
                     width: isMobile ? '100%' : '85vw',
                 },
                 className: 'miller-dialog-typography'
