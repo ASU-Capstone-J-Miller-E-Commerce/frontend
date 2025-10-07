@@ -295,6 +295,7 @@
     border-radius: 3px;
     transition: background-color 0.2s;
     font-weight: 600;
+    color: var(--miller-black);
 }
 
 .quantity-btn:hover:not(:disabled) {

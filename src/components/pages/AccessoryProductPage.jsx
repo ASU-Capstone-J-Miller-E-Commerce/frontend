@@ -175,15 +175,15 @@ export default function AccessoryProductPage() {
                     <div className="product-purchase">
                         {isAvailable && hasPrice ? (
                             <>
-                                <div className="quantity-section">
-                                    <div className="quantity-controls">
+                                <div className="product-quantity-section">
+                                    <div className="product-quantity-controls">
                                         <label htmlFor="quantity">Quantity:</label>
-                                        <div className="quantity-input-wrapper">
+                                        <div className="product-quantity-wrapper">
                                             <button 
                                                 type="button"
                                                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                                                 disabled={quantity <= 1}
-                                                className="quantity-btn"
+                                                className="product-quantity-btn"
                                             >
                                                 -
                                             </button>
@@ -197,19 +197,19 @@ export default function AccessoryProductPage() {
                                                     const value = Math.min(5, Math.max(1, parseInt(e.target.value) || 1));
                                                     setQuantity(value);
                                                 }}
-                                                className="quantity-input"
+                                                className="product-quantity-input"
                                             />
                                             <button 
                                                 type="button"
                                                 onClick={() => setQuantity(Math.min(5, quantity + 1))}
                                                 disabled={quantity >= 5}
-                                                className="quantity-btn"
+                                                className="product-quantity-btn"
                                             >
                                                 +
                                             </button>
                                         </div>
                                     </div>
-                                    <div className="quantity-disclaimer">
+                                    <div className="product-quantity-disclaimer">
                                         <small>* Maximum quantity of 5 per item</small>
                                     </div>
                                 </div>
