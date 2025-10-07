@@ -8,7 +8,6 @@ import Header from "./components/Header.jsx";
 import Footer from "./components/Footer";
 import HomePage from "./components/pages/HomePage.jsx";
 import CollectionsPage from "./components/pages/CollectionsPage.jsx";
-import ProductPage from "./components/pages/ProductPage.jsx";
 import CueProductPage from "./components/pages/CueProductPage.jsx";
 import AccessoryProductPage from "./components/pages/AccessoryProductPage.jsx";
 import BuildACuePage from "./components/pages/BuildACuePage.jsx";
@@ -121,8 +120,6 @@ function App() {
                         <Route path="search" element={<CollectionsPage />} />
                     </Route>
 
-                    <Route path="/products/:guid" element={<ProductPage />} />
-                    
                     <Route path="/cues/:guid" element={<CueProductPage />} />
                     <Route path="/accessories/:guid" element={<AccessoryProductPage />} />
 
