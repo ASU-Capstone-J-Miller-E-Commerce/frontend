@@ -143,6 +143,8 @@
     gap: 10px;
     max-height: 200px;
     overflow-y: auto;
+    padding: 10px; /* Increased from 5px to 6px */
+    margin: -10px; /* Increased from -5px to -6px */
 }
 
 .thumbnail {
@@ -153,17 +155,17 @@
     transition: all 0.2s ease;
     border: 2px solid transparent;
     background: white;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); /* Reduced from 0.1 to 0.08 */
 }
 
 .thumbnail:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12); /* Reduced from 0.15 to 0.12 */
 }
 
 .thumbnail.active {
     border-color: var(--miller-dark-grey);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15); /* Reduced from 0.2 to 0.15 */
 }
 
 .thumbnail img {
