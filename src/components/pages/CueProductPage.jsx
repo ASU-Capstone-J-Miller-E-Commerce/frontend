@@ -249,7 +249,7 @@ export default function CueProductPage() {
                         </div>
                         {hasPrice && (
                             <div className="product-price">
-                                ${Number(cue.price).toFixed(2)}
+                                ${Number(cue.price).toFixed(2)} USD
                             </div>
                         )}
                         <div className={`product-status ${cue.status.replace(/\s+/g, '-')}`}>

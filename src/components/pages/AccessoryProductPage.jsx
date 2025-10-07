@@ -157,7 +157,7 @@ export default function AccessoryProductPage() {
                         </div>
                         {hasPrice && (
                             <div className="product-price">
-                                ${Number(accessory.price).toFixed(2)}
+                                ${Number(accessory.price).toFixed(2)} USD
                             </div>
                         )}
                         <div className={`product-status ${accessory.status}`}>
