@@ -117,9 +117,74 @@ export default function CueProductPage() {
 
     if (loading) {
         return (
-            <div className="product-page">
-                <div className="product-container">
-                    <div className="product-loading">Loading...</div>
+            <div className="product-skeleton">
+                <div className="product-skeleton-container">
+                    {/* Skeleton Gallery */}
+                    <div className="product-skeleton-gallery">
+                        <div className="product-skeleton-main-image"></div>
+                        <div className="product-skeleton-thumbnails">
+                            <div className="skeleton-thumbnail"></div>
+                            <div className="skeleton-thumbnail"></div>
+                            <div className="skeleton-thumbnail"></div>
+                            <div className="skeleton-thumbnail"></div>
+                        </div>
+                    </div>
+
+                    {/* Skeleton Product Info */}
+                    <div className="product-skeleton-info">
+                        <div className="skeleton-product-number"></div>
+                        <div className="skeleton-product-title"></div>
+                        <div className="skeleton-product-price"></div>
+                        <div className="skeleton-product-status"></div>
+                        <div className="skeleton-product-description"></div>
+                        <div className="skeleton-purchase-section"></div>
+
+                        {/* Skeleton Sections */}
+                        <div className="skeleton-section">
+                            <div className="skeleton-section-header">
+                                <div className="skeleton-section-title"></div>
+                                <div className="skeleton-section-icon"></div>
+                            </div>
+                            <div className="skeleton-specs-grid">
+                                <div className="skeleton-spec-item">
+                                    <div className="skeleton-spec-label"></div>
+                                    <div className="skeleton-spec-value"></div>
+                                </div>
+                                <div className="skeleton-spec-item">
+                                    <div className="skeleton-spec-label"></div>
+                                    <div className="skeleton-spec-value"></div>
+                                </div>
+                                <div className="skeleton-spec-item">
+                                    <div className="skeleton-spec-label"></div>
+                                    <div className="skeleton-spec-value"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="skeleton-section">
+                            <div className="skeleton-section-header">
+                                <div className="skeleton-section-title"></div>
+                                <div className="skeleton-section-icon"></div>
+                            </div>
+                            <div className="skeleton-specs-grid">
+                                <div className="skeleton-spec-item">
+                                    <div className="skeleton-spec-label"></div>
+                                    <div className="skeleton-spec-value"></div>
+                                </div>
+                                <div className="skeleton-spec-item">
+                                    <div className="skeleton-spec-label"></div>
+                                    <div className="skeleton-spec-value"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="skeleton-section">
+                            <div className="skeleton-section-header">
+                                <div className="skeleton-section-title"></div>
+                                <div className="skeleton-section-icon"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         );

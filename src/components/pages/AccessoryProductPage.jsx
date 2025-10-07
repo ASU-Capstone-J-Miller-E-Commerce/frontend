@@ -75,9 +75,27 @@ export default function AccessoryProductPage() {
 
     if (loading) {
         return (
-            <div className="product-page">
-                <div className="product-container">
-                    <div className="product-loading">Loading...</div>
+            <div className="product-skeleton">
+                <div className="product-skeleton-container">
+                    {/* Skeleton Gallery */}
+                    <div className="product-skeleton-gallery">
+                        <div className="product-skeleton-main-image"></div>
+                        <div className="product-skeleton-thumbnails">
+                            <div className="skeleton-thumbnail"></div>
+                            <div className="skeleton-thumbnail"></div>
+                            <div className="skeleton-thumbnail"></div>
+                        </div>
+                    </div>
+
+                    {/* Skeleton Product Info */}
+                    <div className="product-skeleton-info">
+                        <div className="skeleton-product-number"></div>
+                        <div className="skeleton-product-title"></div>
+                        <div className="skeleton-product-price"></div>
+                        <div className="skeleton-product-status"></div>
+                        <div className="skeleton-product-description"></div>
+                        <div className="skeleton-purchase-section"></div>
+                    </div>
                 </div>
             </div>
         );
