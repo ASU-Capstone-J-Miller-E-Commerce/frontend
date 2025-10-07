@@ -494,7 +494,7 @@
     }
 
     .cart-header h1 {
-        font-size: 28px;
+        font-size: 22px;
         margin: 0;
         flex: 1;
     }
@@ -502,6 +502,8 @@
     .clear-cart-btn {
         margin: 0;
         white-space: nowrap;
+        padding: 8px 12px;
+        font-size: 12px;
     }
 
     .cart-item {
@@ -604,7 +606,12 @@
 
 @media (max-width: 480px) {
     .cart-header h1 {
-        font-size: 24px;
+        font-size: 18px;
+    }
+
+    .clear-cart-btn {
+        padding: 6px 10px;
+        font-size: 11px;
     }
 
     .summary-content {
