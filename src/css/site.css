@@ -21,7 +21,7 @@
   font-weight: 400;
   color-scheme: light dark;
   color: #2b2b2b;
-  background-color: white;
+  background-color: var(--miller-black);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -47,6 +47,7 @@ body {
   display: grid;
   grid-template-rows: auto 1fr auto;
   min-height: 100dvh;
+  background-color: var(--miller-white);
 }
 
 h1, h2, h3, h4 {
