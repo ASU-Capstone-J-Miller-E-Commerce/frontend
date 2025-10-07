@@ -413,6 +413,7 @@
 @media (max-width: 1024px) {
     .cart-content {
         grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
         gap: 20px;
         flex: 1;
     }
