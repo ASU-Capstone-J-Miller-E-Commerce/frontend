@@ -5,7 +5,7 @@ export default function ReferencesPage() {
         {
             name: "Andrew",
             description: "Backend developer specializing in server-side architecture and API development. Focuses on database optimization, security implementation, and scalable backend solutions.",
-            url: "https://www.linkedin.com/in/andrewhejl/",
+            url: "https://www.linkedin.com/in/andrewhejl7777/",
             email: "hejlandrew@gmail.com",
             category: "Backend Developer"
         },
