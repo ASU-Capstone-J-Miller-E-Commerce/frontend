@@ -623,6 +623,7 @@ function SearchDialog({ open, onClose, handleLinkClick, hasScrolled }) {
                                             title={name}
                                             images={item.imageUrls}
                                             tag={item.cueNumber || item.accessoryNumber || ''}
+                                            featured={item.featured}
                                             price={item.price}
                                             linkTo={link}
                                             onClick={handleProductClick}
