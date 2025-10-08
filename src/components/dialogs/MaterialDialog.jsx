@@ -303,10 +303,9 @@ const MaterialDialog = () => {
                                         src={images[currentImageIndex]}
                                         alt={`${displayName} - Image ${currentImageIndex + 1}`}
                                         style={{
-                                            maxWidth: '90%',
-                                            maxHeight: '90%',
+                                            maxWidth: '100%',
+                                            maxHeight: '100%',
                                             objectFit: 'contain',
-                                            borderRadius: '8px'
                                         }}
                                     />
                                     

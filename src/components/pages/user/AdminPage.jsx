@@ -3188,7 +3188,6 @@ function DialogImageSection({ folder = 'general', existingItem, imageUrls = [], 
                                 key={`${imageUrl}-${index}`} 
                                 sx={{
                                     overflow: 'hidden',
-                                    borderRadius: '4px',
                                     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
                                     cursor: 'grab',
                                     transition: 'all 0.2s ease',
