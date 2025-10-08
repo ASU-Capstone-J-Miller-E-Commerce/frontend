@@ -92,22 +92,22 @@ const ImageGalleryDialog = () => {
             }}
         >
             <Box sx={{ 
-                width: '100vw', 
                 height: '100vh', 
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'center',
                 position: 'relative',
                 backgroundColor: '#fff',
-                padding: '20px'
+                padding: isMobile ? '60px 0 60px 0' : '20px',
+                boxSizing: 'border-box'
             }}>
                 {/* Close button */}
                 <IconButton 
                     onClick={handleClose} 
                     sx={{ 
                         position: 'fixed',
-                        top: 20,
-                        right: 20,
+                        top: isMobile ? 10 : 20,
+                        right: isMobile ? 10 : 20,
                         backgroundColor: 'rgba(0, 0, 0, 0.1)',
                         color: '#333',
                         zIndex: 1000,
@@ -126,10 +126,10 @@ const ImageGalleryDialog = () => {
                     style={{
                         width: 'auto',
                         height: 'auto',
-                        maxWidth: '90vw',
-                        maxHeight: '90vh',
-                        minWidth: '60vw',
-                        minHeight: '60vh',
+                        maxWidth: isMobile ? '100vw' : '90vw',
+                        maxHeight: isMobile ? 'calc(100vh - 120px)' : '90vh',
+                        minWidth: isMobile ? '100vw' : '60vw',
+                        minHeight: isMobile ? 'auto' : '60vh',
                         objectFit: 'contain',
                         objectPosition: 'center',
                     }}
@@ -142,7 +142,10 @@ const ImageGalleryDialog = () => {
                             onClick={prevImage}
                             sx={{
                                 position: 'fixed',
-                                left: 20,
+                                left: isMobile ? 10 : 20,
+                                bottom: isMobile ? 10 : 'auto',
+                                top: isMobile ? 'auto' : '50%',
+                                transform: isMobile ? 'none' : 'translateY(-50%)',
                                 backgroundColor: 'rgba(0, 0, 0, 0.1)',
                                 color: '#333',
                                 '&:hover': {
@@ -156,7 +159,10 @@ const ImageGalleryDialog = () => {
                             onClick={nextImage}
                             sx={{
                                 position: 'fixed',
-                                right: 20,
+                                right: isMobile ? 10 : 20,
+                                bottom: isMobile ? 10 : 'auto',
+                                top: isMobile ? 'auto' : '50%',
+                                transform: isMobile ? 'none' : 'translateY(-50%)',
                                 backgroundColor: 'rgba(0, 0, 0, 0.1)',
                                 color: '#333',
                                 '&:hover': {
