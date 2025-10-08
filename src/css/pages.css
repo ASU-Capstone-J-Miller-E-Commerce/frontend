@@ -1163,6 +1163,10 @@
     align-items: center;
 }
 
+.admin-wrapper {
+    font-family: system-ui, Helvetica, Arial, sans-serif !important;
+}
+
 .admin-header-list {
     display: flex;
     list-style: none;
