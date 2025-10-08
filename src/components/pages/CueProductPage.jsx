@@ -252,8 +252,16 @@ export default function CueProductPage() {
                                 ${Number(cue.price).toFixed(2)} USD
                             </div>
                         )}
-                        <div className={`product-status ${cue.status.replace(/\s+/g, '-')}`}>
-                            {cue.status}
+                        <div className="product-status-row">
+                            <div className={`product-status ${cue.status.replace(/\s+/g, '-')}`}>
+                                {cue.status}
+                            </div>
+                            {cue.featured && (
+                                <div className="product-featured">
+                                    <i className="fa-solid fa-star"></i>
+                                    Featured
+                                </div>
+                            )}
                         </div>
                     </div>
 
