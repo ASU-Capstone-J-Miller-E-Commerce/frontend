@@ -220,12 +220,12 @@ export default function CartPage() {
 
                                 <div className="summary-line">
                                     <span>Items ({totalItems}):</span>
-                                    <span>{hasItemsWithoutPrice() ? "Contact for pricing" : `$${total.toFixed(2)}`}</span>
+                                    <span>{hasItemsWithoutPrice() ? "Contact for pricing" : `$${total.toFixed(2)} USD`}</span>
                                 </div>
 
                                 <div className="summary-line total">
                                     <span>Subtotal:</span>
-                                    <span>{hasItemsWithoutPrice() ? "Contact for pricing" : `$${total.toFixed(2)}`}</span>
+                                    <span>{hasItemsWithoutPrice() ? "Contact for pricing" : `$${total.toFixed(2)} USD`}</span>
                                 </div>
 
                                 {/* Country Selection */}
