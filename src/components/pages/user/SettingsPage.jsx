@@ -128,7 +128,10 @@ export default function SettingsPage() {
                 fullWidth 
                 maxWidth="sm" 
                 className="miller-dialog-typography"
-                PaperProps={{ className: "miller-dialog-typography" }}
+                PaperProps={{ 
+                    className: "miller-dialog-typography",
+                    style: { borderRadius: 0 }
+                }}
                 TransitionProps={{ onEntered: () => set2FAFocus("verCode") }}
             >
                 <DialogTitle>
@@ -204,7 +207,10 @@ export default function SettingsPage() {
                 fullWidth 
                 maxWidth="sm" 
                 className="miller-dialog-typography"
-                PaperProps={{ className: "miller-dialog-typography" }}
+                PaperProps={{ 
+                    className: "miller-dialog-typography",
+                    style: { borderRadius: 0 }
+                }}
                 TransitionProps={{ onEntered: () => setPWFocus("currPassword") }}
             >
                 <DialogTitle>

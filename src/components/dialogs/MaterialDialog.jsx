@@ -245,7 +245,8 @@ const MaterialDialog = () => {
                     maxHeight: isMobile ? '100dvh' : '95vh',
                     width: isMobile ? '100%' : '85vw',
                 },
-                className: 'miller-dialog-typography'
+                className: 'miller-dialog-typography',
+                style: { borderRadius: 0 }
             }}
         >
             {/* Header */}

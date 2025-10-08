@@ -126,7 +126,10 @@ export default function LoginPage () {
                     fullWidth 
                     maxWidth="sm" 
                     className="miller-dialog-typography"
-                    PaperProps={{ className: "miller-dialog-typography" }}
+                    PaperProps={{ 
+                        className: "miller-dialog-typography",
+                        style: { borderRadius: 0 }
+                    }}
                     TransitionProps={{ onEntered: () => setVerifyFocus("verCode") }}
                 >
                     <DialogTitle>
