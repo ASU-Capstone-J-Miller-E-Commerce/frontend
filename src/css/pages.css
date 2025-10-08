@@ -111,7 +111,6 @@
 }
 .order-card.compact {
     padding: 12px 14px;
-    border-radius: 10px;
     box-shadow: 0 1px 6px rgba(0,0,0,0.06);
     gap: 7px;
 }
@@ -131,7 +130,6 @@
 .contact-info.compact {
     margin-bottom: 6px;
     background: #f7f8fa;
-    border-radius: 10px;
     padding: 12px 14px;
     box-shadow: 0 1px 6px rgba(0,0,0,0.04);
     display: flex;
@@ -151,7 +149,6 @@
 }
 .address-card.compact {
     padding: 12px 14px;
-    border-radius: 7px;
     min-width: 120px;
     gap: 2px;
 }
@@ -192,12 +189,10 @@
 .order-item.compact {
     gap: 8px;
     padding: 6px 7px;
-    border-radius: 6px;
 }
 .order-detail-item-image.compact {
     width: 102px;
     height: 102px;
-    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -207,7 +202,6 @@
 .order-detail-item-image.compact.large {
     width: 102px;
     height: 102px;
-    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -215,14 +209,12 @@
 }
 
 .order-detail-item-image.compact img {
-    border-radius: 10px;
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 .no-image.compact {
     font-size: 2.5rem;
-    border-radius: 10px;
     width: 100%;
     height: 100%;
     display: flex;
@@ -232,7 +224,6 @@
 
 .no-image.compact.large {
     font-size: 2.5rem;
-    border-radius: 10px;
     width: 100%;
     height: 100%;
     display: flex;
@@ -279,7 +270,6 @@
     }
     .order-card.compact {
         padding: 7px 5px;
-        border-radius: 7px;
         gap: 4px;
     }
     .contact-info.compact {
@@ -287,18 +277,15 @@
     }
     .address-card.compact {
         padding: 5px 4px;
-        border-radius: 5px;
         min-width: 80px;
     }
     .order-item.compact {
         padding: 4px 4px;
-        border-radius: 4px;
         gap: 5px;
     }
     .order-detail-item-image.compact {
         width: 24px;
         height: 24px;
-        border-radius: 3px;
     }
     .item-details.compact h5 {
         font-size: 0.91rem;
@@ -409,7 +396,6 @@
 }
 .address-card {
     background: #f7f8fa;
-    border-radius: 10px;
     padding: 16px 18px;
     flex: 1 1 220px;
     min-width: 180px;
@@ -489,14 +475,12 @@
     align-items: center;
     gap: 18px;
     background: #f7f8fa;
-    border-radius: 8px;
     padding: 10px 14px;
     box-shadow: 0 1px 6px rgba(0,0,0,0.04);
 }
 .order-detail-item-image {
     width: 56px;
     height: 56px;
-    border-radius: 8px;
     background: #fff;
     display: flex;
     align-items: center;
@@ -508,7 +492,6 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 8px;
 }
 .no-image {
     width: 100%;
@@ -519,7 +502,6 @@
     background: #e3e6ee;
     color: #b0b6c3;
     font-size: 1.5rem;
-    border-radius: 8px;
 }
 .item-details {
     flex: 1;
@@ -551,7 +533,6 @@
 /* Loading and error states */
 .order-detail-loading, .order-detail-error {
     background: #fff;
-    border-radius: 16px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     padding: 48px 32px;
     margin: 48px auto;
@@ -591,18 +572,15 @@
         box-shadow: 0 1px 6px rgba(0,0,0,0.07);
     }
     .address-card {
-        border-radius: 7px;
         min-width: 120px;
     }
     .order-item {
         padding: 7px 8px;
-        border-radius: 6px;
         gap: 10px;
     }
     .order-detail-item-image {
         width: 40px;
         height: 40px;
-        border-radius: 6px;
     }
     .item-details h5 {
         font-size: 0.97rem;
@@ -651,7 +629,6 @@
     text-align: center;
     background: var(--miller-white);
     padding: 60px 40px;
-    border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     word-wrap: break-word;
     overflow-wrap: break-word;
@@ -695,7 +672,6 @@
 .order-details {
     background: #f9fafb;
     padding: 20px;
-    border-radius: 8px;
     margin: 30px 0;
     border-left: 4px solid #10b981;
     text-align: left;
@@ -817,7 +793,6 @@
 .error-details {
     background: #fef2f2;
     padding: 20px;
-    border-radius: 8px;
     margin: 30px 0;
     border-left: 4px solid #f59e0b;
     word-wrap: break-word;
@@ -998,7 +973,6 @@
 # Login page
 ==============================================================*/
 .login-area {
-    border-radius: 10px;
     background-color: var(--miller-white);
     border: none;
     max-width: 500px;
@@ -1473,7 +1447,6 @@
     gap: 20px;
     padding: 0px 20px;
     background-color: #f8f9fa;
-    border-radius: 8px 8px 0 0;
     border-bottom: 2px solid #e9ecef;
     font-weight: 600;
     color: #495057;
@@ -1487,7 +1460,6 @@
 
 .order-list-item {
     background-color: var(--miller-white);
-    border-radius: 6px;
     padding: 16px 20px;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 6px 0px;
     cursor: pointer;
@@ -1518,7 +1490,6 @@
     height: 80px;
     gap: 4px;
     margin: 0;
-    border-radius: 8px;
     overflow: hidden;
 }
 
@@ -1553,7 +1524,6 @@
 .col-images .order-item-image {
     width: 100%;
     height: 100%;
-    border-radius: 6px;
     overflow: hidden;
     position: relative;
 }
@@ -1659,7 +1629,6 @@
     position: relative;
     width: 60px;
     height: 60px;
-    border-radius: 6px;
     overflow: hidden;
 }
 
@@ -1771,7 +1740,6 @@
     text-align: center;
     padding: 40px 20px;
     background-color: var(--miller-white);
-    border-radius: 6px;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 6px 0px;
     border: 1px solid #f0f0f0;
     max-width: 400px;
@@ -1835,7 +1803,6 @@
         
         /* Card styling */
         background-color: var(--miller-white);
-        border-radius: 6px;
         padding: 16px;
         box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 6px 0px;
         cursor: pointer;
@@ -1866,7 +1833,6 @@
         gap: 8px;
         padding: 12px 16px;
         background: #f8f9fa;
-        border-radius: 8px;
         font-size: 1rem;
         border: none;
         margin: 0;
@@ -1887,7 +1853,6 @@
         width: 100%;
         height: 100%;
         gap: 6px;
-        border-radius: 12px;
         overflow: hidden;
     }
     
@@ -1922,7 +1887,6 @@
     .order-list-item .col-images .order-item-image {
         width: 100%;
         height: 100%;
-        border-radius: 8px;
         position: relative;
         overflow: hidden;
     }
@@ -1932,7 +1896,6 @@
         height: 100%;
         object-fit: cover;
         aspect-ratio: 1;
-        border-radius: 8px;
     }
     
     /* Order details below images - order 3 */
@@ -2010,32 +1973,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 400px; 
-    text-align: center;
-}
-
-.modal-content h2 {
-    margin-top: 0;
-}
-
-.modal-content form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.modal-content label {
-    align-self: flex-start;
-    font-weight: bold;
-    margin-bottom: 5px;
 }
 
 /*==============================================================
@@ -2584,7 +2521,6 @@
 .faq-navigation {
     background-color: #f8f9fa;
     padding: 1.5rem;
-    border-radius: 8px;
     margin-bottom: 2rem;
     border: 1px solid #e9ecef;
 }
@@ -2640,7 +2576,6 @@
 
 .faq-item {
     border: 1px solid #e9ecef;
-    border-radius: 8px;
     overflow: hidden;
     background-color: var(--miller-white);
 }
@@ -2861,7 +2796,6 @@
     gap: 1rem;
     padding: 1.5rem;
     background-color: #f8f9fa;
-    border-radius: 8px;
     border: 1px solid #e9ecef;
 }
 
@@ -2948,7 +2882,6 @@
 .reference-card {
     background-color: var(--miller-white);
     border: 1px solid #e9ecef;
-    border-radius: 0;
     padding: 1.5rem;
     transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
@@ -2976,7 +2909,6 @@
     background-color: #e9ecef;
     color: #666;
     padding: 0.25rem 0.75rem;
-    border-radius: 12px;
     font-size: 0.8rem;
     font-weight: bold;
     text-transform: uppercase;
@@ -3126,7 +3058,6 @@
 .not-found-content {
   background: var(--miller-white);
   padding: 1.5rem 1rem;
-  border-radius: 6px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 6px 0px;
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
@@ -3227,7 +3158,6 @@
   
   .not-found-content {
     padding: 1rem 0.5rem;
-    border-radius: 6px;
   }
   
   .not-found-icon {
