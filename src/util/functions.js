@@ -1,5 +1,5 @@
-import { checkAuth } from "./requests";
-import { updateUser, setCartItems } from "./redux/actionCreators";
+import { checkAuth, getFeaturedCues } from "./requests";
+import { updateUser, setCartItems, setFeaturedCues, setFeaturedCuesLoading } from "./redux/actionCreators";
 
 export function checkUserAuth() {
     checkAuth()
@@ -20,7 +20,6 @@ export function checkUserAuth() {
             }
         })
         .catch(error => {
-            console.error("Authentication check failed:", error);
             updateUser({ 
                 authenticated: false, 
                 initialAuthChecked: true, 
@@ -28,3 +27,18 @@ export function checkUserAuth() {
             setCartItems([]);
         });
 };
+
+export function getAndCacheFeaturedCues() {
+    setFeaturedCuesLoading(true);
+    getFeaturedCues()
+        .then((response) => {
+            if (response && response.data) {
+                setFeaturedCues(response.data);
+            } else {
+                setFeaturedCues([]);
+            }
+        })
+        .catch((err) => {
+            setFeaturedCues([]);
+        });
+}

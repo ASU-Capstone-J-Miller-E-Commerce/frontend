@@ -1,28 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { Card } from "../util/Card";
 import { SkeletonCard } from "../util/SkeletonCard";
 import { DefaultButton } from "../util/Buttons";
-import { getFeaturedCues } from "../../util/requests";
 
 export default function FeaturedSection() {
     const navigate = useNavigate();
-    const [featuredCues, setFeaturedCues] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        setLoading(true);
-        getFeaturedCues()
-            .then((response) => {
-                if (response && response.data) {
-                    setFeaturedCues(response.data);
-                }
-                setLoading(false);
-            })
-            .catch((err) => {
-                setLoading(false);
-            });
-    }, []);
+    const { items: featuredCues, loading } = useSelector(state => state.featuredCues);
 
     // Don't render section if no featured cues and not loading
     if (!loading && (!featuredCues || featuredCues.length === 0)) {

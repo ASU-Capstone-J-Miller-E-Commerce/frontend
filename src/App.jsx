@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Routes, Route, Navigate, useLocation, Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
-import { checkUserAuth } from "./util/functions.js";
+import { checkUserAuth, getAndCacheFeaturedCues } from "./util/functions.js";
 
 import Header from "./components/Header.jsx";
 import Footer from "./components/Footer";
@@ -83,9 +83,10 @@ const AdminRoute = () => {
 };
 
 function App() {
-    // ping for user auth on mount
+    // ping for user auth and fetch featured cues on mount
     useEffect(() => {
         checkUserAuth();
+        getAndCacheFeaturedCues();
     }, []);
 
     return (
