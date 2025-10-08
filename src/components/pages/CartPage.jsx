@@ -139,8 +139,6 @@ export default function CartPage() {
         // Create checkout session with just the country
         createCheckoutSession(cartItems, user.email, selectedCountry, cartTotal)
             .then((response) => {
-                receiveResponse(response);
-
                 if (response && response.data) {
                     // Redirect to Stripe checkout page
                     window.location.href = response.data;
