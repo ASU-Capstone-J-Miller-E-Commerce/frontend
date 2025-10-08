@@ -37,6 +37,7 @@ import "./css/fontawesome/brands.css";
 import "./css/fontawesome/solid.css";
 import "./css/cart.css";
 import "react-toastify/dist/ReactToastify.css";
+import ImageGalleryDialog from "./components/dialogs/ImageGalleryDialog.jsx";
 
 
 const GuestRoute = () => {
@@ -105,6 +106,7 @@ function App() {
                 toastClassName="toast-class"
             />
             <MaterialDialog />
+            <ImageGalleryDialog />
             <main className="jmiller-app">
                 <Header />
                 <Routes>

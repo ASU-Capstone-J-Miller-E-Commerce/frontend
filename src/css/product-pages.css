@@ -127,6 +127,8 @@
     overflow: hidden;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     aspect-ratio: 1;
+    cursor: pointer;
+    position: relative;
 }
 
 .product-main-image .main-image {
@@ -1156,4 +1158,60 @@
     .product-skeleton-thumbnails {
         grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
     }
+}
+
+/* Image inspect button - outline version */
+.image-inspect-btn-outline {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(200, 200, 200, 0.6);
+    border-radius: 50%;
+    color: rgba(120, 120, 120, 0.8);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s ease;
+    z-index: 2;
+    font-size: 14px;
+    backdrop-filter: blur(2px);
+    opacity: 0;
+}
+
+.product-main-image:hover .image-inspect-btn-outline {
+    opacity: 1;
+}
+
+.image-inspect-btn-outline:hover {
+    background: rgba(255, 255, 255, 1);
+    border-color: rgba(160, 160, 160, 0.8);
+    color: rgba(80, 80, 80, 1);
+}
+
+.image-inspect-btn-outline i {
+    font-size: 14px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 770px) {
+    .image-inspect-btn-outline {
+        width: 28px;
+        height: 28px;
+        top: 8px;
+        left: 8px;
+        font-size: 12px;
+    }
+    
+    .image-inspect-btn-outline i {
+        font-size: 12px;
+    }
+}
+
+/* Remove old button styles */
+.image-inspect-btn {
+    display: none;
 }

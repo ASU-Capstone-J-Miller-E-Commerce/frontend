@@ -6,6 +6,7 @@ import { getAccessoryByGuid, addToCart } from "../../util/requests";
 import { addCartItemRedux } from "../../util/redux/actionCreators";
 import { receiveErrors, receiveLogs, receiveResponse } from "../../util/notifications";
 import NotFoundPage from "./NotFoundPage";
+import { showImageGallery } from "../dialogs/ImageGalleryDialog";
 
 export default function AccessoryProductPage() {
     const { guid } = useParams();
@@ -73,6 +74,13 @@ export default function AccessoryProductPage() {
             });
     };
 
+    const handleImageInspect = () => {
+        const images = accessory.imageUrls || [];
+        if (images.length > 0) {
+            showImageGallery(images, currentImageIndex, accessory.name);
+        }
+    };
+
     if (loading) {
         return (
             <div className="product-skeleton">
@@ -117,12 +125,23 @@ export default function AccessoryProductPage() {
                 <div className="product-gallery">
                     {hasImages ? (
                         <>
-                            <div className="product-main-image">
+                            <div className="product-main-image" onClick={handleImageInspect}>
                                 <img 
                                     src={images[currentImageIndex]} 
                                     alt={accessory.name}
                                     className="main-image"
                                 />
+                                {/* Image Inspect Button */}
+                                <button 
+                                    className="image-inspect-btn-outline"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleImageInspect();
+                                    }}
+                                    title="View full-size images"
+                                >
+                                    <i className="fa-solid fa-magnifying-glass-plus"></i>
+                                </button>
                             </div>
                             {images.length > 1 && (
                                 <div className="product-thumbnails">

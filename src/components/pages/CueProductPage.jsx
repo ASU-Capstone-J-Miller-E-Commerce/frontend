@@ -8,6 +8,7 @@ import MaterialLink from "../util/MaterialLink";
 import NotFoundPage from "./NotFoundPage";
 import { NavLink } from "react-router-dom";
 import { receiveErrors, receiveLogs, receiveResponse } from "../../util/notifications";
+import { showImageGallery } from "../dialogs/ImageGalleryDialog";
 
 function SectionDropdown({ title, children, defaultOpen = false }) {
     const [open, setOpen] = useState(defaultOpen);
@@ -115,6 +116,12 @@ export default function CueProductPage() {
             });
     };
 
+    const handleImageInspect = () => {
+        if (images.length > 0) {
+            showImageGallery(images, currentImageIndex, cue.name);
+        }
+    };
+
     if (loading) {
         return (
             <div className="product-skeleton">
@@ -209,12 +216,23 @@ export default function CueProductPage() {
                 <div className="product-gallery">
                     {hasImages ? (
                         <>
-                            <div className="product-main-image">
+                            <div className="product-main-image" onClick={handleImageInspect}>
                                 <img 
                                     src={images[currentImageIndex]} 
                                     alt={cue.name}
                                     className="main-image"
                                 />
+                                {/* Image Inspect Button */}
+                                <button 
+                                    className="image-inspect-btn-outline"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleImageInspect();
+                                    }}
+                                    title="View full-size images"
+                                >
+                                    <i className="fa-solid fa-magnifying-glass-plus"></i>
+                                </button>
                             </div>
                             {images.length > 1 && (
                                 <div className="product-thumbnails">
