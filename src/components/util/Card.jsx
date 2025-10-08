@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 
-export function Card({title, price, tag, linkTo="#", image, images, onClick}) {
+export function Card({title, price, tag, linkTo="#", image, images, onClick, featured = false}) {
     const hasPrice = price !== undefined && price !== null && price !== "";
     const hasTag = tag !== undefined && tag !== null && tag !== "";
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -35,6 +35,12 @@ export function Card({title, price, tag, linkTo="#", image, images, onClick}) {
                         src={imageArray[currentImageIndex]} 
                         alt={title}
                     />
+                    {/* Featured indicator overlay on image */}
+                    {featured && (
+                        <div className="card-featured-overlay">
+                            <i className="fa-solid fa-star"></i>
+                        </div>
+                    )}
                 </div>
                 {/* Card Content */}
                 <div className="card-content">
