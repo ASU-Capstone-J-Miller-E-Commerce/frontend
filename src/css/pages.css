@@ -874,7 +874,7 @@
         word-break: break-word;
     }
     
-    .checkout-result-container p {
+    .checkout-result_container p {
         font-size: 1rem;
     }
     
@@ -937,7 +937,7 @@
         padding: 15px 5px;
     }
     
-    .checkout-result-container {
+    .checkout-result_container {
         padding: 20px 10px;
         margin: 0;
         max-width: calc(100vw - 10px);
@@ -2952,7 +2952,7 @@
 .reference-card {
     background-color: var(--miller-white);
     border: 1px solid #e9ecef;
-    border-radius: 8px;
+    border-radius: 0;
     padding: 1.5rem;
     transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
@@ -3023,7 +3023,6 @@
 .references-footer {
     background-color: #f8f9fa;
     padding: 2rem;
-    border-radius: 8px;
     border: 1px solid #e9ecef;
     margin-top: 2rem;
 }
