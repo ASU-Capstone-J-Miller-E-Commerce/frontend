@@ -4,16 +4,11 @@ import {
     IconButton,
     Box,
     useTheme,
-    useMediaQuery,
-    Slide
+    useMediaQuery
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
 
 // Dialog state management
 let dialogState = {
@@ -70,13 +65,19 @@ const ImageGalleryDialog = () => {
         setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
     };
 
+    const handleBackdropClick = (e) => {
+        // Close dialog if clicking outside of navigation buttons
+        if (e.target === e.currentTarget) {
+            handleClose();
+        }
+    };
+
     if (!images.length) return null;
 
     return (
         <Dialog
             open={open}
             onClose={handleClose}
-            TransitionComponent={Transition}
             maxWidth={false}
             fullWidth
             fullScreen
@@ -90,17 +91,26 @@ const ImageGalleryDialog = () => {
                     borderRadius: 0,
                 },
             }}
+            sx={{
+                '& .MuiDialog-container': {
+                    cursor: 'zoom-out'
+                }
+            }}
         >
-            <Box sx={{ 
-                height: '100vh', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center',
-                position: 'relative',
-                backgroundColor: '#fff',
-                padding: isMobile ? '60px 0 60px 0' : '20px',
-                boxSizing: 'border-box'
-            }}>
+            <Box 
+                sx={{ 
+                    height: '100vh', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    position: 'relative',
+                    backgroundColor: '#fff',
+                    padding: isMobile ? '60px 0 60px 0' : '20px',
+                    boxSizing: 'border-box',
+                    cursor: 'zoom-out'
+                }}
+                onClick={handleBackdropClick}
+            >
                 {/* Close button */}
                 <IconButton 
                     onClick={handleClose} 
@@ -111,6 +121,7 @@ const ImageGalleryDialog = () => {
                         backgroundColor: 'rgba(0, 0, 0, 0.1)',
                         color: '#333',
                         zIndex: 1000,
+                        cursor: 'pointer',
                         '&:hover': {
                             backgroundColor: 'rgba(0, 0, 0, 0.2)'
                         }
@@ -123,6 +134,7 @@ const ImageGalleryDialog = () => {
                 <img
                     src={images[currentIndex]}
                     alt={`${productName} - Image ${currentIndex + 1}`}
+                    onClick={handleClose}
                     style={{
                         width: 'auto',
                         height: 'auto',
@@ -132,6 +144,7 @@ const ImageGalleryDialog = () => {
                         minHeight: isMobile ? 'auto' : '60vh',
                         objectFit: 'contain',
                         objectPosition: 'center',
+                        cursor: 'zoom-out'
                     }}
                 />
                 
@@ -139,7 +152,10 @@ const ImageGalleryDialog = () => {
                 {images.length > 1 && (
                     <>
                         <IconButton
-                            onClick={prevImage}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                prevImage();
+                            }}
                             sx={{
                                 position: 'fixed',
                                 left: isMobile ? 10 : 20,
@@ -148,6 +164,7 @@ const ImageGalleryDialog = () => {
                                 transform: isMobile ? 'none' : 'translateY(-50%)',
                                 backgroundColor: 'rgba(0, 0, 0, 0.1)',
                                 color: '#333',
+                                cursor: 'pointer',
                                 '&:hover': {
                                     backgroundColor: 'rgba(0, 0, 0, 0.2)'
                                 }
@@ -156,7 +173,10 @@ const ImageGalleryDialog = () => {
                             <ChevronLeftIcon />
                         </IconButton>
                         <IconButton
-                            onClick={nextImage}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                nextImage();
+                            }}
                             sx={{
                                 position: 'fixed',
                                 right: isMobile ? 10 : 20,
@@ -165,6 +185,7 @@ const ImageGalleryDialog = () => {
                                 transform: isMobile ? 'none' : 'translateY(-50%)',
                                 backgroundColor: 'rgba(0, 0, 0, 0.1)',
                                 color: '#333',
+                                cursor: 'pointer',
                                 '&:hover': {
                                     backgroundColor: 'rgba(0, 0, 0, 0.2)'
                                 }
