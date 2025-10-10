@@ -842,7 +842,7 @@
         width: calc(100% - 10px);
     }
     
-    .checkout-result-container h1 {
+    .checkout-result_container h1 {
         font-size: 1.75rem;
         word-break: break-word;
     }
@@ -1062,12 +1062,14 @@
 .user-nav {
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 
 @media (max-width: 750px) {
     .user-nav {
         flex-direction: row;
         width: 100%;
+        height: auto; /* Add this */
     }
 }
 
@@ -1077,6 +1079,10 @@
     margin: 0;
     z-index: 9;
     position: sticky;
+    /* Add flexbox properties */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 @media (max-width: 750px) {
@@ -1086,52 +1092,174 @@
         width: 100%;
         position: static;
         z-index: auto;
+        height: auto; /* Add this */
+    }
+}
+
+/* Add gap before logout button on desktop only */
+@media (min-width: 751px) {
+    .user-nav-item:first-child {
+            margin-top: 6px;
+        }
+    .user-nav-item:last-child {
+        margin-top: auto; /* Push logout button to bottom */
+        margin-bottom: 5px;
     }
 }
 
 .user-nav-item {
     font-size: 20px;
+    margin: 3px 5px; /* Increased spacing for better separation */
 }
 
 @media (max-width: 750px) {
     .user-nav-item {
         flex: 1;
         font-size: 16px;
+        margin: 2px 1px; /* Reduced margin on mobile */
     }
 }
 
 .user-nav-item a {
-    padding: 6px 15px;
+    padding: 14px 22px; /* More generous padding */
     display: flex;
     align-items: center;
     justify-content: space-between;
     color: var(--miller-white);
     text-decoration: none;
     font-size: 1.05rem;
-    font-weight: 500;
+    font-weight: 600; /* Bolder text */
+    
+    /* Cool gradient background */
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.15) 0%, 
+        rgba(255, 255, 255, 0.08) 50%, 
+        rgba(255, 255, 255, 0.05) 100%);
+    
+    /* Enhanced border with gradient */
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 10px; /* More rounded corners */
+    
+    /* Cool multi-layered shadow */
+    box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        0 1px 3px rgba(0, 0, 0, 0.1);
+    
+    /* Smooth transitions for all properties */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    
+    /* Text styling */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.5px;
+    
+    /* Subtle backdrop blur effect (if supported) */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    
+    position: relative;
+    overflow: hidden;
+}
+
+/* Cool animated pseudo-element for extra flair */
+.user-nav-item a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.1), 
+        transparent);
+    transition: left 0.6s ease;
+}
+
+.user-nav-item a:hover::before {
+    left: 100%;
 }
 
 @media (max-width: 750px) {
     .user-nav-item a {
-        padding: 12px 8px;
+        padding: 10px 6px; /* Reduced padding for mobile */
         justify-content: center;
-        font-size: 0.9rem;
+        font-size: 0.85rem; /* Smaller font size */
         text-align: center;
         white-space: nowrap;
+        border-radius: 6px; /* Smaller radius on mobile */
+        font-weight: 500;
+        letter-spacing: 0.2px; /* Reduced letter spacing */
     }
 }
 
 @media (max-width: 450px) {
     .user-nav-item a {
-        padding: 8px 4px;
-        font-size: 0.75rem;
+        padding: 8px 4px; /* Even more compact on small screens */
+        font-size: 0.75rem; /* Smaller font */
+        border-radius: 4px;
+        letter-spacing: 0.1px; /* Minimal letter spacing */
     }
 }
 
-.user-nav-item a:hover,
-.user-nav-item a.active {
-    background-color: rgb(109, 109, 109);
+.user-nav-item a:hover {
+    /* Enhanced hover gradient */
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.25) 0%, 
+        rgba(255, 255, 255, 0.18) 50%, 
+        rgba(255, 255, 255, 0.12) 100%);
+    
+    border-color: rgba(255, 255, 255, 0.5);
     color: var(--miller-white);
+    
+    /* Cool 3D lift effect - only on hover */
+    transform: translateY(-1px) scale(1.02);
+    
+    /* Enhanced shadow with glow */
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.25),
+        0 0 20px rgba(255, 255, 255, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.15);
+    
+    /* Enhanced text shadow */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.user-nav-item a.active {
+    /* Special active state with cooler gradient - no lift effect */
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.3) 0%, 
+        rgba(255, 255, 255, 0.22) 50%, 
+        rgba(255, 255, 255, 0.15) 100%);
+    
+    border-color: rgba(255, 255, 255, 0.6);
+    
+    /* Enhanced shadow but no transform */
+    box-shadow: 
+        0 6px 20px rgba(0, 0, 0, 0.2),
+        0 0 15px rgba(255, 255, 255, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.1);
+    
+    /* Enhanced text shadow */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* When active item is hovered, apply the lift effect */
+.user-nav-item a.active:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.25),
+        0 0 20px rgba(255, 255, 255, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Additional cool effect for button press */
+.user-nav-item a:active {
+    transform: translateY(-1px) scale(0.98);
+    transition: all 0.1s ease;
 }
 
 .user-content {
