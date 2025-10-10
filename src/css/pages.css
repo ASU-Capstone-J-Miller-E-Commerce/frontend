@@ -3419,3 +3419,224 @@
         line-height: 1.5;
     }
 }
+
+/*==============================================================
+# Orders Skeleton Loader
+==============================================================*/
+
+/* Base skeleton animation */
+@keyframes shimmer {
+    0% {
+        background-position: -200px 0;
+    }
+
+    100% {
+        background-position: calc(200px + 100%) 0;
+    }
+}
+
+.skeleton-order-item {
+    background-color: var(--miller-white);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 6px 0px;
+    border: 1px solid #f0f0f0;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* Skeleton table header */
+.skeleton-header {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+    pointer-events: none;
+}
+
+.skeleton-table-header-item {
+    height: 20px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+.skeleton-table-header-wide {
+    width: 80%;
+}
+
+.skeleton-table-header-medium {
+    width: 60%;
+}
+
+/* Skeleton order images */
+.skeleton-order-images {
+    display: grid;
+    width: 80px;
+    height: 80px;
+    gap: 4px;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+.skeleton-order-images-card {
+    display: grid;
+    width: 100%;
+    height: 120px;
+    gap: 6px;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    margin: 16px 0;
+}
+
+.skeleton-order-image {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    width: 100%;
+    height: 100%;
+}
+
+/* Skeleton order details */
+.skeleton-order-number {
+    height: 16px;
+    width: 120px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 6px;
+}
+
+.skeleton-order-summary {
+    height: 14px;
+    width: 80px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 4px;
+}
+
+.skeleton-order-date {
+    height: 12px;
+    width: 70px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+/* Skeleton status */
+.skeleton-order-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.skeleton-order-status-card {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.skeleton-status-icon {
+    width: 16px;
+    height: 16px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+.skeleton-status-text {
+    height: 16px;
+    width: 80px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+/* Skeleton total amount */
+.skeleton-total-amount {
+    height: 18px;
+    width: 100px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+/* Skeleton order button */
+.skeleton-order-button {
+    height: 36px;
+    width: 100%;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+/* Mobile skeleton adjustments */
+@media (max-width: 768px) {
+    .skeleton-order-images {
+        width: 100%;
+        height: 100px;
+    }
+
+    .skeleton-order-images-card {
+        height: 100px;
+    }
+
+    /* Mobile forces card layout for list items */
+    .order-list-item.skeleton-order-item {
+        display: flex !important;
+        flex-direction: column;
+        grid-template-columns: none !important;
+        gap: 12px;
+        padding: 16px;
+    }
+
+    .order-list-item.skeleton-order-item .col-status {
+        order: 1;
+        width: 100%;
+    }
+
+    .order-list-item.skeleton-order-item .col-status .skeleton-order-status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        background: #f8f9fa;
+        width: 100%;
+        border-radius: 4px;
+    }
+
+    .order-list-item.skeleton-order-item .col-images {
+        order: 2;
+        width: 100%;
+    }
+
+    .order-list-item.skeleton-order-item .col-images .skeleton-order-images {
+        width: 100%;
+        height: 100px;
+    }
+
+    .order-list-item.skeleton-order-item .col-order {
+        order: 3;
+        width: 100%;
+    }
+
+    .order-list-item.skeleton-order-item .col-total {
+        order: 4;
+        width: 100%;
+        padding-top: 12px;
+        border-top: 1px solid #f0f0f0;
+    }
+
+    .order-list-item.skeleton-order-item .skeleton-total-amount {
+        width: 120px;
+    }
+}
