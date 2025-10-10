@@ -3640,3 +3640,354 @@
         width: 120px;
     }
 }
+
+/*==============================================================
+# Order Detail Skeleton Loader
+==============================================================*/
+
+/* Skeleton Cards */
+.skeleton-card {
+    background-color: var(--miller-white);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 6px 0px;
+    border: 1px solid #f0f0f0;
+    pointer-events: none;
+}
+
+/* Header Skeleton */
+.skeleton-header {
+    pointer-events: none;
+}
+
+.skeleton-back-button {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+.skeleton-order-id {
+    height: 18px;
+    width: 120px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 4px;
+}
+
+.skeleton-order-date {
+    height: 14px;
+    width: 160px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+/* Status Info Skeleton */
+.skeleton-status-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.skeleton-status-icon {
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+.skeleton-status-content {
+    flex: 1;
+}
+
+.skeleton-status-title {
+    height: 20px;
+    width: 100px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+/* Tracking Info Skeleton */
+.skeleton-tracking-info {
+    padding-top: 16px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.skeleton-tracking-title {
+    height: 16px;
+    width: 140px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.skeleton-tracking-line {
+    height: 14px;
+    width: 100%;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 6px;
+}
+
+.skeleton-tracking-line:nth-child(2) {
+    width: 80%;
+}
+
+.skeleton-tracking-line:nth-child(3) {
+    width: 90%;
+}
+
+.skeleton-tracking-line:nth-child(4) {
+    width: 85%;
+}
+
+/* Contact Info Skeleton */
+.skeleton-contact-info {
+    margin-bottom: 20px;
+}
+
+.skeleton-contact-title {
+    height: 16px;
+    width: 140px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.skeleton-contact-line {
+    height: 14px;
+    width: 100%;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 4px;
+}
+
+.skeleton-contact-line:first-of-type {
+    width: 70%;
+}
+
+.skeleton-contact-line:last-of-type {
+    width: 85%;
+}
+
+/* Address Card Skeleton */
+.skeleton-address-card {
+    margin-bottom: 16px;
+}
+
+.skeleton-address-title {
+    height: 16px;
+    width: 120px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.skeleton-address-line {
+    height: 14px;
+    width: 100%;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 4px;
+}
+
+.skeleton-address-line:nth-child(1) {
+    width: 80%;
+}
+
+.skeleton-address-line:nth-child(2) {
+    width: 75%;
+}
+
+.skeleton-address-line:nth-child(3) {
+    width: 90%;
+}
+
+.skeleton-address-line-short {
+    width: 60% !important;
+}
+
+/* Items Title Skeleton */
+.skeleton-items-title {
+    height: 16px;
+    width: 100px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 16px;
+}
+
+/* Order Item Skeleton */
+.skeleton-order-item {
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+}
+
+.skeleton-order-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.skeleton-item-image {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+.skeleton-image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+.skeleton-item-details {
+    flex: 1;
+}
+
+.skeleton-item-name {
+    height: 16px;
+    width: 80%;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 6px;
+}
+
+.skeleton-item-number {
+    height: 14px;
+    width: 60%;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 6px;
+}
+
+.skeleton-item-price {
+    height: 14px;
+    width: 50%;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+.skeleton-item-quantity {
+    min-width: 80px;
+}
+
+.skeleton-quantity-text {
+    height: 14px;
+    width: 70px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+/* Total Amount Skeleton */
+.skeleton-total-amount {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 2px solid #f0f0f0;
+    margin-top: 16px;
+}
+
+.skeleton-total-label {
+    height: 16px;
+    width: 100px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+.skeleton-total-value {
+    height: 16px;
+    width: 120px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+/* Mobile Skeleton Adjustments */
+@media (max-width: 900px) {
+    .order-detail-main.compact {
+        flex-direction: column;
+    }
+
+    .skeleton-tracking-line,
+    .skeleton-contact-line,
+    .skeleton-address-line {
+        width: 100% !important;
+    }
+
+    .skeleton-item-name {
+        width: 90%;
+    }
+
+    .skeleton-item-number {
+        width: 70%;
+    }
+
+    .skeleton-item-price {
+        width: 60%;
+    }
+}
+
+@media (max-width: 600px) {
+    .skeleton-order-id {
+        width: 100px;
+    }
+
+    .skeleton-order-date {
+        width: 140px;
+    }
+
+    .skeleton-tracking-title {
+        width: 120px;
+    }
+
+    .skeleton-contact-title {
+        width: 120px;
+    }
+
+    .skeleton-address-title {
+        width: 100px;
+    }
+
+    .skeleton-items-title {
+        width: 80px;
+    }
+}
