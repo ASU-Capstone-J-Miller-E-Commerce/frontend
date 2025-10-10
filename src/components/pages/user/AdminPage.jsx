@@ -217,10 +217,10 @@ function AdminHeader({ setAdminPage, adminPage, loading, onPlusClick }) {
             </ul>
             <div className="admin-header-right">
                 <button
-                    className={`admin-icon-button ${loading || adminPage === 'Orders' ? 'disabled' : ''}`}
-                    disabled={loading || adminPage === 'Orders'}
+                    className={`admin-icon-button ${loading || adminPage === 'Orders' || adminPage === 'Email' ? 'disabled' : ''}`}
+                    disabled={loading || adminPage === 'Orders' || adminPage === 'Email'}
                     onClick={handlePlusClick}
-                    title={adminPage === 'Orders' ? 'Orders are created through the payment process' : ''}
+                    title={adminPage === 'Orders' ? 'Orders are created through the payment process' : adminPage === 'Email' ? 'Email announcements are sent directly' : ''}
                 >
                     <i className="fas fa-plus"></i>
                 </button>
