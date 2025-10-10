@@ -1103,7 +1103,7 @@
         }
     .user-nav-item:last-child {
         margin-top: auto; /* Push logout button to bottom */
-        margin-bottom: 5px;
+        margin-bottom: 6px;
     }
 }
 
