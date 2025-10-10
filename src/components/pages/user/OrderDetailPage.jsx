@@ -15,7 +15,7 @@ export default function OrderDetailPage() {
         setLoading(true);
         getUserOrderById(orderId)
             .then(response => {
-                if (response.status === "success" && response.data) {
+                if (response.data) {
                     setOrder(response.data);
                 } else {
                     setOrder(null);

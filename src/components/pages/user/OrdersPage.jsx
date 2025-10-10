@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AccountSection from "../../sections/AccountSection";
 import { getUserOrders } from "../../../util/requests";
 import { receiveResponse } from "../../../util/notifications";
 
@@ -18,12 +17,10 @@ export default function OrdersPage() {
         setLoading(true);
         getUserOrders()
             .then((response) => {
-                console.log(response)
                 setOrders(response.data);
                 setLoading(false);
             })
             .catch((error) => {
-                console.error('Error loading orders:', error);
                 receiveResponse(error);
                 setLoading(false);
             });
