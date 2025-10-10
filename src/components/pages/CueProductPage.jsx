@@ -8,6 +8,7 @@ import MaterialLink from "../util/MaterialLink";
 import NotFoundPage from "./NotFoundPage";
 import { NavLink } from "react-router-dom";
 import { receiveErrors, receiveLogs, receiveResponse } from "../../util/notifications";
+import { showImageGallery } from "../dialogs/ImageGalleryDialog";
 
 function SectionDropdown({ title, children, defaultOpen = false }) {
     const [open, setOpen] = useState(defaultOpen);
@@ -115,11 +116,82 @@ export default function CueProductPage() {
             });
     };
 
+    const handleImageInspect = () => {
+        if (images.length > 0) {
+            showImageGallery(images, currentImageIndex, cue.name);
+        }
+    };
+
     if (loading) {
         return (
-            <div className="product-page">
-                <div className="product-container">
-                    <div className="product-loading">Loading...</div>
+            <div className="product-skeleton">
+                <div className="product-skeleton-container">
+                    {/* Skeleton Gallery */}
+                    <div className="product-skeleton-gallery">
+                        <div className="product-skeleton-main-image"></div>
+                        <div className="product-skeleton-thumbnails">
+                            <div className="skeleton-thumbnail"></div>
+                            <div className="skeleton-thumbnail"></div>
+                            <div className="skeleton-thumbnail"></div>
+                            <div className="skeleton-thumbnail"></div>
+                        </div>
+                    </div>
+
+                    {/* Skeleton Product Info */}
+                    <div className="product-skeleton-info">
+                        <div className="skeleton-product-number"></div>
+                        <div className="skeleton-product-title"></div>
+                        <div className="skeleton-product-price"></div>
+                        <div className="skeleton-product-status"></div>
+                        <div className="skeleton-product-description"></div>
+                        <div className="skeleton-purchase-section"></div>
+
+                        {/* Skeleton Sections */}
+                        <div className="skeleton-section">
+                            <div className="skeleton-section-header">
+                                <div className="skeleton-section-title"></div>
+                                <div className="skeleton-section-icon"></div>
+                            </div>
+                            <div className="skeleton-specs-grid">
+                                <div className="skeleton-spec-item">
+                                    <div className="skeleton-spec-label"></div>
+                                    <div className="skeleton-spec-value"></div>
+                                </div>
+                                <div className="skeleton-spec-item">
+                                    <div className="skeleton-spec-label"></div>
+                                    <div className="skeleton-spec-value"></div>
+                                </div>
+                                <div className="skeleton-spec-item">
+                                    <div className="skeleton-spec-label"></div>
+                                    <div className="skeleton-spec-value"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="skeleton-section">
+                            <div className="skeleton-section-header">
+                                <div className="skeleton-section-title"></div>
+                                <div className="skeleton-section-icon"></div>
+                            </div>
+                            <div className="skeleton-specs-grid">
+                                <div className="skeleton-spec-item">
+                                    <div className="skeleton-spec-label"></div>
+                                    <div className="skeleton-spec-value"></div>
+                                </div>
+                                <div className="skeleton-spec-item">
+                                    <div className="skeleton-spec-label"></div>
+                                    <div className="skeleton-spec-value"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="skeleton-section">
+                            <div className="skeleton-section-header">
+                                <div className="skeleton-section-title"></div>
+                                <div className="skeleton-section-icon"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
@@ -144,12 +216,23 @@ export default function CueProductPage() {
                 <div className="product-gallery">
                     {hasImages ? (
                         <>
-                            <div className="product-main-image">
+                            <div className="product-main-image" onClick={handleImageInspect}>
                                 <img 
                                     src={images[currentImageIndex]} 
                                     alt={cue.name}
                                     className="main-image"
                                 />
+                                {/* Image Inspect Button */}
+                                <button 
+                                    className="image-inspect-btn-outline"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleImageInspect();
+                                    }}
+                                    title="View full-size images"
+                                >
+                                    <i className="fa-solid fa-magnifying-glass-plus"></i>
+                                </button>
                             </div>
                             {images.length > 1 && (
                                 <div className="product-thumbnails">
@@ -184,11 +267,19 @@ export default function CueProductPage() {
                         </div>
                         {hasPrice && (
                             <div className="product-price">
-                                ${Number(cue.price).toFixed(2)}
+                                ${Number(cue.price).toFixed(2)} USD
                             </div>
                         )}
-                        <div className={`product-status ${cue.status.replace(/\s+/g, '-')}`}>
-                            {cue.status}
+                        <div className="product-status-row">
+                            <div className={`product-status ${cue.status.replace(/\s+/g, '-')}`}>
+                                {cue.status}
+                            </div>
+                            {cue.featured && (
+                                <div className="product-featured">
+                                    <i className="fa-solid fa-star"></i>
+                                    Featured
+                                </div>
+                            )}
                         </div>
                     </div>
 

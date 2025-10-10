@@ -732,6 +732,7 @@ export default function Collection({
                                                     price={item.price}
                                                     linkTo={isSearchCollection ? linkTo : `/${collection}/${item.guid}`}
                                                     images={item.imageUrls}
+                                                    featured={item.featured}
                                                 />
                                             )}
                                         </li>

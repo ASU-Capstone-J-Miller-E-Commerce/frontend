@@ -28,9 +28,9 @@ export default function Footer () {
                         <img src={logo} alt="J Miller Custom Cues" className="footer-logo-img" />
                     </NavLink>
                     <div className="footer-contact-info">
-                        <p>1234 Hwy 456</p>
-                        <p>Mesa, AZ 85213</p>
-                        <p>1-800-123-4567</p>
+                        <p>Cottage Grove, Oregon</p>
+                        <p>United States</p>
+                        <p>(503) 260-1170</p>
                     </div>
                 </div>
 

@@ -161,7 +161,7 @@ export default function AdminPage() {
     };
 
     return (
-        <div>
+        <div className='admin-wrapper'>
             <AdminHeader setAdminPage={setAdminPage} adminPage={adminPage} loading={loading} onPlusClick={handleDialogOpen} />
             <div className='user-content'>
                 <AdminContent adminPage={adminPage} loading={loading} onEditClick={handleDialogOpen} onPasswordEditClick={handlePasswordDialogOpen} onDeleteClick={handleDeleteDialogOpen} cueData={cueData || []} accessoryData={accessoryData || []} materialData={materialData || []} userData={userData || []} orderData={orderData || []} />
@@ -217,10 +217,10 @@ function AdminHeader({ setAdminPage, adminPage, loading, onPlusClick }) {
             </ul>
             <div className="admin-header-right">
                 <button
-                    className={`admin-icon-button ${loading || adminPage === 'Orders' ? 'disabled' : ''}`}
-                    disabled={loading || adminPage === 'Orders'}
+                    className={`admin-icon-button ${loading || adminPage === 'Orders' || adminPage === 'Email' ? 'disabled' : ''}`}
+                    disabled={loading || adminPage === 'Orders' || adminPage === 'Email'}
                     onClick={handlePlusClick}
-                    title={adminPage === 'Orders' ? 'Orders are created through the payment process' : ''}
+                    title={adminPage === 'Orders' ? 'Orders are created through the payment process' : adminPage === 'Email' ? 'Email announcements are sent directly' : ''}
                 >
                     <i className="fas fa-plus"></i>
                 </button>
@@ -621,6 +621,7 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
     const [isCustomJointCollarMaterial, setIsCustomJointCollarMaterial] = useState(false);
     const [isCustomButtCapMaterial, setIsCustomButtCapMaterial] = useState(false);
     const [featured, setFeatured] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // Add this line
 
     useEffect(() => {
         setLocalTitle(title);
@@ -804,6 +805,7 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
     const existingCue = savedCue || !!element._id;
 
     const onSubmit = (data) => {
+        setIsLoading(true); // Add this line
         data.isFullSplice = buttType;
         data.includeWrap = includeWrap;
         data.featured = featured;
@@ -812,7 +814,9 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
                 .then((res) => {
                     receiveResponse(res);
                     getData();
+                    setIsLoading(false); // Add this line
                 })
+                .catch(() => setIsLoading(false)); // Add this line
             if (deletedUrls.length > 0) {
                 deleteImages(deletedUrls)
                     .then((res) => {
@@ -835,12 +839,14 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
                     
                     reset(res.data);
                     setSavedCue(true);
+                    setIsLoading(false); // Add this line
                 })
+                .catch(() => setIsLoading(false)); // Add this line
         }
     };
 
     const handleSaveClick = () => {
-        if (formRef.current) {
+        if (formRef.current && !isLoading) { // Add !isLoading check
             formRef.current.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
         }
     };
@@ -1121,21 +1127,23 @@ function CueDialog({ open, onClose, title, getData, cueData, materialData, setDi
     }, [tipSize, setValue]);
 
     return (
-        <Dialog open={open} onClose={onClose} fullScreen>
+        <Dialog open={open} onClose={isLoading ? () => {} : onClose} fullScreen>
             <DialogTitle style={dialogTitleStyle}>
                 {localTitle}
                 <div style={{ float: 'right', display: 'flex' }}>
                     <button
                         type="button"
-                        className='fa-solid fa-floppy-disk admin-action-button'
+                        className={isLoading ? 'fa-solid fa-spinner fa-spin admin-action-button' : 'fa-solid fa-floppy-disk admin-action-button'}
                         style={{ display: 'inline-block', justifySelf: 'right', fontSize: '1.5rem', marginTop: '-0.05rem', marginRight: '20px' }}
                         onClick={handleSaveClick}
+                        disabled={isLoading}
                     />
                     <button
                         type="button"
                         className='fa-solid fa-xmark admin-action-button'
-                        style={{ display: 'inline-block', justifySelf: 'right', fontSize: '1.5rem', marginTop: '-0.05rem' }}
-                        onClick={onClose}
+                        style={{ display: 'inline-block', justifySelf: 'right', fontSize: '1.5rem', marginTop: '-0.05rem', opacity: isLoading ? 0.5 : 1 }}
+                        onClick={isLoading ? () => {} : onClose}
+                        disabled={isLoading}
                     />
                 </div>
             </DialogTitle>
@@ -1924,6 +1932,7 @@ function AccessoryDialog({ open, onClose, title: initialTitle, getData, setDialo
     const [deletedUrls, setDeletedUrls] = useState([]);
     const [savedAccessory, setSavedAccessory] = useState(false);
     const [localTitle, setLocalTitle] = useState(initialTitle);
+    const [isLoading, setIsLoading] = useState(false); // Add this line
     
     const { register, handleSubmit, watch, formState: { errors }, reset, setValue, getValues } = useForm({
         defaultValues: element
@@ -1947,12 +1956,15 @@ function AccessoryDialog({ open, onClose, title: initialTitle, getData, setDialo
     }, [open, reset]);
 
     const onSubmit = (data) => {
+        setIsLoading(true); // Add this line
         if (existingAccessory) {
             editAccessory(data._id, data.accessoryNumber, data.name, data.description, data.price, data.status, data.imageUrls)
                 .then((res) => {
                     receiveResponse(res);
                     getData();
+                    setIsLoading(false); // Add this line
                 })
+                .catch(() => setIsLoading(false)); // Add this line
             if (deletedUrls.length > 0) {
                 deleteImages(deletedUrls)
                     .then((res) => {
@@ -1975,12 +1987,14 @@ function AccessoryDialog({ open, onClose, title: initialTitle, getData, setDialo
 
                     reset(res.data);
                     setSavedAccessory(true);
+                    setIsLoading(false); // Add this line
                 })
+                .catch(() => setIsLoading(false)); // Add this line
         }
     };
     
     const handleSaveClick = () => {
-        if (formRef.current) {
+        if (formRef.current && !isLoading) { // Add !isLoading check
             formRef.current.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
         }
     };
@@ -1992,21 +2006,23 @@ function AccessoryDialog({ open, onClose, title: initialTitle, getData, setDialo
     const status = watch("status");
 
     return (
-        <Dialog open={open} onClose={onClose} fullScreen>
+        <Dialog open={open} onClose={isLoading ? () => {} : onClose} fullScreen>
             <DialogTitle style={dialogTitleStyle}>
-                {localTitle} {/* Use local title here */}
+                {localTitle}
                 <div style={{ float: 'right', display: 'flex' }}>
                     <button
                         type="button"
-                        className='fa-solid fa-floppy-disk admin-action-button'
+                        className={isLoading ? 'fa-solid fa-spinner fa-spin admin-action-button' : 'fa-solid fa-floppy-disk admin-action-button'}
                         style={{ display: 'inline-block', justifySelf: 'right', fontSize: '1.5rem', marginTop: '-0.05rem', marginRight: '20px' }}
                         onClick={handleSaveClick}
+                        disabled={isLoading}
                     />
                     <button
                         type="button"
                         className='fa-solid fa-xmark admin-action-button'
-                        style={{ display: 'inline-block', justifySelf: 'right', fontSize: '1.5rem', marginTop: '-0.05rem' }}
-                        onClick={onClose}
+                        style={{ display: 'inline-block', justifySelf: 'right', fontSize: '1.5rem', marginTop: '-0.05rem', opacity: isLoading ? 0.5 : 1 }}
+                        onClick={isLoading ? () => {} : onClose}
+                        disabled={isLoading}
                     />
                 </div>
             </DialogTitle>
@@ -2116,6 +2132,7 @@ function MaterialDialog({ open, onClose, title: initialTitle, getData, setDialog
     const [deletedUrls, setDeletedUrls] = useState([]);
     const [savedMaterial, setSavedMaterial] = useState(false);
     const [localTitle, setLocalTitle] = useState(initialTitle);
+    const [isLoading, setIsLoading] = useState(false); // Add this line
 
     const getDefaultValues = (type) => {
         const commonDefaults = {
@@ -2194,6 +2211,7 @@ function MaterialDialog({ open, onClose, title: initialTitle, getData, setDialog
     }, [materialType]);
 
     const onSubmit = (data) => {
+        setIsLoading(true); // Add this line
         if (materialType === 'wood') {
             if (existingMaterial) {
                 editWood(
@@ -2220,7 +2238,9 @@ function MaterialDialog({ open, onClose, title: initialTitle, getData, setDialog
                     .then(res => {
                         receiveResponse(res);
                         getData();
-                    });
+                        setIsLoading(false); // Add this line
+                    })
+                    .catch(() => setIsLoading(false)); // Add this line
                 if (deletedUrls.length > 0) {
                     deleteImages(deletedUrls)
                         .then((res) => {
@@ -2260,13 +2280,14 @@ function MaterialDialog({ open, onClose, title: initialTitle, getData, setDialog
                             title: `Edit Wood '${displayName}'`
                         }));
                         
-                        // Update local title
                         setLocalTitle(`Edit Wood '${displayName}'`);
                         
                         // Update form with new data that includes ID
                         reset(res.data);
                         setSavedMaterial(true);
-                    });
+                        setIsLoading(false); // Add this line
+                    })
+                    .catch(() => setIsLoading(false)); // Add this line
             }
         } else if (materialType === 'crystal') {
             if (existingMaterial) {
@@ -2283,7 +2304,9 @@ function MaterialDialog({ open, onClose, title: initialTitle, getData, setDialog
                     .then(res => {
                         receiveResponse(res);
                         getData();
-                    });
+                        setIsLoading(false); // Add this line
+                    })
+                    .catch(() => setIsLoading(false)); // Add this line
                 if (deletedUrls.length > 0) {
                     deleteImages(deletedUrls)
                         .then((res) => {
@@ -2312,13 +2335,14 @@ function MaterialDialog({ open, onClose, title: initialTitle, getData, setDialog
                             title: `Edit Stone/Crystal '${displayName}'`
                         }));
                         
-                        // Update local title
                         setLocalTitle(`Edit Stone/Crystal '${displayName}'`);
                         
                         // Update form with new data that includes ID
                         reset(res.data);
                         setSavedMaterial(true);
-                    });
+                        setIsLoading(false); // Add this line
+                    })
+                    .catch(() => setIsLoading(false)); // Add this line
             }
         }
     };
@@ -2326,7 +2350,7 @@ function MaterialDialog({ open, onClose, title: initialTitle, getData, setDialog
     const formRef = useRef(null);
     
     const handleSaveClick = () => {
-        if (formRef.current) {
+        if (formRef.current && !isLoading) { // Add !isLoading check
             formRef.current.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
         }
     };
@@ -2669,21 +2693,23 @@ function MaterialDialog({ open, onClose, title: initialTitle, getData, setDialog
     };
     
     return (
-        <Dialog open={open} onClose={onClose} fullScreen>
+        <Dialog open={open} onClose={isLoading ? () => {} : onClose} fullScreen>
             <DialogTitle style={dialogTitleStyle}>
                 {localTitle}
                 <div style={{ float: 'right', display: 'flex' }}>
                     {materialType && <button
                         type="button"
-                        className='fa-solid fa-floppy-disk admin-action-button'
+                        className={isLoading ? 'fa-solid fa-spinner fa-spin admin-action-button' : 'fa-solid fa-floppy-disk admin-action-button'}
                         style={{ display: 'inline-block', justifySelf: 'right', fontSize: '1.5rem', marginTop: '-0.05rem', marginRight: '20px' }}
                         onClick={handleSaveClick}
+                        disabled={isLoading}
                     />}
                     <button
                         type="button"
                         className='fa-solid fa-xmark admin-action-button'
-                        style={{ display: 'inline-block', justifySelf: 'right', fontSize: '1.5rem', marginTop: '-0.05rem' }}
-                        onClick={onClose}
+                        style={{ display: 'inline-block', justifySelf: 'right', fontSize: '1.5rem', marginTop: '-0.05rem', opacity: isLoading ? 0.5 : 1 }}
+                        onClick={isLoading ? () => {} : onClose}
+                        disabled={isLoading}
                     />
                 </div>
             </DialogTitle>
@@ -2732,6 +2758,7 @@ function MaterialDialog({ open, onClose, title: initialTitle, getData, setDialog
 function UserDialog({ open, onClose, title: initialTitle, getData, setDialogProps, element = { email: '', password: '', firstName: '', lastName: '' } }) {
     const [savedUser, setSavedUser] = useState(false);
     const [localTitle, setLocalTitle] = useState(initialTitle);
+    const [isLoading, setIsLoading] = useState(false); // Add this line
     
     const { register, handleSubmit, watch, formState: { errors }, reset } = useForm({
         defaultValues: element
@@ -2752,6 +2779,7 @@ function UserDialog({ open, onClose, title: initialTitle, getData, setDialogProp
     }, [open, reset]);
 
     const onSubmit = (data) => {
+        setIsLoading(true); // Add this line
         const userData = {
             _id: data._id,
             email: data.email,
@@ -2768,33 +2796,34 @@ function UserDialog({ open, onClose, title: initialTitle, getData, setDialogProp
                     receiveResponse(res);
                     getData();
                     
-                    // Update dialog props in parent
                     setDialogProps(prev => ({
                         ...prev,
                         element: res.data,
                         title: `Edit User '${res.data.firstName || res.data.email}'`
                     }));
                     
-                    // Update local title
                     setLocalTitle(`Edit User '${res.data.firstName || res.data.email}'`);
                     
-                    // Update form with new data that includes ID
                     reset(res.data);
                     setSavedUser(true);
-                });
+                    setIsLoading(false); // Add this line
+                })
+                .catch(() => setIsLoading(false)); // Add this line
         } else {
             editUser(userData._id, userData.email, userData.firstName, userData.lastName)
                 .then((res) => {
                     receiveResponse(res);
                     getData();
-                });
+                    setIsLoading(false); // Add this line
+                })
+                .catch(() => setIsLoading(false)); // Add this line
         }
     };
 
     const formRef = useRef(null);
     
     const handleSaveClick = () => {
-        if (formRef.current) {
+        if (formRef.current && !isLoading) { // Add !isLoading check
             formRef.current.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
         }
     };
@@ -2805,21 +2834,23 @@ function UserDialog({ open, onClose, title: initialTitle, getData, setDialogProp
     const lastName = watch("lastName");
 
     return (
-        <Dialog open={open} onClose={onClose} fullScreen>
+        <Dialog open={open} onClose={isLoading ? () => {} : onClose} fullScreen>
             <DialogTitle style={dialogTitleStyle}>
                 {localTitle}
                 <div style={{ float: 'right', display: 'flex' }}>
                     <button
                         type="button"
-                        className='fa-solid fa-floppy-disk admin-action-button'
+                        className={isLoading ? 'fa-solid fa-spinner fa-spin admin-action-button' : 'fa-solid fa-floppy-disk admin-action-button'}
                         style={{ display: 'inline-block', justifySelf: 'right', fontSize: '1.5rem', marginTop: '-0.05rem', marginRight: '20px' }}
                         onClick={handleSaveClick}
+                        disabled={isLoading}
                     />
                     <button
                         type="button"
                         className='fa-solid fa-xmark admin-action-button'
-                        style={{ display: 'inline-block', justifySelf: 'right', fontSize: '1.5rem', marginTop: '-0.05rem' }}
-                        onClick={onClose}
+                        style={{ display: 'inline-block', justifySelf: 'right', fontSize: '1.5rem', marginTop: '-0.05rem', opacity: isLoading ? 0.5 : 1 }}
+                        onClick={isLoading ? () => {} : onClose}
+                        disabled={isLoading}
                     />
                 </div>
             </DialogTitle>
@@ -3001,6 +3032,8 @@ function DeleteDialog({ open, onClose, title, adminPage, getData, element }) {
 }
 
 function PasswordDialog({ open, onClose, title, element = { password: '', firstName: '' } }) {
+    const [isLoading, setIsLoading] = useState(false); // Add this line
+    
     const { register, handleSubmit, watch, formState: { errors }, reset } = useForm({
         defaultValues: element
     });
@@ -3012,11 +3045,14 @@ function PasswordDialog({ open, onClose, title, element = { password: '', firstN
     }, [open, reset]);
 
     const onSubmit = (data) => {
+        setIsLoading(true); // Add this line
         changePassword(element._id, data.password)
             .then((res) => {
                 receiveResponse(res);
                 onClose();
-            });
+                setIsLoading(false); // Add this line
+            })
+            .catch(() => setIsLoading(false)); // Add this line
     };
 
     const formRef = useRef(null);
@@ -3024,14 +3060,15 @@ function PasswordDialog({ open, onClose, title, element = { password: '', firstN
     const password = watch("password");
 
     return (
-        <Dialog open={open} onClose={onClose} >
+        <Dialog open={open} onClose={isLoading ? () => {} : onClose}>
             <DialogTitle>
                 {title} {firstName && `'${firstName}'`}
                 <button
                     type="button"
                     className='fa-solid fa-xmark admin-action-button'
-                    style={{ display: 'inline-block', float: 'right', justifySelf: 'right', fontSize: '1.5rem', marginTop: '-0.05rem' }}
-                    onClick={onClose}
+                    style={{ display: 'inline-block', float: 'right', justifySelf: 'right', fontSize: '1.5rem', marginTop: '-0.05rem', opacity: isLoading ? 0.5 : 1 }}
+                    onClick={isLoading ? () => {} : onClose}
+                    disabled={isLoading}
                 />
             </DialogTitle>
             <DialogContent>
@@ -3057,19 +3094,21 @@ function PasswordDialog({ open, onClose, title, element = { password: '', firstN
                         
                         <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '1rem' }}>
                             <span 
-                                onClick={onClose} 
+                                onClick={isLoading ? () => {} : onClose}
                                 style={{ 
                                     textDecoration: 'underline', 
-                                    cursor: 'pointer',
+                                    cursor: isLoading ? 'not-allowed' : 'pointer',
                                     color: '#333',
-                                    fontSize: '1rem'
+                                    fontSize: '1rem',
+                                    opacity: isLoading ? 0.5 : 1
                                 }}
                             >
                                 Cancel
                             </span>
                             <DefaultButton
-                                text="Save"
+                                text={isLoading ? 'Saving...' : 'Save'}
                                 type="submit"
+                                disabled={isLoading}
                             />
                         </div>
                     </div>
@@ -3188,7 +3227,6 @@ function DialogImageSection({ folder = 'general', existingItem, imageUrls = [], 
                                 key={`${imageUrl}-${index}`} 
                                 sx={{
                                     overflow: 'hidden',
-                                    borderRadius: '4px',
                                     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
                                     cursor: 'grab',
                                     transition: 'all 0.2s ease',
@@ -3297,6 +3335,7 @@ function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogPro
     });
 
     const [loading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // Add this line (rename existing loading to isLoading)
     const title = initialTitle || 'Edit Order';
 
     // Watch all form values like other dialogs
@@ -3358,7 +3397,7 @@ function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogPro
     }, [open, element._id]);
 
     const onSubmit = async (data) => {
-        setLoading(true);
+        setIsLoading(true); // Change from setLoading to setIsLoading
         try {
             // Only send editable shipping status fields
             const orderData = {
@@ -3376,16 +3415,18 @@ function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogPro
                 onClose();
                 getData();
             }
+            setIsLoading(false); // Add this line
         } catch (error) {
             console.error('Error updating order:', error);
-        } finally {
-            setLoading(false);
+            setIsLoading(false); // Add this line
         }
     };
 
     const handleCancel = () => {
-        reset(element);
-        onClose();
+        if (!isLoading) { // Add this check
+            reset(element);
+            onClose();
+        }
     };
 
     if (!element) {
@@ -3433,21 +3474,23 @@ function OrderDialog({ open, onClose, title: initialTitle, getData, setDialogPro
     };
 
     return (
-        <Dialog open={open} onClose={handleCancel} fullScreen>
+        <Dialog open={open} onClose={isLoading ? () => {} : handleCancel} fullScreen>
             <DialogTitle style={dialogTitleStyle}>
                 {title}
                 <div style={{ float: 'right', display: 'flex' }}>
                     <button
                         type="button"
-                        className='fa-solid fa-floppy-disk admin-action-button'
+                        className={isLoading ? 'fa-solid fa-spinner fa-spin admin-action-button' : 'fa-solid fa-floppy-disk admin-action-button'}
                         style={{ display: 'inline-block', justifySelf: 'right', fontSize: '1.5rem', marginTop: '-0.05rem', marginRight: '20px' }}
-                        onClick={handleSubmit(onSubmit)}
+                        onClick={isLoading ? () => {} : handleSubmit(onSubmit)}
+                        disabled={isLoading}
                     />
                     <button
                         type="button"
                         className='fa-solid fa-xmark admin-action-button'
-                        style={{ display: 'inline-block', justifySelf: 'right', fontSize: '1.5rem', marginTop: '-0.05rem' }}
-                        onClick={handleCancel}
+                        style={{ display: 'inline-block', justifySelf: 'right', fontSize: '1.5rem', marginTop: '-0.05rem', opacity: isLoading ? 0.5 : 1 }}
+                        onClick={isLoading ? () => {} : handleCancel}
+                        disabled={isLoading}
                     />
                 </div>
             </DialogTitle>

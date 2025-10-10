@@ -48,3 +48,20 @@ export function clearCartRedux() {
         type: actionTypes.CLEAR_CART
     });
 }
+
+/*==============================================================
+# Featured Cues
+==============================================================*/
+export function setFeaturedCues(items) {
+    store.dispatch({
+        type: actionTypes.SET_FEATURED_CUES,
+        items
+    });
+}
+
+export function setFeaturedCuesLoading(loading) {
+    store.dispatch({
+        type: actionTypes.SET_FEATURED_CUES_LOADING,
+        loading
+    });
+}

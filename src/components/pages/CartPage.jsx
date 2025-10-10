@@ -139,8 +139,6 @@ export default function CartPage() {
         // Create checkout session with just the country
         createCheckoutSession(cartItems, user.email, selectedCountry, cartTotal)
             .then((response) => {
-                receiveResponse(response);
-
                 if (response && response.data) {
                     // Redirect to Stripe checkout page
                     window.location.href = response.data;
@@ -220,12 +218,12 @@ export default function CartPage() {
 
                                 <div className="summary-line">
                                     <span>Items ({totalItems}):</span>
-                                    <span>{hasItemsWithoutPrice() ? "Contact for pricing" : `$${total.toFixed(2)}`}</span>
+                                    <span>{hasItemsWithoutPrice() ? "Contact for pricing" : `$${total.toFixed(2)} USD`}</span>
                                 </div>
 
                                 <div className="summary-line total">
                                     <span>Subtotal:</span>
-                                    <span>{hasItemsWithoutPrice() ? "Contact for pricing" : `$${total.toFixed(2)}`}</span>
+                                    <span>{hasItemsWithoutPrice() ? "Contact for pricing" : `$${total.toFixed(2)} USD`}</span>
                                 </div>
 
                                 {/* Country Selection */}

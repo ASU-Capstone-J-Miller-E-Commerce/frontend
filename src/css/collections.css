@@ -18,6 +18,119 @@
     aspect-ratio: 2048 / 2048;
 }
 
+/* Card image container needs relative positioning for overlay */
+.card-image {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Featured overlay on card image */
+.card-featured-overlay {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(255, 140, 0, 0.3);
+    z-index: 1;
+    opacity: 1;
+    animation: featuredGlow 2s ease-in-out infinite alternate;
+    overflow: hidden;
+}
+
+.card-featured-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 100%
+    );
+    animation: featuredShine 3s ease-in-out infinite;
+}
+
+.card-featured-overlay i {
+    font-size: 10px;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    top: 49%;
+    left: 53%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+}
+
+/* Add the keyframe animations */
+@keyframes featuredGlow {
+    0% {
+        box-shadow: 0 2px 8px rgba(255, 140, 0, 0.3);
+    }
+    100% {
+        box-shadow: 0 2px 12px rgba(255, 140, 0, 0.5);
+    }
+}
+
+@keyframes featuredShine {
+    0% {
+        left: -100%;
+    }
+    50% {
+        left: 100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+@keyframes featuredStar {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Mobile optimizations for featured overlay */
+@media (max-width: 770px) {
+    .card-featured-overlay {
+        width: 20px;
+        height: 20px;
+        top: 6px;
+        right: 6px;
+    }
+    
+    .card-featured-overlay i {
+        font-size: 8px;
+    }
+}
+
+@media (max-width: 400px) {
+    .card-featured-overlay {
+        width: 18px;
+        height: 18px;
+        top: 5px;
+        right: 5px;
+    }
+    
+    .card-featured-overlay i {
+        font-size: 7px;
+    }
+}
+
 /* Card content spacing */
 .card-content {
     padding: 13px 0px;

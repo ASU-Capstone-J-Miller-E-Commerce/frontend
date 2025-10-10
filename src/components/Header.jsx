@@ -28,7 +28,7 @@ const options = {
 const navItems = [
     { text: "Cues", options: options["Cues"] },
     { text: "Accessories", link: "/collections/accessories" },
-    { text: "Build-A-Cue", link: "/build-a-cue" },
+    // { text: "Build-A-Cue", link: "/build-a-cue" },
     { text: "Materials", options: options["Materials"] }
 ];
 
@@ -458,7 +458,10 @@ function SearchDialog({ open, onClose, handleLinkClick, hasScrolled }) {
                     boxShadow: 'none',
                     // Height handling for search results
                     height: searchResults.length > 0 || nothingFound ? 'auto' : 'auto', // Let black background adjust to content
-                    minHeight: hasScrolled ? '70px' : '100px',
+                    minHeight: {
+                        xs: hasScrolled ? '60px' : '90px', // Mobile
+                        sm: hasScrolled ? '70px' : '90px' // Desktop
+                    },
                     // Use 95vh to take up almost the entire viewport while leaving a small margin
                     maxHeight: searchResults.length > 0 || nothingFound ? '100dvh' : 'auto',
                     // Always maintain scroll capability
@@ -495,7 +498,10 @@ function SearchDialog({ open, onClose, handleLinkClick, hasScrolled }) {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        height: hasScrolled ? '70px' : '100px',
+                        height: {
+                            xs: hasScrolled ? '60px' : '90px', // Mobile heights - changed from 100px to 90px
+                            sm: hasScrolled ? '70px' : '90px' // Desktop heights - unchanged
+                        },
                         width: '100%',
                         boxSizing: 'border-box',
                         transition: 'height 0.3s ease',
@@ -617,6 +623,7 @@ function SearchDialog({ open, onClose, handleLinkClick, hasScrolled }) {
                                             title={name}
                                             images={item.imageUrls}
                                             tag={item.cueNumber || item.accessoryNumber || ''}
+                                            featured={item.featured}
                                             price={item.price}
                                             linkTo={link}
                                             onClick={handleProductClick}

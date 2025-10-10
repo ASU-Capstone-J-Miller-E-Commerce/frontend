@@ -10,7 +10,7 @@ import { Dialog, DialogTitle, DialogContent, useForkRef } from "@mui/material";
 
 export default function LoginPage () {
     const navigate = useNavigate();
-    const { register, handleSubmit, watch, formState: { errors }, setFocus: setLoginFocus } = useForm({
+    const { register, handleSubmit, watch, formState: { errors } } = useForm({
         defaultValues: {
             email: "",
             password: "",
@@ -21,11 +21,6 @@ export default function LoginPage () {
             verCode: "",
         }
     });
-
-    useEffect(() => {
-        const t = setTimeout(() => setLoginFocus("email"), 0);
-        return () => clearTimeout(t);
-    }, [setLoginFocus]);
 
     //2FA Modal
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -89,7 +84,6 @@ export default function LoginPage () {
                 {/* FIELDS */}
                 <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
                     <FormField 
-                        autoFocus
                         title="Email"
                         type="text"
                         value={email}
@@ -132,7 +126,10 @@ export default function LoginPage () {
                     fullWidth 
                     maxWidth="sm" 
                     className="miller-dialog-typography"
-                    PaperProps={{ className: "miller-dialog-typography" }}
+                    PaperProps={{ 
+                        className: "miller-dialog-typography",
+                        style: { borderRadius: 0 }
+                    }}
                     TransitionProps={{ onEntered: () => setVerifyFocus("verCode") }}
                 >
                     <DialogTitle>

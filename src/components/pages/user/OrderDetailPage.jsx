@@ -15,7 +15,7 @@ export default function OrderDetailPage() {
         setLoading(true);
         getUserOrderById(orderId)
             .then(response => {
-                if (response.status === "success" && response.data) {
+                if (response.data) {
                     setOrder(response.data);
                 } else {
                     setOrder(null);
@@ -62,14 +62,7 @@ export default function OrderDetailPage() {
     };
 
     if (loading) {
-        return (
-            <div className="user-content">
-                <div className="order-detail-loading">
-                    <i className="fa-solid fa-spinner fa-spin"></i>
-                    <p>Loading order details...</p>
-                </div>
-            </div>
-        );
+        return <OrderDetailSkeleton />;
     }
 
     if (!order) {
@@ -230,6 +223,110 @@ export default function OrderDetailPage() {
                             <div className="order-total-amount compact">
                                 <span><strong>Total Amount:</strong></span>
                                 <span><strong>${order.totalAmount.toFixed(2)} {order.currency.toUpperCase()}</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// OrderDetailSkeleton Component
+function OrderDetailSkeleton() {
+    return (
+        <div className="user-content">
+            <div className="order-detail-page compact">
+                {/* Header Skeleton */}
+                <div className="order-detail-header compact skeleton-header">
+                    <div className="skeleton-back-button"></div>
+                    <div className="order-id-block">
+                        <div className="skeleton-order-id"></div>
+                        <div className="skeleton-order-date"></div>
+                    </div>
+                </div>
+
+                <div className="order-detail-main compact">
+                    {/* Left Column Skeleton */}
+                    <div className="order-detail-left compact">
+                        {/* Status Card Skeleton */}
+                        <div className="order-card order-status-card compact skeleton-card">
+                            <div className="status-info compact skeleton-status-info">
+                                <div className="skeleton-status-icon"></div>
+                                <div className="skeleton-status-content">
+                                    <div className="skeleton-status-title"></div>
+                                </div>
+                            </div>
+                            <div className="tracking-info compact skeleton-tracking-info">
+                                <div className="skeleton-tracking-title"></div>
+                                <div className="skeleton-tracking-line"></div>
+                                <div className="skeleton-tracking-line"></div>
+                                <div className="skeleton-tracking-line"></div>
+                            </div>
+                        </div>
+
+                        {/* Contact + Addresses Card Skeleton */}
+                        <div className="order-card order-address-card compact skeleton-card">
+                            <div className="contact-info compact skeleton-contact-info">
+                                <div className="contact-details">
+                                    <div className="skeleton-contact-title"></div>
+                                    <div className="skeleton-contact-line"></div>
+                                    <div className="skeleton-contact-line"></div>
+                                </div>
+                            </div>
+                            <div className="address-group compact">
+                                {/* Shipping Address Skeleton */}
+                                <div className="address-card compact skeleton-address-card">
+                                    <div className="skeleton-address-title"></div>
+                                    <div className="address compact skeleton-address">
+                                        <div className="skeleton-address-line"></div>
+                                        <div className="skeleton-address-line"></div>
+                                        <div className="skeleton-address-line"></div>
+                                        <div className="skeleton-address-line skeleton-address-line-short"></div>
+                                    </div>
+                                </div>
+
+                                {/* Billing Address Skeleton */}
+                                <div className="address-card compact skeleton-address-card">
+                                    <div className="skeleton-address-title"></div>
+                                    <div className="address compact skeleton-address">
+                                        <div className="skeleton-address-line"></div>
+                                        <div className="skeleton-address-line"></div>
+                                        <div className="skeleton-address-line skeleton-address-line-short"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Right Column Skeleton: Order Items */}
+                    <div className="order-detail-right compact">
+                        <div className="order-card order-items-card compact skeleton-card">
+                            <div className="skeleton-items-title"></div>
+                            <div className="items-list compact">
+                                <ul>
+                                    {/* Generate 3 skeleton items */}
+                                    {[...Array(3)].map((_, index) => (
+                                        <li key={index} className="order-item compact skeleton-order-item">
+                                            <div className="order-detail-item-image compact large skeleton-item-image">
+                                                <div className="skeleton-image-placeholder"></div>
+                                            </div>
+                                            <div className="item-details compact skeleton-item-details">
+                                                <div className="skeleton-item-name"></div>
+                                                <div className="skeleton-item-number"></div>
+                                                <div className="skeleton-item-price"></div>
+                                            </div>
+                                            <div className="item-quantity compact skeleton-item-quantity">
+                                                <div className="skeleton-quantity-text"></div>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            {/* Total Amount Skeleton */}
+                            <div className="order-total-amount compact skeleton-total-amount">
+                                <div className="skeleton-total-label"></div>
+                                <div className="skeleton-total-value"></div>
                             </div>
                         </div>
                     </div>

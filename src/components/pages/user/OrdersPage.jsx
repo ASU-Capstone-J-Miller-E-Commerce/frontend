@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AccountSection from "../../sections/AccountSection";
 import { getUserOrders } from "../../../util/requests";
 import { receiveResponse } from "../../../util/notifications";
 
@@ -18,12 +17,10 @@ export default function OrdersPage() {
         setLoading(true);
         getUserOrders()
             .then((response) => {
-                console.log(response)
                 setOrders(response.data);
                 setLoading(false);
             })
             .catch((error) => {
-                console.error('Error loading orders:', error);
                 receiveResponse(error);
                 setLoading(false);
             });
@@ -72,16 +69,7 @@ export default function OrdersPage() {
     };
 
     if (loading) {
-        return (
-            <div className="user-content">
-                <div className="orders-page">
-                    <div className="loading-content">
-                        <i className="fa-solid fa-spinner fa-spin"></i>
-                        <p>Loading your orders...</p>
-                    </div>
-                </div>
-            </div>
-        );
+        return <OrdersSkeleton viewMode={viewMode} />;
     }
 
     return (
@@ -240,6 +228,105 @@ export default function OrdersPage() {
                         ))}
                     </div>
                 )}
+            </div>
+        </div>
+    );
+}
+
+// OrdersSkeleton Component
+function OrdersSkeleton({ viewMode = 'list' }) {
+    return (
+        <div className="user-content">
+            <div className="orders-page">
+                <div className={`orders-container ${viewMode}-view`}>
+                    {viewMode === 'list' && (
+                        <div className="orders-table-header desktop-only skeleton-header">
+                            <div className="col-images">
+                                <div className="skeleton-table-header-item"></div>
+                            </div>
+                            <div className="col-order">
+                                <div className="skeleton-table-header-item skeleton-table-header-wide"></div>
+                            </div>
+                            <div className="col-status">
+                                <div className="skeleton-table-header-item skeleton-table-header-medium"></div>
+                            </div>
+                            <div className="col-total">
+                                <div className="skeleton-table-header-item skeleton-table-header-medium"></div>
+                            </div>
+                        </div>
+                    )}
+                    
+                    {/* Generate 4 skeleton items */}
+                    {[...Array(4)].map((_, index) => (
+                        <div key={index} className={`order-item skeleton-order-item ${viewMode === 'list' ? 'order-list-item' : 'order-card'}`}>
+                            {viewMode === 'list' ? (
+                                <>
+                                    {/* Images Column */}
+                                    <div className="col-images">
+                                        <div className="order-images skeleton-order-images">
+                                            <div className="skeleton-order-image"></div>
+                                            <div className="skeleton-order-image"></div>
+                                            <div className="skeleton-order-image"></div>
+                                            <div className="skeleton-order-image"></div>
+                                        </div>
+                                    </div>
+
+                                    {/* Order Column */}
+                                    <div className="col-order">
+                                        <div className="skeleton-order-number"></div>
+                                        <div className="skeleton-order-summary"></div>
+                                        <div className="skeleton-order-date"></div>
+                                    </div>
+
+                                    {/* Status Column */}
+                                    <div className="col-status">
+                                        <div className="skeleton-order-status">
+                                            <div className="skeleton-status-icon"></div>
+                                            <div className="skeleton-status-text"></div>
+                                        </div>
+                                    </div>
+
+                                    {/* Total Column */}
+                                    <div className="col-total">
+                                        <div className="skeleton-total-amount"></div>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    {/* Card Layout */}
+                                    <div className="skeleton-order-status-card">
+                                        <div className="skeleton-status-icon"></div>
+                                        <div className="skeleton-status-text"></div>
+                                        <div className="skeleton-order-date"></div>
+                                    </div>
+
+                                    {/* Order Images */}
+                                    <div className="order-images skeleton-order-images-card">
+                                        <div className="skeleton-order-image"></div>
+                                        <div className="skeleton-order-image"></div>
+                                        <div className="skeleton-order-image"></div>
+                                        <div className="skeleton-order-image"></div>
+                                    </div>
+
+                                    {/* Order Info */}
+                                    <div className="order-info">
+                                        <div className="order-details">
+                                            <div className="skeleton-order-number"></div>
+                                            <div className="skeleton-order-summary"></div>
+                                        </div>
+                                        <div className="order-total">
+                                            <div className="skeleton-total-amount"></div>
+                                        </div>
+                                    </div>
+
+                                    <div className="order-actions">
+                                        <div className="skeleton-order-button"></div>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );

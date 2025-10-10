@@ -6,6 +6,7 @@ import { getAccessoryByGuid, addToCart } from "../../util/requests";
 import { addCartItemRedux } from "../../util/redux/actionCreators";
 import { receiveErrors, receiveLogs, receiveResponse } from "../../util/notifications";
 import NotFoundPage from "./NotFoundPage";
+import { showImageGallery } from "../dialogs/ImageGalleryDialog";
 
 export default function AccessoryProductPage() {
     const { guid } = useParams();
@@ -73,11 +74,36 @@ export default function AccessoryProductPage() {
             });
     };
 
+    const handleImageInspect = () => {
+        const images = accessory.imageUrls || [];
+        if (images.length > 0) {
+            showImageGallery(images, currentImageIndex, accessory.name);
+        }
+    };
+
     if (loading) {
         return (
-            <div className="product-page">
-                <div className="product-container">
-                    <div className="product-loading">Loading...</div>
+            <div className="product-skeleton">
+                <div className="product-skeleton-container">
+                    {/* Skeleton Gallery */}
+                    <div className="product-skeleton-gallery">
+                        <div className="product-skeleton-main-image"></div>
+                        <div className="product-skeleton-thumbnails">
+                            <div className="skeleton-thumbnail"></div>
+                            <div className="skeleton-thumbnail"></div>
+                            <div className="skeleton-thumbnail"></div>
+                        </div>
+                    </div>
+
+                    {/* Skeleton Product Info */}
+                    <div className="product-skeleton-info">
+                        <div className="skeleton-product-number"></div>
+                        <div className="skeleton-product-title"></div>
+                        <div className="skeleton-product-price"></div>
+                        <div className="skeleton-product-status"></div>
+                        <div className="skeleton-product-description"></div>
+                        <div className="skeleton-purchase-section"></div>
+                    </div>
                 </div>
             </div>
         );
@@ -99,12 +125,23 @@ export default function AccessoryProductPage() {
                 <div className="product-gallery">
                     {hasImages ? (
                         <>
-                            <div className="product-main-image">
+                            <div className="product-main-image" onClick={handleImageInspect}>
                                 <img 
                                     src={images[currentImageIndex]} 
                                     alt={accessory.name}
                                     className="main-image"
                                 />
+                                {/* Image Inspect Button */}
+                                <button 
+                                    className="image-inspect-btn-outline"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleImageInspect();
+                                    }}
+                                    title="View full-size images"
+                                >
+                                    <i className="fa-solid fa-magnifying-glass-plus"></i>
+                                </button>
                             </div>
                             {images.length > 1 && (
                                 <div className="product-thumbnails">
@@ -139,7 +176,7 @@ export default function AccessoryProductPage() {
                         </div>
                         {hasPrice && (
                             <div className="product-price">
-                                ${Number(accessory.price).toFixed(2)}
+                                ${Number(accessory.price).toFixed(2)} USD
                             </div>
                         )}
                         <div className={`product-status ${accessory.status}`}>
@@ -157,15 +194,15 @@ export default function AccessoryProductPage() {
                     <div className="product-purchase">
                         {isAvailable && hasPrice ? (
                             <>
-                                <div className="quantity-section">
-                                    <div className="quantity-controls">
+                                <div className="product-quantity-section">
+                                    <div className="product-quantity-controls">
                                         <label htmlFor="quantity">Quantity:</label>
-                                        <div className="quantity-input-wrapper">
+                                        <div className="product-quantity-wrapper">
                                             <button 
                                                 type="button"
                                                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                                                 disabled={quantity <= 1}
-                                                className="quantity-btn"
+                                                className="product-quantity-btn"
                                             >
                                                 -
                                             </button>
@@ -179,19 +216,19 @@ export default function AccessoryProductPage() {
                                                     const value = Math.min(5, Math.max(1, parseInt(e.target.value) || 1));
                                                     setQuantity(value);
                                                 }}
-                                                className="quantity-input"
+                                                className="product-quantity-input"
                                             />
                                             <button 
                                                 type="button"
                                                 onClick={() => setQuantity(Math.min(5, quantity + 1))}
                                                 disabled={quantity >= 5}
-                                                className="quantity-btn"
+                                                className="product-quantity-btn"
                                             >
                                                 +
                                             </button>
                                         </div>
                                     </div>
-                                    <div className="quantity-disclaimer">
+                                    <div className="product-quantity-disclaimer">
                                         <small>* Maximum quantity of 5 per item</small>
                                     </div>
                                 </div>

@@ -6,7 +6,7 @@ import { contactUs } from "../../util/requests";
 import { receiveResponse } from "../../util/notifications";
 
 export default function ContactUsPage() {
-    const { register, handleSubmit, watch, formState: { errors }, reset, setFocus } = useForm({
+    const { register, handleSubmit, watch, formState: { errors }, reset } = useForm({
         defaultValues: {
             name: "",
             email: "",
@@ -17,11 +17,6 @@ export default function ContactUsPage() {
     });
 
     const [attachment, setAttachment] = useState(null);
-
-    useEffect(() => {
-        const t = setTimeout(() => setFocus("name"), 0);
-        return () => clearTimeout(t);
-    }, [setFocus]);
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -76,7 +71,6 @@ export default function ContactUsPage() {
                         <div className="contact-row">
                             <div className="form-column flex-1">
                                 <FormField
-                                    autoFocus
                                     type="text"
                                     title="Name*"
                                     value={name}
@@ -171,8 +165,8 @@ export default function ContactUsPage() {
                             </div>
                             <div className="contact-details">
                                 <h4>Phone</h4>
-                                <p>(555) 123-4567</p>
-                                <p className="contact-note">Mon-Fri, 9AM-6PM EST</p>
+                                <p>(503) 260-1170</p>
+                                <p className="contact-note">Mon-Fri, 9AM-5PM PST</p>
                             </div>
                         </div>
 
@@ -182,7 +176,7 @@ export default function ContactUsPage() {
                             </div>
                             <div className="contact-details">
                                 <h4>Email</h4>
-                                <p>info@jmillercues.com</p>
+                                <p>jmillercustomcues@gmail.com</p>
                                 <p className="contact-note">We respond within 24 hours</p>
                             </div>
                         </div>
@@ -192,22 +186,9 @@ export default function ContactUsPage() {
                                 <i className="fa-solid fa-location-dot"></i>
                             </div>
                             <div className="contact-details">
-                                <h4>Address</h4>
-                                <p>1234 Craftsman Lane</p>
-                                <p>Woodworker City, WC 12345</p>
+                                <h4>Location</h4>
+                                <p>Cottage Grove, Oregon</p>
                                 <p>United States</p>
-                            </div>
-                        </div>
-
-                        <div className="contact-info-item">
-                            <div className="contact-icon">
-                                <i className="fa-solid fa-clock"></i>
-                            </div>
-                            <div className="contact-details">
-                                <h4>Business Hours</h4>
-                                <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
-                                <p>Saturday: 10:00 AM - 4:00 PM</p>
-                                <p>Sunday: Closed</p>
                             </div>
                         </div>
                     </div>

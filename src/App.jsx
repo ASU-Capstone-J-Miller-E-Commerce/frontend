@@ -2,13 +2,12 @@ import React, { useEffect } from "react";
 import { Routes, Route, Navigate, useLocation, Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
-import { checkUserAuth } from "./util/functions.js";
+import { checkUserAuth, getAndCacheFeaturedCues } from "./util/functions.js";
 
 import Header from "./components/Header.jsx";
 import Footer from "./components/Footer";
 import HomePage from "./components/pages/HomePage.jsx";
 import CollectionsPage from "./components/pages/CollectionsPage.jsx";
-import ProductPage from "./components/pages/ProductPage.jsx";
 import CueProductPage from "./components/pages/CueProductPage.jsx";
 import AccessoryProductPage from "./components/pages/AccessoryProductPage.jsx";
 import BuildACuePage from "./components/pages/BuildACuePage.jsx";
@@ -38,6 +37,7 @@ import "./css/fontawesome/brands.css";
 import "./css/fontawesome/solid.css";
 import "./css/cart.css";
 import "react-toastify/dist/ReactToastify.css";
+import ImageGalleryDialog from "./components/dialogs/ImageGalleryDialog.jsx";
 
 
 const GuestRoute = () => {
@@ -84,9 +84,10 @@ const AdminRoute = () => {
 };
 
 function App() {
-    // ping for user auth on mount
+    // ping for user auth and fetch featured cues on mount
     useEffect(() => {
         checkUserAuth();
+        getAndCacheFeaturedCues();
     }, []);
 
     return (
@@ -105,6 +106,7 @@ function App() {
                 toastClassName="toast-class"
             />
             <MaterialDialog />
+            <ImageGalleryDialog />
             <main className="jmiller-app">
                 <Header />
                 <Routes>
@@ -121,8 +123,6 @@ function App() {
                         <Route path="search" element={<CollectionsPage />} />
                     </Route>
 
-                    <Route path="/products/:guid" element={<ProductPage />} />
-                    
                     <Route path="/cues/:guid" element={<CueProductPage />} />
                     <Route path="/accessories/:guid" element={<AccessoryProductPage />} />
 

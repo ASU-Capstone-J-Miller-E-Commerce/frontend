@@ -245,7 +245,8 @@ const MaterialDialog = () => {
                     maxHeight: isMobile ? '100dvh' : '95vh',
                     width: isMobile ? '100%' : '85vw',
                 },
-                className: 'miller-dialog-typography'
+                className: 'miller-dialog-typography',
+                style: { borderRadius: 0 }
             }}
         >
             {/* Header */}
@@ -291,7 +292,7 @@ const MaterialDialog = () => {
                                 <Box
                                     sx={{
                                         width: '100%',
-                                        height: isMobile ? '300px' : '400px',
+                                        height: isMobile ? '300px' : '475px',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
@@ -302,10 +303,10 @@ const MaterialDialog = () => {
                                         src={images[currentImageIndex]}
                                         alt={`${displayName} - Image ${currentImageIndex + 1}`}
                                         style={{
-                                            maxWidth: '90%',
-                                            maxHeight: '90%',
+                                            width: '100%',
+                                            height: '100%',
                                             objectFit: 'contain',
-                                            borderRadius: '8px'
+                                            objectPosition: 'center',
                                         }}
                                     />
                                     
@@ -367,7 +368,7 @@ const MaterialDialog = () => {
                         )}
 
                         {/* Content Section */}
-                        <Box sx={{ p: 3 }}>
+                        <Box sx={{ p: isMobile ? '24px 12px' : 3 }}>
                             {/* Status and Tier */}
                             <Box sx={{ display: 'flex', gap: 1, mb: 3, flexWrap: 'wrap' }}>
                                 {material.status && (
