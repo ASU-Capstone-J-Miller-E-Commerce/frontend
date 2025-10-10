@@ -1982,7 +1982,8 @@
 /*==============================================================
 # Collections pages
 ==============================================================*/
-.collection-banner {
+.collection-banner,
+.page-header {
     display: flex;
     align-items: center;
     text-align: left;
@@ -1993,16 +1994,19 @@
   }
 
 @media (max-width: 770px) {
-    .collection-banner {
+    .collection-banner,
+        .page-header {
         padding: 6px 0px 6px 20px;
     }
 
-    .collection-banner h1 {
+    .collection-banner h1,
+    .page-header h1 {
         font-size: 2.5rem;
     }
 }
 
-.collection-banner h1 {
+.collection-banner h1,
+.page-header h1 {
     margin: 0;
 }
 
@@ -2490,7 +2494,7 @@
     flex-direction: column;
 }
 
-.page-header {
+/* .page-header {
     background-color: var(--miller-dark-grey);
     color: var(--miller-white);
     text-align: center;
@@ -2502,7 +2506,7 @@
     margin: 0;
     font-size: 2.5rem;
     font-family: 'bouwsma-uncial', system-ui, Helvetica, Arial, sans-serif;
-}
+} */
 
 .page-content {
     flex: 1;
@@ -2976,13 +2980,13 @@
 # Mobile Optimizations
 ==============================================================*/
 @media (max-width: 768px) {
-    .page-header {
+    /* .page-header {
         padding: 1.5rem 1rem;
     }
     
     .page-header h1 {
         font-size: 2rem;
-    }
+    } */
     
     .page-content {
         padding: 1.5rem 1rem;
