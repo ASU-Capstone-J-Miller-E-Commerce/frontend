@@ -173,8 +173,8 @@ export default function CheckoutSuccessPage() {
                             onClick={() => navigate("/collections/cues")}
                         />
                         <DefaultButton 
-                            text="View Order History" 
-                            onClick={() => navigate("/account/orders")}
+                            text="View Order" 
+                            onClick={() => navigate(`/account/orders/${orderDetails.orderId}`)}
                             className="secondary"
                         />
                     </div>
