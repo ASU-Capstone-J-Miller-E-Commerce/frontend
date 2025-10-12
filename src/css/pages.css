@@ -1101,10 +1101,6 @@
     .user-nav-item:first-child {
             margin-top: 6px;
         }
-    .user-nav-item:last-child {
-        margin-top: auto; /* Push logout button to bottom */
-        margin-bottom: 6px;
-    }
 }
 
 .user-nav-item {
