@@ -135,8 +135,8 @@ export default function CheckoutSuccessPage() {
                                     <div className="item-category">
                                         <h4>Cues ({orderDetails.items.cues.length})</h4>
                                         <ul>
-                                            {orderDetails.items.cues.map((cueGuid, index) => (
-                                                <li key={index}>Cue {cueGuid}</li>
+                                            {orderDetails.items.cues.map((cue, index) => (
+                                                <li key={index}>{cue.name || `Cue ${cue.guid}`}</li>
                                             ))}
                                         </ul>
                                     </div>
@@ -147,7 +147,7 @@ export default function CheckoutSuccessPage() {
                                         <ul>
                                             {orderDetails.items.accessories.map((accessory, index) => (
                                                 <li key={index}>
-                                                    {accessory.guid} (Quantity: {accessory.quantity})
+                                                    {accessory.name || accessory.guid} (Quantity: {accessory.quantity})
                                                 </li>
                                             ))}
                                         </ul>
