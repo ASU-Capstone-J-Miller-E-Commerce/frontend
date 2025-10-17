@@ -6,7 +6,7 @@ import { isValidElement } from 'react';
 
 export function _ajax(settings = {}) {
     // Add base URL
-    settings.url = `/api${settings.url}`;
+    settings.url = `http://localhost:5000${settings.url}`;
 
     // Special handling for FormData (file uploads)
     if (settings.data instanceof FormData) {
@@ -399,6 +399,13 @@ export function editOrder(id, orderData) {
         method: "PATCH",
         data: orderData
     });
+}
+
+export function getAdminAnalytics() {
+    return _ajax({
+        url: "/admin/analytics",
+        method: "GET"
+    })
 }
 
 // admin accessories section

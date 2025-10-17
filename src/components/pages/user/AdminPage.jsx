@@ -4,7 +4,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, B
 import { set, useForm } from 'react-hook-form';
 import { FormField, FormTextArea, FormSelect, DefaultToggle, FormMultiSelect, FormDatePicker } from '../../util/Inputs';
 import { DefaultButton } from '../../util/Buttons';
-import { getAdminUsers, createUser, editUser, changePassword, deleteUser, getAdminAccessories, createAccessory, editAccessory, deleteAccessory, getAdminMaterials, createWood, editWood, createCrystal, editCrystal, deleteCrystal, deleteWood, getAdminCues, createCue, editCue, deleteCue, deleteImages, getAdminOrders, editOrder, sendAnnouncement, getAdminAnnouncements, createAnnouncement, editAnnouncement, deleteAnnouncement } from '../../../util/requests';
+import { getAdminUsers, createUser, editUser, changePassword, deleteUser, getAdminAccessories, createAccessory, editAccessory, deleteAccessory, getAdminMaterials, createWood, editWood, createCrystal, editCrystal, deleteCrystal, deleteWood, getAdminCues, createCue, editCue, deleteCue, deleteImages, getAdminOrders, editOrder, sendAnnouncement, getAdminAnnouncements, createAnnouncement, editAnnouncement, deleteAnnouncement, getAdminAnalytics } from '../../../util/requests';
 import { receiveErrors, receiveResponse } from '../../../util/notifications';
 import { AdminSkeletonLoader } from '../../util/Util';
 import { useSelector } from 'react-redux';
@@ -53,6 +53,7 @@ export default function AdminPage() {
     const [userData, setUserData] = useState(null);
     const [orderData, setOrderData] = useState(null);
     const [announcementData, setAnnouncementData] = useState(null);
+    const [analyticData, setAnalyticData] = useState(null);
 
     const getData = async (pageOverride = null) => {
         setLoading(true);
@@ -120,6 +121,16 @@ export default function AdminPage() {
                         setLoading(false);
                     });
                 break;
+            case 'Analytics':
+                getAdminAnalytics()
+                    .then((res) => {
+                        setLoading(false);
+                        setAnalyticData(res.data);
+                    })
+                    .catch((err) => {
+                        setLoading(false);
+                    });
+                break;
             default:
                 setLoading(false);
                 break;
@@ -134,7 +145,8 @@ export default function AdminPage() {
             (adminPage === 'Materials' && materialData === null) ||
             (adminPage === 'Users' && userData === null) ||
             (adminPage === 'Orders' && orderData === null) || 
-            (adminPage === 'Announcements' && announcementData === null)
+            (adminPage === 'Announcements' && announcementData === null) ||
+            (adminPage === 'Analytics' && analyticData === null)
         ) {
             getData();
         }
@@ -178,7 +190,7 @@ export default function AdminPage() {
         <div className='admin-wrapper'>
             <AdminHeader setAdminPage={setAdminPage} adminPage={adminPage} loading={loading} onPlusClick={handleDialogOpen} />
             <div className='user-content'>
-                <AdminContent adminPage={adminPage} loading={loading} onEditClick={handleDialogOpen} onPasswordEditClick={handlePasswordDialogOpen} onDeleteClick={handleDeleteDialogOpen} cueData={cueData || []} accessoryData={accessoryData || []} materialData={materialData || []} userData={userData || []} orderData={orderData || []} announcementData={announcementData || []} />
+                <AdminContent adminPage={adminPage} loading={loading} onEditClick={handleDialogOpen} onPasswordEditClick={handlePasswordDialogOpen} onDeleteClick={handleDeleteDialogOpen} cueData={cueData || []} accessoryData={accessoryData || []} materialData={materialData || []} userData={userData || []} orderData={orderData || []} announcementData={announcementData || []} analyticData={analyticData || []}/>
             </div>
             {adminPage === 'Cues' && dialogOpen && <CueDialog open={dialogOpen} onClose={handleDialogClose} setDialogProps={setDialogPropsHandler} getData={getData} cueData={cueData} materialData={materialData} {...dialogProps} />}
             {adminPage === 'Accessories' && dialogOpen && <AccessoryDialog open={dialogOpen} onClose={handleDialogClose} setDialogProps={setDialogPropsHandler} getData={getData} {...dialogProps} />}
@@ -186,6 +198,7 @@ export default function AdminPage() {
             {adminPage === 'Users' && dialogOpen && <UserDialog open={dialogOpen} onClose={handleDialogClose} setDialogProps={setDialogPropsHandler} getData={getData} {...dialogProps} />}
             {adminPage === 'Orders' && dialogOpen && <OrderDialog open={dialogOpen} onClose={handleDialogClose} setDialogProps={setDialogPropsHandler} getData={getData} {...dialogProps} />}
             {adminPage === 'Announcements' && dialogOpen && <AnnouncementDialog open={dialogOpen} onClose={handleDialogClose} setDialogProps={setDialogPropsHandler} getData={getData} {...dialogProps} />}
+            {adminPage === 'Analytics' && dialogOpen && <AnalyticDialog open={dialogOpen} onClose={handleDialogClose} setDialogProps={setDialogPropsHandler} getData={getData} {...dialogProps} />}
             {passwordDialogOpen && <PasswordDialog open={passwordDialogOpen} onClose={handlePasswordDialogClose} getData={getData} {...passwordDialogProps} />}
             {deleteDialogOpen && <DeleteDialog open={deleteDialogOpen} onClose={handleDeleteDialogClose} getData={getData} adminPage={adminPage} {...deleteDialogProps} />}
         </div>
@@ -193,7 +206,7 @@ export default function AdminPage() {
 }
 
 function AdminHeader({ setAdminPage, adminPage, loading, onPlusClick }) {
-    const pages = ['Cues', 'Accessories', 'Materials', 'Users', 'Orders', 'Email', 'Announcements'];
+    const pages = ['Cues', 'Accessories', 'Materials', 'Users', 'Orders', 'Email', 'Announcements', 'Analytics'];
 
     const handlePlusClick = () => {
         let title = '';
@@ -250,7 +263,7 @@ function AdminHeader({ setAdminPage, adminPage, loading, onPlusClick }) {
     );
 }
 
-function AdminContent({ adminPage, loading, onEditClick, onPasswordEditClick, onDeleteClick, cueData, accessoryData, materialData, userData, orderData, announcementData }) {
+function AdminContent({ adminPage, loading, onEditClick, onPasswordEditClick, onDeleteClick, cueData, accessoryData, materialData, userData, orderData, announcementData, analyticData }) {
     if (loading) {
         return <AdminSkeletonLoader />;
     }
@@ -270,6 +283,8 @@ function AdminContent({ adminPage, loading, onEditClick, onPasswordEditClick, on
             return <AnnouncementsTable data={announcementData} onEditClick={onEditClick} onDeleteClick={onDeleteClick} />;
         case 'Email':
             return <EmailTab />;
+        case 'Analytics':
+            return <AnalyticsTable data={analyticData} />;
         default:
             return null;
     }
@@ -641,6 +656,60 @@ function AnnouncementsTable({ data, onEditClick, onDeleteClick }) {
         </div>
     );
 }
+
+function AnalyticsTable({ data }) {
+    const woodsData = data?.woods || [];
+    const crystalsData = data?.crystals || [];
+    
+    const woodsColumns = [
+        {
+            accessorKey: 'name',
+            header: 'Name',
+            id: 'woodName',
+        },
+        {
+            accessorKey: 'clicks',
+            header: 'Total Visits',
+            id: 'woodClicks',
+        },
+    ];
+
+    const crystalsColumns = [
+        {
+            accessorKey: 'name',
+            header: 'Name',
+            id: 'crystalName',
+        },
+        {
+            accessorKey: 'clicks',
+            header: 'Total Visits',
+            id: 'crystalClicks',
+        },
+    ];
+
+    return (
+        <div style={{ display: 'flex', gap: '20px' }}>
+            <div style={{ flex: 1 }}>
+                <h3 className="admin-page-header">Woods Analytics</h3>
+                <MaterialReactTable
+                    columns={woodsColumns}
+                    data={woodsData}
+                    {...tableProps}
+                />
+            </div>
+
+            <div style={{ flex: 1 }}>
+                <h3 className="admin-page-header">Crystals Analytics</h3>
+                <MaterialReactTable
+                    columns={crystalsColumns}
+                    data={crystalsData}
+                    {...tableProps}
+                />
+            </div>
+        </div>
+    );
+}
+
 
 // Add handleWrapColor to the CueDialog default element properties
 function CueDialog({ open, onClose, title, getData, cueData, materialData, setDialogProps, element = {
