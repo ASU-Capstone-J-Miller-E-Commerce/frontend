@@ -3,11 +3,19 @@ import { receiveResponse} from './notifications';
 import { setCartItems } from './redux/actionCreators';
 import { isValidElement } from 'react';
 
+export function getBaseUrl() {
+    const isDevelopment = import.meta.env.MODE === 'development';
+
+    if (isDevelopment) {
+        return import.meta.env.VITE_DEV_SERVER_URL;
+    } else {
+        return import.meta.env.VITE_PROD_SERVER_URL;
+    }
+};
 
 export function _ajax(settings = {}) {
-    // Add base URL
-    settings.url = `/api${settings.url}`;
-
+    // Add base URL based on environment
+    settings.url = `${getBaseUrl()}${settings.url}`;
     // Special handling for FormData (file uploads)
     if (settings.data instanceof FormData) {
         settings.processData = false; // Don't process FormData
