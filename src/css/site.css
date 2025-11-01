@@ -149,9 +149,12 @@ p {
     margin-top: 45px;
     font-size: 0.55em;
     width: 80vw !important;
+  }
+  .Toastify__toast-container--top-center {
     left: 50% !important;
     transform: translateX(-50%) !important;
-    position: fixed !important;
+    right: auto !important;
+    width: auto;
   }
 }
 
