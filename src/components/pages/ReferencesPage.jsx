@@ -25,6 +25,94 @@ export default function ReferencesPage() {
         }
     ];
 
+    const images = [
+        {
+            name: "Atlas Billiard Supplies, LLC",
+            description: `Atlas Billiard Supplies has supported cue-makers for decades and allowed us to use their stock photos for materials and components, including the Build-A-Cue section. They provide top quality products and excellent customer service.`,
+            url: "https://atlassupplies.com/",
+            category: "Supplier"
+        },
+        {
+            name: "The Wood Database",
+            description: `The Wood Database is an invaluable resource for woodworkers, offering detailed information and photos for nearly any wood type. Their research and images help us present the woods we offer.`,
+            url: "https://www.wood-database.com/",
+            category: "Educational Resource"
+        },
+        {
+            name: "The African Blackwood Conservation Project",
+            description: `Thanks to Bette Stockbauer for use of African Blackwood tree photos and for ongoing conservation and replanting efforts through the African Blackwood Conservation Project.`,
+            url: "https://www.blackwoodconservation.org/",
+            category: "Conservation"
+        }
+    ];
+
+    const woodAndCrystal = [
+        {
+            name: "The Wood Database",
+            description: `A top resource for woodworkers and researchers, providing detailed info and photos for nearly any wood type. Their research helps us share wood properties and images on our site.`,
+            url: "https://www.wood-database.com/"
+        },
+        {
+            name: "Touch Wood Rings",
+            description: `Touch Wood Rings offers insight into the metaphysical and spiritual traits of woods. They craft beautiful rings from consciously selected materials, sharing knowledge about the mystical properties of wood.`,
+            url: "https://www.touchwoodrings.com/"
+        }
+    ];
+
+    // New: Additional Resources as per user prompt
+    const additionalResources = [
+        {
+            name: "The African Blackwood Conservation Project",
+            description: "Thanks to Bette Stockbauer for use of African Blackwood tree photos and for ongoing conservation and replanting efforts for the African Blackwood tree.",
+            url: "https://www.blackwoodconservation.org/"
+        },
+        {
+            name: "Gruben, Michelle. All about wand woods: Magick and meaning from Alder to Zebrawood. Grove and Grotto.",
+            description: "",
+            url: "https://www.groveandgrotto.com/blogs/articles/all-about-wand-woods-magick-and-meaning-from-alder-to-zebrawood"
+        },
+        {
+            name: "Buddhist Bracelet. Wood Spiritual Meaning. Buddhist bracelet.",
+            description: "",
+            url: "https://www.buddhistbracelet.com/blogs/news/wood-spiritual-meaning"
+        },
+        {
+            name: "Urban Stillness. Wood Symbolism. Urbanstillness.",
+            description: "",
+            url: "https://urbanstillness.com/pages/wood-symbolism"
+        },
+        {
+            name: "Cosmic Punk. Wand crafting series- wood meanings. Amino apps.",
+            description: "",
+            url: "https://aminoapps.com/c/worldofmagic278/page/blog/wand-crafting-series-wood-meanings/aYD5_8qc0ue1QJv0LbRx5DJdLopkM1ZZwj"
+        },
+        {
+            name: "MacFie’s Wizard Shop. Wood Properties. Macfies.",
+            description: "",
+            url: "https://www.macfies.com/wood-properties.html"
+        },
+        {
+            name: "Rare Earth Designs. Magic in the Woods. Rare earth designs.",
+            description: "",
+            url: "https://www.rareearthdesigns.net/magic-woods"
+        },
+        {
+            name: "Everis. Symbolism of Trees: Meanings, Cultural History & Spiritual Significance. Everis.",
+            description: "",
+            url: "https://www.everisforever.com/articles-tools/memorial-ideas/symbolism-of-trees-meanings-cultural-history-spiritual-significance/"
+        },
+        {
+            name: "Xerri, Semele. Wood Glossary. Triple Moon.",
+            description: "",
+            url: "https://semelexerri.co.uk/giveaways/wood-glossary/"
+        },
+        {
+            name: "Ciaran1. Magical Properties of Wood for Wands. Spells of Magic.",
+            description: "",
+            url: "https://www.spellsofmagic.com/coven_ritual.html?ritual=3300&coven=510"
+        }
+    ];
+
     const developmentTechnology = [
         {
             name: "React",
@@ -58,54 +146,6 @@ export default function ReferencesPage() {
         }
     ];
 
-    const images = [
-        {
-            name: "Adobe Stock",
-            description: "Professional stock images for crystal and gemstone photography",
-            url: "https://stock.adobe.com/",
-            category: "Premium Stock"
-        },
-        {
-            name: "Custom Photography",
-            description: "Original photography of our materials, products, and crafting processes",
-            url: "#",
-            category: "Original Content"
-        }
-    ];
-
-    const additionalResources = [
-        {
-            name: "American Poolplayers Association (APA)",
-            description: "World's largest amateur pool league providing industry standards and regulations",
-            url: "https://poolplayers.com/",
-            category: "Sports Organization"
-        },
-        {
-            name: "Billiard Congress of America (BCA)",
-            description: "Governing body for cue sports in the United States setting equipment standards",
-            url: "https://www.bca-pool.com/",
-            category: "Sports Organization"
-        },
-        {
-            name: "World Pool-Billiard Association (WPA)",
-            description: "International governing body for pool establishing global competition standards",
-            url: "https://wpapool.com/",
-            category: "International Organization"
-        },
-        {
-            name: "Fine Woodworking Magazine",
-            description: "Premier publication for woodworking techniques, tools, and craftsmanship inspiration",
-            url: "https://www.finewoodworking.com/",
-            category: "Educational Resource"
-        },
-        {
-            name: "Sustainable Forestry Initiative",
-            description: "Certification program ensuring responsible sourcing of wood materials",
-            url: "https://forests.org/",
-            category: "Sustainability"
-        }
-    ];
-
     const ReferenceSection = ({ title, references }) => (
         <div className="reference-section">
             <h2>{title}</h2>
@@ -114,9 +154,11 @@ export default function ReferencesPage() {
                     <div key={index} className="reference-card">
                         <div className="reference-header">
                             <h4 className="reference-name">{ref.name}</h4>
-                            <span className="reference-category">{ref.category}</span>
+                            {ref.category && (
+                                <span className="reference-category">{ref.category}</span>
+                            )}
                         </div>
-                        <p className="reference-description">{ref.description}</p>
+                        {ref.description && <p className="reference-description">{ref.description}</p>}
                         {ref.email && (
                             <div className="reference-contact">
                                 <a 
@@ -128,7 +170,7 @@ export default function ReferencesPage() {
                                 </a>
                             </div>
                         )}
-                        {ref.url !== "#" && (
+                        {ref.url && ref.url !== "#" && (
                             <a 
                                 href={ref.url} 
                                 target="_blank" 
@@ -136,7 +178,34 @@ export default function ReferencesPage() {
                                 className="reference-link"
                             >
                                 <i className="fa-solid fa-external-link-alt"></i>
-                                {ref.email ? 'LinkedIn Profile' : 'Visit Website'}
+                                Visit Website
+                            </a>
+                        )}
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+
+    const WoodAndCrystalSection = ({ references }) => (
+        <div className="reference-section">
+            <h2>Wood and Crystal Properties</h2>
+            <div className="reference-grid">
+                {references.map((ref, index) => (
+                    <div key={index} className="reference-card">
+                        <div className="reference-header">
+                            <h4 className="reference-name">{ref.name}</h4>
+                        </div>
+                        <p className="reference-description">{ref.description}</p>
+                        {ref.url && (
+                            <a 
+                                href={ref.url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="reference-link"
+                            >
+                                <i className="fa-solid fa-external-link-alt"></i>
+                                Visit Website
                             </a>
                         )}
                     </div>
@@ -166,18 +235,22 @@ export default function ReferencesPage() {
                 />
 
                 <ReferenceSection 
-                    title="Development Technology" 
-                    references={developmentTechnology} 
-                />
-
-                <ReferenceSection 
                     title="Images" 
                     references={images} 
+                />
+
+                <WoodAndCrystalSection 
+                    references={woodAndCrystal}
                 />
 
                 <ReferenceSection 
                     title="Additional Resources" 
                     references={additionalResources} 
+                />
+
+                <ReferenceSection 
+                    title="Development Technology" 
+                    references={developmentTechnology} 
                 />
 
                 <div className="references-footer">
