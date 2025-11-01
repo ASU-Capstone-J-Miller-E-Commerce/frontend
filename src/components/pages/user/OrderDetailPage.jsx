@@ -44,7 +44,7 @@ export default function OrderDetailPage() {
             'shipped': 'Shipped',
             'delivered': 'Delivered',
             'delivery_exception': 'Delivery Exception',
-            'cancelled': 'Cancelled'
+            'canceled': 'Cancelled'
         };
         return statusMap[orderStatus] || orderStatus;
     };

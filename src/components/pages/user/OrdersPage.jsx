@@ -53,7 +53,7 @@ export default function OrdersPage() {
             'shipped': 'fa-truck',
             'delivered': 'fa-check',
             'delivery_exception': 'fa-triangle-exclamation',
-            'cancelled': 'fa-xmark'
+            'canceled': 'fa-xmark'
         };
         return iconMap[orderStatus] || 'fa-clock';
     };
