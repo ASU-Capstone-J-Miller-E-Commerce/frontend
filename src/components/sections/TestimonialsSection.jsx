@@ -4,9 +4,9 @@ export default function TestimonialsSection () {
     const testimonials = [
         {
             id: 1,
-            name: "Michael Thompson",
+            name: "Bill B",
             rating: 5,
-            text: "Absolutely love my new cue! The craftsmanship is incredible and you can really feel the quality in every shot. It's completely transformed my game."
+            text: "I really appreciate the high standards of craftsmanship. It’s truly a one-of-a-kind art piece, and it plays beautifully."
         },
         {
             id: 2,
