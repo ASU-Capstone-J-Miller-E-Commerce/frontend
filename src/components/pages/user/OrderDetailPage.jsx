@@ -54,9 +54,9 @@ export default function OrderDetailPage() {
             'pending': 'fa-clock',
             'confirmed': 'fa-check-circle',
             'shipped': 'fa-truck',
-            'delivered': 'fa-box-check',
-            'delivery_exception': 'fa-exclamation-triangle',
-            'cancelled': 'fa-times-circle'
+            'delivered': 'fa-check',
+            'delivery_exception': 'fa-triangle-exclamation',
+            'cancelled': 'fa-xmark'
         };
         return iconMap[orderStatus] || 'fa-clock';
     };
